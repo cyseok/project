@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+
+   <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+   <context-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+      	/WEB-INF/spring/root-context.xml 
+      	/WEB-INF/spring/appServlet/security-context.xml 
+      </param-value>
+   </context-param>
+   
+   
+   <!-- Creates the Spring Container shared by all Servlets and Filters -->
+   <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+   
+   <!-- springSecurityFilterChain 보다 먼저 실행되어야 함 -->
+	<filter>
+        <filter-name>multipartFilter</filter-name>
+        <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>multipartFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+   
+   <filter> 
+       <filter-name>encodingFilter</filter-name>
+       <filter-class> 
+           org.springframework.web.filter.CharacterEncodingFilter
+       </filter-class> 
+       <init-param>
+           <param-name>encoding</param-name> 
+           <param-value>UTF-8</param-value> 
+       </init-param>
+       <init-param> 
+           <param-name>forceEncoding</param-name> 
+           <param-value>true</param-value> 
+       </init-param> 
+   </filter> 
+   <filter-mapping> 
+       <filter-name>encodingFilter</filter-name> 
+       <url-pattern>/*</url-pattern> 
+   </filter-mapping>
+   
+    <!-- DelegatingFilterProxy 클래스를 필터로 등록되도록 설정 -->
+	<!-- => 반드시 필터의 이름은 [springSecurityFilterChain]으로 등록되도록 작성 -->
+	<!-- DelegatingFilterProxy : 메인 Filter Chain에 위치되도록 설정하는 클래스 -->
+	<!-- => Spring Security 필터를 사용하는 시작점으로 설정되며 서블릿 컨테이너 영역(WAS)의 필터와 
+	ApplicationContext(Spring Container)에서 Spring Bean으로 등록된 필터를 연결하는 다리 역활 수행  -->
+	<!-- => 사용자가 웹프로그램을 요청하면 DelegatingFilterProxy가 요청을 받아 FilterChainProxy 필터에게
+	요청을 위임하여 필요한 필터들이 순서대로 실행되도록 동작 -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+   <!-- Processes application requests -->
+   <servlet>
+      <servlet-name>appServlet</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+         <param-name>contextConfigLocation</param-name>
+         <param-value>
+         	/WEB-INF/spring/appServlet/servlet-context.xml
+         </param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+      
+   <servlet-mapping>
+      <servlet-name>appServlet</servlet-name>
+      <url-pattern>/</url-pattern>
+   </servlet-mapping>
+
+</web-app>
