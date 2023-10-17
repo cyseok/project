@@ -3,9 +3,17 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.8.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -21,8 +29,24 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!-- component-scan: 스프링 컨테이너가 클래스에서 사용된 스프링 어노테이션을 검색하여 패키지를 제공하는 엘리먼트 -->
+	<!-- base-package 속성: 스프링 어노테이션을 사용한 클래스가 선언된 패키지를 속성값으로 설정 -->
+	<!-- [com.project.controller] 패키지에 요청 처리 클래스(Controller 클래스)를 작성하여 @Controller 어노테이션을 사용하여 Spring Bean으로 등록 -->
 	<context:component-scan base-package="com.project.controller" />
+	<!-- [com.project.dao] 패키지에 DAO 클래스를 작성하여 @Repository 어노테이션을 사용하여 Spring Bean으로 등록 -->
+	<context:component-scan base-package="com.project.dao" />
+	<!-- [com.project.service] 패키지에 Service 클래스를 작성하여 @Service 어노테이션을 사용하여 Spring Bean으로 등록 -->
+	<context:component-scan base-package="com.project.service" />
+	<!-- [com.project.util] 패키지에 작성된 Interceptor 클래스를 사용하기 위해 작성 -->
+	<context:component-scan base-package="com.project.util"/>
 	
 	
-	
+	<!-- global-method-security: Spring Bean으로 등록된 클래스(Controller 클래스)의 요청 처리 메소드에 권한 관련 어노테이션을 제공하기 위한 엘리먼트 -->
+	<!-- ▶ security Namespaces 를 추가하여 spring-security -->	
+	<!-- pre-post-annotations 속성: [disabled] 또는 [enabled] 중 하나를 속성값으로 설정 -->
+	<!-- ▶ 속성값을 [enabled]로 설정할 경우 @PreAuthorize 어노테이션을 제공 -->
+	<!-- secured-annotations 속성: [disabled] 또는 [enabled] 중 하나를 속성값으로 설정 -->
+	<!-- ▶ 속성값을 [enabled]로 설정할 경우 @Secured 어노테이션을 제공 -->
+	<!-- <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/> -->
+	 
 </beans:beans>

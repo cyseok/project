@@ -6,7 +6,6 @@
    <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
    <context-param>
       <param-name>contextConfigLocation</param-name>
-      <!-- Spring Security 기능을 제공하기 위한 Spring Bean Configuration File을 생성하여 등록 -->
       <param-value>
       	/WEB-INF/spring/root-context.xml 
       	/WEB-INF/spring/appServlet/security-context.xml 
@@ -56,7 +55,7 @@
 	ApplicationContext(Spring Container)에서 Spring Bean으로 등록된 필터를 연결하는 다리 역활 수행  -->
 	<!-- => 사용자가 웹프로그램을 요청하면 DelegatingFilterProxy가 요청을 받아 FilterChainProxy 필터에게
 	요청을 위임하여 필요한 필터들이 순서대로 실행되도록 동작 -->
-	<filter>
+	<!-- <filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
@@ -64,7 +63,7 @@
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
 
    <!-- Processes application requests -->
    <servlet>

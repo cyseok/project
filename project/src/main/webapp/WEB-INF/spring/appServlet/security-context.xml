@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:beans="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+   
+
+   <!-- <http auto-config="true" use-expressions="true">
+      <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+      <intercept-url pattern="/user/mypage" access="hasRole('ROLE_USER')" />
+      <intercept-url pattern="/cart/insert" access="hasRole('ROLE_USER')" /> 
+      <intercept-url pattern="/**" access="permitAll" /> 
+ 
+      authentication-success-handler-ref 속성: AuthenticationSuccessHandler 인터페이스를 상속받은 클래스에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정
+      <form-login login-page="/user/login"
+               login-processing-url="/user/login"
+               username-parameter="id"
+               password-parameter="pw"
+               default-target-url="/"
+               authentication-success-handler-ref="customLoginSuccessHandler"
+			   authentication-failure-handler-ref="customLoginFailureHandler"
+      />
+      
+      
+      authentication-success-handler-ref="customLoginSuccessHandler"
+     
+      <access-denied-handler ref="customAccessDeniedHandler"/>
+      
+      <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID"/>
+    
+      자동 로그인
+      <remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
+      
+      
+      session-management: 로그인 정보가 저장된 세션을 관리하기 위한 엘리먼트
+      <session-management>
+         <concurrency-control max-sessions="1" expired-url="/sessionError"/>
+      </session-management>
+   </http>
+   
+ 
+      고쳐야함
+      <authentication-manager>
+      <authentication-provider>
+         <user-service>
+           <user name="abc123" password="{noop}123456" authorities="ROLE_USER"/>
+            <user name="xyz789" password="{noop}123456" authorities="ROLE_MANAGER"/>
+            <user name="opq456" password="{noop}123456" authorities="ROLE_ADMIN"/> 
+         </user-service>
+      </authentication-provider>
+   </authentication-manager>
+     
+   
+   
+   
+   
+   바꿔줘야 함
+   <authentication-manager>
+      <authentication-provider>
+         <jdbc-user-service
+            data-source-ref="dataSource"
+            users-by-username-query="select userid, password, enabled from security_users where userid=?"
+            authorities-by-username-query="select userid, auth from security_auth where userid=?"
+         />
+         <password-encoder ref="passwordEncoder"/>
+      </authentication-provider>
+   </authentication-manager>
+   
+  
+   
+   고쳐야함
+   user-service-ref 속성: 인증에 필요한 사용자 및 권한 정보(UserDetails 객체)기 저장된 객체를 반환하는 클래스(CustomUserDetailsService)에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정
+    <authentication-manager>
+      <authentication-provider user-service-ref="customUserDetailsService">
+         <password-encoder ref="bcryptPasswordEncoder"/>         
+      </authentication-provider>
+   </authentication-manager>
+  
+
+   <context:component-scan base-package="com.project.dao" />
+   <context:component-scan base-package="com.project.repository"/>
+   <context:component-scan base-package="com.project.security" />
+   
+   
+   Spring Security 관련 클래스를 Spring Bean으로 등록
+   <beans:bean class="com.project.security.CustomAccessDeniedHandler" id="customAccessDeniedHandler" />
+   <beans:bean class="com.project.security.CustomLoginSuccessHandler" id="customLoginSuccessHandler" />
+   <beans:bean class="com.project.security.CustomLoginFailureHandler" id="customLoginFailureHandler" />
+   <beans:bean class="com.project.security.CustomPasswordEncoder" id="customPasswordEncoder" /> 
+   
+   
+   BCryptPasswordEncoder: 문자열을 암호화 처리하거나 비교 결과를 제공하기 위한 클래스  
+   <beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean> -->
+</beans:beans>

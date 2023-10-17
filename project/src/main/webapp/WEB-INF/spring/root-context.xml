@@ -1,8 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-	
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- root-context.xml: 모든 웹자원(Front Controller)에서 객체로 사용될 클래스를 Spring Bean으로 등록하기 위한 Spring Bean Configuration File -->
+	<!-- ▶ DAO 클래스 작성에 필요한 클래스를 Spring Bean으로 등록 -->
+	<!-- ▶ DataSource, SqlSessionFactory(마이바티스), SqlSession, TransactionManager 등... -->
+	
+	<!-- DataSource 관련 클래스를 Spring Bean으로 등록 -->
+	<!-- ▶ Connection 객체를 생성하기 위한 값을 클래스 필드에 저장되도록 값 주입 - Setter Injection -->
+	
+		
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	  <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" /> <!-- MySQL 8.x 이상을 위한 드라이버 클래스 -->
+	  <property name="url" value="jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" />
+	  <property name="username" value="i6eqgj8l9920k7q7"></property>
+	  <property name="password" value="svtfuithtubdhpoj"></property>
+	</bean>
+		
+	<!-- SqlSessionFactory 관련 클래스를 Spring Bean으로 등록 -->
+	<!-- ▶ SqlSession 객체를 생성하기 위한 값을 클래스 필드에 저장되도록 값 주입 - Setter Injection -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
+		<!-- configLocation 필드에 Mybatis 환경 설정 파일의 경로가 저장되도록 값을 주입 -->
+		<!-- ▶ SpringMVC 프로그램의 스프링 컨테이너(WebApplicationContext 객체)는 [src/main/webapp] 폴더의 웹자원을 이용하여 환경 설정 파일의 경로를 제공받아 사용 가능 -->
+        <!-- <property name="configLocation" value="/WEB-INF/spring/mybatis-config.xml"/> -->
+        <!-- [src/main/java] 또는 [src/main/resources] 폴더에 환경 설정 파일을 작성한 경우 classpath 접두사를 사용하면 스프링 컨테이너(WebApplicatoinContext 객체)로 파일 접근 가능 -->
+        <!-- 패키지 안에 있으면 이런 식으로 작성 ▷ <property name="configLocation" value="classpath:com/project/config/mybatis-config.xml"/> -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- dataSource 필드에 DataSource 관련 클래스의 Spring Bean을 제공받아 의존성 주입 - Setter Injection -->
+        <!-- ▶ Mybatis 환경 설정 파일의 environment 엘리먼트와 유사한 기능을 제공 -->
+        <property name="dataSource" ref="dataSource"/>
+        
+        <!-- dataSource 필드에 DTO 클래스가 작성된 패키지 경로가 저장되도록 값 주입 -->
+        <!-- ▶ Mybatis 환경 설정 파일의 typeAliases 엘리먼트에 package 엘리먼트와 유사한 기능을 제공 -->
+        <!-- ▶ XML 기반 매퍼 파일에서 Java 자료형 대신 사용될 별칭을 제공 -->
+        <property name="typeAliasesPackage" value="com.project.dto"/>
+        
+        <!-- mapperLocations 필드에 List 객체를 생성하여 저장되도록 의존성 주입 -->
+        <!-- ▶ List 객체의 요소에는 XML 기반의 매퍼 파일의 경로를 저장할 수 있도록 - 매퍼 등록 -->
+        <!-- ▶ Mybatis 환경 설정 파일의 mappers 엘리먼트에 mapper 엘리먼트와 유사한 기능을 제공 -->
+        <property name="mapperLocations">
+        	<list>
+        		<!-- [src/main/java] 폴더의 패키지에 작성된 모든 XML 파일을 매퍼로 등록되도록 처리 -->
+        		<value>classpath:com/project/mapper/*.xml</value>
+        	</list>
+        </property>
+	</bean>
+   
+    <!-- SqlSession 관련 클래스(SqlSessionTemplate 클래스)를 Spring Bean으로 등록 -->
+	<!-- ▶ 필드에 SqlSession 객체(SqlSessionTemplate 객체)를 제공하기 위한 SqlSessionFactory 관련 클래스의 Spring Bean을 제공받아 의존성 주입 - Constructor Injection -->
+	<!-- SqlSessionTemplate는 Setter 메소드가 없기 때문에 매개 변수로 SqlSessionFactoryBean을 받아 의존성을 주입해야 함 -->
+	<!-- destroy-method 속성을 사용하여 Spring Bean 소멸 전 clearCache 메소드를 자동 호출하도록 설정 -->
+	<!-- ▶ clearCache 메소드는 SqlSession 객체(SqlSessionTemplate 객체) 소멸 전 SqlSession 객체에 의하여 사용된 JDBC 관련 객체를 정리하는 메소드 -->
+	<!-- ▶ DAO 클래스의 메소드에서 SqlSession 객체를 사용한 후 close() 메소드를 호출하지 않도록 설정 - 이 속성으로 인하여 mybatis를 사용할 때 close() 할 필요가 없음! -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession" destroy-method="clearCache">
+		<constructor-arg ref="sqlSessionFactoryBean" />
+	</bean>
+   
+    <!-- TransactionManager 관련 클래스를 Spring Bean으로 등록 -->
+	<!-- ▶ Spring Bean의 식별자(beanName)을 반드시 [transactionManager]로 수정해주어야 함 - 낭중에 사용할 어노테이션을 위하여 -->
+	<!-- ▶ 필드에 TransactionManager에 의하여 관리될 Connection 객체가 저장된 DataSource 관련 클래스의 Spring Bean을 제공받아 의존성 주입 - Setter Injection -->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+   
+    <!--  mapper 등록하려면 추가해줘야함!! -->
+    <mybatis-spring:scan base-package="com.project.mapper" /> 
+   
+    <!-- annotation-driven: @Transactional 어노테이션을 사용하여 TransactionManager 객체로 트랜잭션 처리 기능을 제공하기 위한 엘리먼트 -->
+    <tx:annotation-driven/>
+    
+    <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource">
+		<property name="basenames">
+			<list>
+				<value>/WEB-INF/message/security_message</value>
+			</list>
+		</property>
+		<property name="cacheSeconds" value="60"/>
+		<property name="defaultEncoding" value="utf-8"/>
+	</bean>
+    
+    <!-- 파일 업로드 처리 기능을 제공하는 클래스를 Spring Bean으로 등록 -->
+	<!-- ▶ Spring Bean의 식별자(beanName)를 반드시 multipartResolver라는 이름으로 사용해야 함 -->
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="filterMultipartResolver">
+	  <!-- maxUploadSize 필드에 최대 업로드 처리 가능한 파일의 제한 용량(Byte)이 저장되도록 값을 주입 -->
+	  <property name="maxUploadSize" value="20971520"/>
+	  <!-- defaultEncoding 필드에 전달값에 문자 형태(CharacterSet)가 저장되도록 값을 주입 -->
+	  <property name="defaultEncoding" value="utf-8"/>
+	</bean>
 		
 </beans>
