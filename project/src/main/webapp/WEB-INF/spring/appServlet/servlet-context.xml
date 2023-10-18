@@ -39,6 +39,7 @@
 	<context:component-scan base-package="com.project.service" />
 	<!-- [com.project.util] 패키지에 작성된 Interceptor 클래스를 사용하기 위해 작성 -->
 	<context:component-scan base-package="com.project.util"/>
+	<context:component-scan base-package="com.project.auth" />
 	
 	
 	<!-- global-method-security: Spring Bean으로 등록된 클래스(Controller 클래스)의 요청 처리 메소드에 권한 관련 어노테이션을 제공하기 위한 엘리먼트 -->
