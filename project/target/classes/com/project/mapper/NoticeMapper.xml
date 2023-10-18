@@ -1,5 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.project.mapper.Mapper">
-
+<mapper namespace="com.project.mapper.NoticeMapper">
+	
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice" parameterType="com.project.dto.NoticeDTO">
+		INSERT INTO NOTICE(
+	        notice_idx
+         	, userinfo_id
+            , notice_title 
+            , notice_content
+            , notice_regDate 
+            , notice_viewcnt
+            , notice_status
+	        )
+	    VALUES(
+	        #{noticeIdx} 
+	        , #{userinfoId}
+	        , #{noticeTitle}
+	        , #{noticeContent}
+	        , NOW()
+	        , 0
+	        , 1
+	        )
+	</insert>
+	
+	<!-- 공지사항 수정 -->
+	<update id="updateNotice" parameterType="com.project.dto.NoticeDTO">
+		UPDATE notice SET
+			notice_title=#{noticeTitle} 
+            , notice_content=#{noticeContent} 
+        WHERE notice_idx=#{noticeIdx}
+	</update>
+	
+	<!-- 공지사항 삭제 -->
+	<delete id="deleteNotice" parameterType="com.project.dto.NoticeDTO">
+		DELETE FROM notice
+		WHERE notice_idx=#{noticeIdx}
+	</delete>
+	
+	<!-- 공지사항 상세보기 -->
+	<select id="selectNotice" resultType="com.project.dto.NoticeDTO">
+		SELECT
+         	notice_idx
+         	, userinfo_id
+            , notice_title 
+            , notice_content
+            , notice_regDate 
+            , notice_viewcnt
+         FROM NOTICE 
+         WHERE notice_idx=#{noticeIdx}
+	</select>
+	
+	<!-- 공지사항 조회수 업데이트 -->
+	<update id="viewNoticeCount" parameterType="com.project.dto.NoticeDTO">
+		UPDATE NOTICE SET
+        	notice_viewcnt = notice_viewcnt + 1
+        WHERE notice_idx=#{noticeIdx}
+	</update>
+	
+	<!-- 공지사항 글 목록 개수 -->
+	<select id="selectNoticeCount" resultType="int">
+		SELECT COUNT(*) 
+		
+		FROM notice
+		
+        <!-- 검색어 조건 처리 -->
+        <choose>
+            <when test="selectKeyword != null and selectKeyword != ''">
+                 WHERE notice_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+                 OR notice_content LIKE CONCAT('%', #{selectKeyword}, '%')
+            </when>
+            <otherwise>
+                WHERE 1=1 <!-- 검색어가 없는 경우 모든 데이터 검색 -->
+            </otherwise>
+        </choose>
+	</select>
+	
+	<select id="selectNoticeList" resultType="com.project.dto.NoticeDTO">
+		SELECT * FROM (
+          SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM
+          		 , RN.* FROM (
+          
+          	SELECT
+                  notice_idx
+                  , userinfo_id
+                  , notice_title
+                  , notice_content
+                  , notice_regDate
+                  , notice_viewcnt
+           FROM notice
+           <!-- 검색어 조건 처리 -->
+	        <choose>
+	            <when test="selectKeyword != null and selectKeyword != ''">
+	                 WHERE notice_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                 OR notice_content LIKE CONCAT('%', #{selectKeyword}, '%')
+	            </when>
+	            <otherwise>
+	                WHERE 1=1 <!-- 검색어가 없는 경우 모든 데이터 검색 -->
+	            </otherwise>
+	        </choose>
+	              ORDER BY notice_regDate DESC
+          ) RN, (SELECT @ROWNUM := 0) tmp
+      )SUB WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
+      <!-- 페이징 처리 -->
+	</select>
+	
+	
+	
+	
 </mapper>

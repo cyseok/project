@@ -10,42 +10,93 @@
   </head>  
   
 <body>
-<table>
-	<colgroup>
-	<col width="10%">
-	<col width="65%">
-	<col width="10%">
-	<col width="15%">
-	</colgroup>
-	
-	<tr>
-		<td class="t1">번호</td>
-		<td class="t1">제목</td>
-		<td class="t1">작성자</td>
-		<td class="t1">작성일</td>
-		<td class="t1" style="white-space: nowrap;">조회수</td>
-	</tr>
-	
-	<c:choose>
-		<c:when test="${empty result.noticeList}">
+
+		<form action="<c:url value="/notice/list"/>" method="get" class="search-area">   
+   			<div class="">
+       			<input type="text" class="" id="" name="selectKeyword" placeholder="제목, 내용 검색어를 입력하세요">
+       			<button type="submit" class="" id="" >
+       			검색
+       			</button>
+   			</div>
+		</form>
+		
+	<table>
+		<colgroup>
+		<col width="10%">
+		<col width="20%">
+		<col width="55%">
+		<col width="10%">
+		<col width="5%">
+		</colgroup>
+		
 		<tr>
-			<td colspan="5">게시글이 없습니다.</td>
-		</tr>	
-		</c:when>
-		<c:otherwise>  
-		                     
-			<c:forEach var="notice" items="${result.noticeList }">
+			<td>번호</td>
+			<td>제목</td>
+			<td>내용</td>
+			<td>작성자</td>
+			<td>작성일</td>
+			<td style="white-space: nowrap;">조회수</td>
+		</tr>
+		
+		<c:choose>
+			<c:when test="${empty result.noticeList}">
 			<tr>
-				<td class="t2">${notice.noticeIdx }</td>
-				<td class="t2"><a href="${pageContext.request.contextPath}/notice/view/${notice.noticeIdx}" >${notice.noticeTitle}</a></td>
-				<td class="t2">${notice.userinfoId }</td>
-				<td class="t2">${notice.noticeRegDate }</td>
-				<td class="t2">${notice.noticeViewcnt }</td>
-			</tr>
-			</c:forEach>
-		</c:otherwise>
-	</c:choose>
-</table>
+				<td colspan="5">게시글이 없습니다.</td>
+			</tr>	
+			</c:when>
+			<c:otherwise>  
+			                     
+				<c:forEach var="noticeList" items="${result.noticeList }">
+				<tr data-idx="noticeList.noticeIdx">
+					<td>${noticeList.noticeIdx }</td>
+					<td><a href="${pageContext.request.contextPath}/notice/detail/${noticeList.noticeIdx}" >${noticeList.noticeTitle}</a></td>
+					<td>${noticeList.userinfoId }</td>
+					<td>${noticeList.noticeContent }</td>
+					<td>${noticeList.noticeRegDate }</td>
+					<td>${noticeList.noticeViewcnt }</td>
+				</tr>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
+	</table>
+	
+    <button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/write'">글쓰기</button>
+	<!-- ======================================================== -->
+	<div class="page_t">
+        <%-- 페이지 번호 출력 --%>
+        <c:choose>
+           <c:when test="${result.pager.startPage > result.pager.blockSize }">
+              <a
+                 href="<c:url value="/notice/list"/>?pageNum=${result.pager.prevPage}&keyword=${search.keyword}">
+                 [이전]
+              </a>
+           </c:when>
+           <c:otherwise>
+               [이전]
+           </c:otherwise>
+        </c:choose>
+        <c:forEach var="i" begin="${result.pager.startPage }" end="${result.pager.endPage }" step="1">
+           <c:choose>
+              <c:when test="${result.pager.pageNum != i  }">
+                 <a href="<c:url value="/notice/list"/>?pageNum=${i}&keyword=${search.selectKeyword}"><span class="p_num">${i }</span></a>
+              </c:when>
+              <c:otherwise>
+                 <span class="p_num">${i }</span>
+              </c:otherwise>
+           </c:choose>
+        </c:forEach>
+        <c:choose>
+           <c:when test="${result.pager.endPage != result.pager.totalPage }">
+              <a href="<c:url value="/notice/list"/>?pageNum=${result.pager.nextPage}&keyword=${search.selectKeyword}"><span class="p_next">
+                    [다음]</span>
+              </a>
+           </c:when>
+           <c:otherwise>
+               [다음] 
+        </c:otherwise>
+      </c:choose>
+    </div>
+	<!-- ======================================================== -->
 
 </body>
 </html>

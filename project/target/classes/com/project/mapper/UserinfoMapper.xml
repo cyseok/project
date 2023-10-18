@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.UserinfoMapper">
+
+   <!--회원가입 -->
+   
+   <!-- 회원정보 삽입 -->
+   <insert id="insertUserinfo">
+      INSERT INTO 
+      userinfo (
+         id
+         , pw
+         , name
+         , email
+         , regdate
+         , status  
+         , enabled
+      )
+      VALUES (
+         #{id}
+         , #{pw}
+         , #{name}
+         , #{email}
+         , Now()
+         , #{status}
+         , 0
+      )
+   </insert>
+   
+   <!-- Auth -->
+   <insert id="insertSecurityAuth">
+      INSERT INTO security_auth 
+      VALUES (
+            #{id}
+            , #{auth}
+            )
+   </insert>
+   
+   <resultMap type="Userinfo" id="securityUserinfoResultMap">
+      <id column="id" property="id"/>
+      <result column="pw" property="pw"/>
+      <result column="name" property="name"/>
+      <result column="regdate" property="regdate"/>
+      <result column="status" property="status"/>
+      <result column="enabled" property="enabled"/>
+      <collection property="securityAuthList" select="selectSecurityAuthById" column="id"/>
+   </resultMap> 
+   
+   <select id="selectSecurityAuthById" resultType="SecurityAuth">
+      SELECT id
+         , auth 
+      FROM security_auth 
+      WHERE id=#{id}
+   </select>
+   
+  
+    <select id="selectUserinfoById" resultMap="securityUserinfoResultMap">
+		SELECT users.id
+        	 , pw
+         	, name
+         	, email
+         	, regdate
+         	, status  
+         	, enabled
+         	, auth
+    	FROM userinfo users
+    	LEFT JOIN security_auth auth
+    	ON users.id=auth.id
+    	WHERE users.id=#{id}
+	</select>
+
+
+  
+ 
+   
+   <!--로그인 -->
+   
+   <!-- 비밀번호 인코딩 전 -->
+   <!-- 
+   <select id="userinfoLogin" resultType="Userinfo">
+      SELECT *
+      FROM userinfo
+      WHERE id=#{id} and pw = #{pw}
+   </select> -->
+   
+   
+   <!-- 비밀번호 인코딩 후 -->
+   <select id="userinfoLogin" resultType="Userinfo">
+      SELECT *
+      FROM userinfo
+      WHERE id=#{id}
+   </select>
+
+   <!-- 이메일로 사용자 ID 찾기 -->
+    <select id="findUserByEmail" parameterType="string" resultType="com.project.dto.Userinfo">
+        SELECT * 
+        FROM userinfo 
+        WHERE email = #{email}
+    </select>   
+
+
+   
+   
+   <!-- 마이페이지 -->
+   
+
+
+   <!-- 새로 추가했음 -->
+   <!-- 아이디로 유저 정보 검색 - 삭제하면 안되어요
+   <select id="selectUserinfoById" resultType="Userinfo">
+      SELECT id
+         , pw
+         , name
+         , gender 
+         , email
+         , birth
+         , address
+         , phone
+         , regdate
+         , logdate
+         , status 
+      FROM userinfo
+      WHERE id=#{id}
+   </select>   
+    -->
+    
+   <!-- 관리자 -->
+   
+   
+   <!-- 조건에 따른 유저 정보 검색 -->
+   <sql id="search">
+      <if test="condition != null and keyword != null">
+            <if test="condition == 'name'">
+               <!-- 검색조건이 name이라면 -->
+               AND name LIKE '%'||#{keyword}||'%'
+            </if>
+            <if test="condition == 'id'">
+               <!-- 검색조건이 id라면 -->
+               AND id LIKE '%'||#{keyword}||'%'
+            </if>
+            <if test="condition == 'email'">
+               <!-- 검색조건이 email라면 -->
+               AND email LIKE '%'||#{keyword}||'%'
+            </if>
+            <if test="condition == 'regdate'">
+               <!-- 검색조건이 regdate라면 -->
+               AND regdate LIKE '%'||#{keyword}||'%' 
+            </if>
+            <if test="condition == 'status'">
+               <!-- 검색조건이 status라면 -->
+               AND status LIKE '%'||#{keyword}||'%' 
+            </if>
+         </if>
+      </sql>
+      
+      
+      <select id="selectUserinfo" resultType="Userinfo">
+      SELECT 
+         id
+         , pw
+         , name
+         , email
+         , regdate
+         , logdate
+         , status
+         , enabled 
+      FROM userinfo 
+      WHERE 1 = 1
+       <include refid="search" />
+   </select>
+   
+   
+   <!-- 가입일에 따른 유저 정보 검색 -->
+   <!--  
+   <choose>
+      가입일 
+      <when test="optionDate == 1"> 
+      AND regdate BETWEEN #{startDatePicker} AND #{endDatePicker}</when>
+      <when test="shOptionDate == 2">
+      AND a.modDateTime BETWEEN #{shDateStart} AND #{shDateEnd}</when>
+   </choose> -->
+   
+   
+</mapper>
