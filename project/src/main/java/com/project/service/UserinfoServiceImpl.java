@@ -12,7 +12,7 @@ import com.project.dao.UserinfoDAO;
 import com.project.dto.SecurityAuth;
 import com.project.dto.Userinfo;
 import com.project.exception.UserinfoNotFoundException;
-import com.project.utill.Pager;
+import com.project.util.Pager;
 
 import lombok.RequiredArgsConstructor;
 

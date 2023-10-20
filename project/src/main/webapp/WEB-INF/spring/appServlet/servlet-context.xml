@@ -41,6 +41,9 @@
 	<context:component-scan base-package="com.project.util"/>
 	<context:component-scan base-package="com.project.auth" />
 	
+	<!-- 파일 다운로드 기능을 제공하는 클래스를 Spring Bean으로 등록 - @Component 어노테이션을 사용해도 됨! -->
+	<!-- ▶ Spring Bean의 식별자(beanName)을 반드시 요청 처리 메소드의 반환값가 같도록 작성 -->
+	<beans:bean class="com.project.util.FileDownload" id="fileDownload" />
 	
 	<!-- global-method-security: Spring Bean으로 등록된 클래스(Controller 클래스)의 요청 처리 메소드에 권한 관련 어노테이션을 제공하기 위한 엘리먼트 -->
 	<!-- ▶ security Namespaces 를 추가하여 spring-security -->	
@@ -48,6 +51,6 @@
 	<!-- ▶ 속성값을 [enabled]로 설정할 경우 @PreAuthorize 어노테이션을 제공 -->
 	<!-- secured-annotations 속성: [disabled] 또는 [enabled] 중 하나를 속성값으로 설정 -->
 	<!-- ▶ 속성값을 [enabled]로 설정할 경우 @Secured 어노테이션을 제공 -->
-	<!-- <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/> -->
+	<security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/>
 	 
 </beans:beans>

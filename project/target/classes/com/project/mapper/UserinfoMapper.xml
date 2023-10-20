@@ -70,6 +70,17 @@
 	</select>
 
 
+     <!-- 아이디 중복검사 -->
+     <select id="idCheck" resultType="int">
+        SELECT count(*) FROM userinfo 
+        WHERE id = #{id}
+     </select>
+     
+          <!-- 이메일 중복검사 -->
+     <select id="emailCheck" resultType="int">
+        SELECT count(*) FROM userinfo 
+        WHERE email = #{email}
+     </select>
   
  
    
@@ -83,6 +94,12 @@
       WHERE id=#{id} and pw = #{pw}
    </select> -->
    
+      <!-- 로그인 시간 변경 -->
+   <update id="updateLogdate"> 
+        UPDATE userinfo
+        SET logdate= Now()
+        WHERE id= #{id}
+   </update>
    
    <!-- 비밀번호 인코딩 후 -->
    <select id="userinfoLogin" resultType="Userinfo">

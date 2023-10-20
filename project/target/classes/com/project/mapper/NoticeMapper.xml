@@ -3,56 +3,62 @@
 <mapper namespace="com.project.mapper.NoticeMapper">
 	
 	<!-- 공지사항 등록 -->
-	<insert id="insertNotice" parameterType="com.project.dto.NoticeDTO">
+	<insert id="insertNotice" parameterType="com.project.dto.Notice">
 		INSERT INTO NOTICE(
 	        notice_idx
-         	, userinfo_id
             , notice_title 
             , notice_content
-            , notice_regDate 
+            , notice_regDate
+            ,  notice_img
             , notice_viewcnt
+            , notice_file
             , notice_status
 	        )
 	    VALUES(
 	        #{noticeIdx} 
-	        , #{userinfoId}
 	        , #{noticeTitle}
 	        , #{noticeContent}
 	        , NOW()
+	        , #{noticeImg}
 	        , 0
+	        , #{noticeFile}
 	        , 1
 	        )
 	</insert>
 	
 	<!-- 공지사항 수정 -->
-	<update id="updateNotice" parameterType="com.project.dto.NoticeDTO">
+	<update id="updateNotice" parameterType="com.project.dto.Notice">
 		UPDATE notice SET
 			notice_title=#{noticeTitle} 
-            , notice_content=#{noticeContent} 
+            , notice_content=#{noticeContent}
+            , notice_img=#{noticeImg} 
+            , notice_file=#{noticeFile} 
+            
         WHERE notice_idx=#{noticeIdx}
 	</update>
 	
 	<!-- 공지사항 삭제 -->
-	<delete id="deleteNotice" parameterType="com.project.dto.NoticeDTO">
+	<delete id="deleteNotice" parameterType="com.project.dto.Notice">
 		DELETE FROM notice
 		WHERE notice_idx=#{noticeIdx}
 	</delete>
 	
 	<!-- 공지사항 상세보기 -->
-	<select id="selectNotice" resultType="com.project.dto.NoticeDTO">
+	<select id="selectNotice" resultType="com.project.dto.Notice">
 		SELECT
          	notice_idx
-         	, userinfo_id
             , notice_title 
             , notice_content
-            , notice_regDate 
+            , date_format(notice_regdate, '%y-%m-%d') as notice_regdate 
+            , notice_img
             , notice_viewcnt
+            , notice_file
          FROM NOTICE 
          WHERE notice_idx=#{noticeIdx}
 	</select>
 	
 	<!-- 공지사항 조회수 업데이트 -->
-	<update id="viewNoticeCount" parameterType="com.project.dto.NoticeDTO">
+	<update id="viewNoticeCount" parameterType="com.project.dto.Notice">
 		UPDATE NOTICE SET
         	notice_viewcnt = notice_viewcnt + 1
         WHERE notice_idx=#{noticeIdx}
@@ -76,17 +82,16 @@
         </choose>
 	</select>
 	
-	<select id="selectNoticeList" resultType="com.project.dto.NoticeDTO">
+	<select id="selectNoticeList" resultType="com.project.dto.Notice">
 		SELECT * FROM (
           SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM
           		 , RN.* FROM (
           
           	SELECT
                   notice_idx
-                  , userinfo_id
                   , notice_title
                   , notice_content
-                  , notice_regDate
+                  , date_format(notice_regdate, '%y-%m-%d') as notice_regdate
                   , notice_viewcnt
            FROM notice
            <!-- 검색어 조건 처리 -->
@@ -101,11 +106,25 @@
 	        </choose>
 	              ORDER BY notice_regDate DESC
           ) RN, (SELECT @ROWNUM := 0) tmp
-      )SUB WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
+      ) SUB WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
       <!-- 페이징 처리 -->
 	</select>
 	
-	
-	
+	<select id="selectPreNumNextNum" resultType="com.project.dto.Notice">
+		SELECT notice_idx
+		FROM notice
+		WHERE notice_idx IN(
+		
+		  	(SELECT notice_idx AS PREVNUM
+		  	FROM notice 
+		  	WHERE notice_idx <![CDATA[<]]> #{noticeIdx}  
+		  	ORDER BY notice_regDate DESC LIMIT 1) 
+		  	
+		  	, (SELECT notice_idx AS NEXTNUM
+		  	   FROM notice 
+		       WHERE notice_idx <![CDATA[>]]> #{noticeIdx}  
+		       ORDER BY notice_regDate ASC LIMIT 1) 
+		)
+	</select>
 	
 </mapper>

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.project.dto.NoticeDTO;
+import com.project.dto.Notice;
 import com.project.security.CustomUserDetails;
 import com.project.service.NoticeService;
 
@@ -27,7 +27,8 @@ public class NoticeController {
 	private final NoticeService noticeService;
 	private final WebApplicationContext context; //파일 업로드
 	
-	// 공지사항 리스트 페이지
+	/* 기존 공지사항 목록 페이지 요청
+	RESTful API 잘 작동하면 지우기
 	@GetMapping("/list")
 	public String noticeList(@RequestParam Map<String, Object> map
 			, Model model
@@ -49,6 +50,13 @@ public class NoticeController {
 			
 		}
 		
+	   return "notice/list";
+	}
+	*/
+	
+	// 공지사항 목록 페이지 요청
+	@GetMapping
+	public String noticeList() {
 	   return "notice/list";
 	}
 	
@@ -85,7 +93,7 @@ public class NoticeController {
 	// 공지사항 등록
 	@PostMapping("/add")
 	public String noticeWrite(Model model
-			, NoticeDTO notice) {
+			, Notice notice) {
 		
 		noticeService.addNotice(notice);
 		
@@ -101,25 +109,15 @@ public class NoticeController {
 		return "redirect:/notice/list";
 	}
 	
-	// diy 수정 페이지 
+	// 공지사항 수정 페이지 
 	@GetMapping("/modify/{noticeIdx}")
-	public String diyModifyPage(@PathVariable("noticeIdx") int noticeIdx
+	public String noticeModify(@PathVariable("noticeIdx") int noticeIdx
 			, Model model) {
 		
 		model.addAttribute("notice", noticeService.getSelectNotice(noticeIdx));
 		
 		return "/notice/modify";
 	}
-	
-	// diy 수정 요청
-	@PostMapping("/update")
-	public String diyModify(NoticeDTO notice) {
-		
-		noticeService.modifyNotice(notice);
-		
-		return "redirect:/notice/list";
-	}
-
 	
 
 }

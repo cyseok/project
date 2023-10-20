@@ -10,7 +10,7 @@
   </head> 
   
 <body>
-	<form class="" action="${pageContext.request.contextPath}/notice/update" method="post" id="modifyForm" enctype="multipart/form-data">            
+	<form class="" action="${pageContext.request.contextPath}/notice/modify" method="post" id="modifyForm" enctype="multipart/form-data">            
 	   <p>공지사항 번호</p>
 	        <input class="text" type="text" name="noticeIdx" value="${notice.noticeIdx }" readonly>
 	  
