@@ -43,6 +43,11 @@ public class UserinfoDAOImpl implements UserinfoDAO {
       return sqlSession.getMapper(UserinfoMapper.class).userinfoLogin(userinfo);
    }
 
+   @Override
+   public int updateLogdate(String id) {
+      return sqlSession.getMapper(UserinfoMapper.class).updateLogdate(id);
+   }
+   
    /* 아이디 찾기 */
    @Override
    public Userinfo findUserByEmail(String email) {

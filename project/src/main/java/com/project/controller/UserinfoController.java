@@ -104,6 +104,7 @@ public class UserinfoController {
          if (pwEncoder.matches(rawPw, encodePw)) {
             lto.setPw("");
             session.setAttribute("userinfo", lto);
+            userinfoservice.updateUserLogindate(lto.getId());
             return "redirect:/";
          } else {
             rttr.addFlashAttribute("result", 0);

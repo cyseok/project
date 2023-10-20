@@ -94,6 +94,12 @@
       WHERE id=#{id} and pw = #{pw}
    </select> -->
    
+      <!-- 로그인 시간 변경 -->
+   <update id="updateLogdate"> 
+        UPDATE userinfo
+        SET logdate= Now()
+        WHERE id= #{id}
+   </update>
    
    <!-- 비밀번호 인코딩 후 -->
    <select id="userinfoLogin" resultType="Userinfo">
