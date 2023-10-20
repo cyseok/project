@@ -18,22 +18,20 @@
                username-parameter="id"
                password-parameter="pw"
                default-target-url="/"
+               authentication-success-handler-ref="customLoginSuccessHandler"
                authentication-failure-handler-ref="customLoginFailureHandler"
       />
       
-      <!-- 
-      authentication-success-handler-ref="customLoginSuccessHandler" -->
      
       <access-denied-handler ref="customAccessDeniedHandler"/>
       
       <logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID"/>
     
-     <!-- <remember-me data-source-ref="dataSource" token-validity-seconds="604800"/> -->
+     <remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
       
       
       <!-- session-management: 로그인 정보가 저장된 세션을 관리하기 위한 엘리먼트 -->
       <session-management>
-    
          <concurrency-control max-sessions="1" expired-url="/sessionError"/>
       </session-management>
    </http>
@@ -48,13 +46,8 @@
             <user name="opq456" password="{noop}123456" authorities="ROLE_ADMIN"/> 
          </user-service>
       </authentication-provider>
-   </authentication-manager> -->
-     
+   </authentication-manager> 
    
-   
-   <!--
-   
-   바꿔줘야 함
    <authentication-manager>
       <authentication-provider>
          <jdbc-user-service
@@ -68,8 +61,9 @@
    
    -->
    
-   <!-- 고쳐야함 -->
-   <!-- user-service-ref 속성: 인증에 필요한 사용자 및 권한 정보(UserDetails 객체)기 저장된 객체를 반환하는 클래스(CustomUserDetailsService)에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
+   <!-- customUserDetailsService 생성해줘야함 -->
+   <!-- user-service-ref 속성: 인증에 필요한 사용자 및 권한 정보(UserDetails 객체)기 저장된 객체를 반환하는 
+   		클래스(CustomUserDetailsService)에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
     <authentication-manager>
       <authentication-provider user-service-ref="customUserDetailsService">
          <password-encoder ref="bcryptPasswordEncoder"/>         
@@ -78,7 +72,6 @@
   
 
    <context:component-scan base-package="com.project.dao" />
-   <context:component-scan base-package="com.project.repository"/>
    <context:component-scan base-package="com.project.security" />
    
    
@@ -86,7 +79,7 @@
    <beans:bean class="com.project.security.CustomAccessDeniedHandler" id="customAccessDeniedHandler" />
    <beans:bean class="com.project.security.CustomLoginSuccessHandler" id="customLoginSuccessHandler" />
    <beans:bean class="com.project.security.CustomLoginFailureHandler" id="customLoginFailureHandler" />
-   <!-- <beans:bean class="xyz.itwill.security.CustomPasswordEncoder" id="customPasswordEncoder" />  -->
+   <beans:bean class="com.project.security.CustomPasswordEncoder" id="customPasswordEncoder" /> 
    
    
    <!-- BCryptPasswordEncoder: 문자열을 암호화 처리하거나 비교 결과를 제공하기 위한 클래스 -->  
