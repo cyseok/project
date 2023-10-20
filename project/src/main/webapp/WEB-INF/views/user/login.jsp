@@ -11,6 +11,66 @@
 .login_warn {
    color: red;
 }
+
+.py-10 {
+   max-width: 400px;
+   margin: 0 auto;
+   padding: 20px;
+   background-color: #f7f7f7;
+   border-radius: 5px;
+}
+
+.logo_wrap {
+   text-align: center;
+   font-size: 24px;
+}
+
+.id_wrap,
+.pw_wrap {
+   margin-bottom: 10px;
+}
+
+.id_input_box,
+.pw_input_box {
+    position:relative ;
+}
+
+.id_input,
+.pw_iput {
+   width: 95%;
+   padding: 10px;
+   border-radius: 5px;
+   border: none;
+   margin-top: 10px;
+}
+
+.login_warn {
+    margin-top :10 px ;
+    color:red ;
+
+}
+
+.join_button ,.login_button {
+   display: block;
+   width: 100%;
+   padding: 12px;
+   background-color: #4CAF50;
+   color: white;
+   text-align: center;
+   border: none;
+   cursor: pointer;
+   margin-top: 15px;
+   margin-bottom : 15px;
+}
+
+.btn_f {
+    font-size :16px ;
+    font-weight:bold ; 
+}
+
+.login_button{
+	background-color:#af4c4c ;
+}
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.js"
    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -50,18 +110,15 @@
                      <div class="login_warn">사용자 ID 또는 비밀번호를 잘못 입력하셨습니다.</div>
                   </c:if>
 
-                  <div class="login_con">
-                   <a href="${pageContext.request.contextPath}/user/join">회원가입</a>
-                  </div>
-
                   <div class="login_button_wrap">
                      <input type="button" class="login_button btn_f" value="로그인">
-
-                 
                   </div>
                </div>
                 <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
             </form>
+            	<div class="login_con">
+   					<button class="join_button btn_f" onclick="location.href='${pageContext.request.contextPath}/user/join'">회원가입</button>
+				</div>
 
 
          </div>

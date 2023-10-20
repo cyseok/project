@@ -39,18 +39,17 @@
          border-radius: 5px;
          border: none;
       	margin-top :10 px;
-
       }
 
     	.join_button {
     	  display:block ;
     	  width :100% ;
-    	  height : 30px;
+    	  height : 35px;
     	  padding :12 px ;
     	  background-color:#4CAF50 ;
     	  color:white ;
     	  text-align:center ;
-    	  font-size :25 px ; 
+    	  font-size:18px;
         border:none ; 
         cursor:pointer ; 
         margin-top :15 px; 
