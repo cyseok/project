@@ -9,9 +9,11 @@ import com.project.exception.LoginAuthFailException;
 import com.project.exception.UserinfoNotFoundException;
 
 public interface UserinfoService {
+	
 	/*회원가입*/
 	void registerUser(Userinfo userinfo, String userinfoRole) throws ExistsUserinfoException;//회원정보삽입(회원가입)
-
+	int idCheck(String id) throws Exception;//아이디 중복 검사
+	int emailCheck(String email) throws Exception;//아이디 중복 검사
 
 
 	/*로그인*/

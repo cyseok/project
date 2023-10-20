@@ -57,14 +57,7 @@
                   <div class="login_button_wrap">
                      <input type="button" class="login_button btn_f" value="로그인">
 
-                    
-                     
-                     <!--<a class="p-2">
-                       <img alt="카카오로그인" src="${pageContext.request.contextPath}/assets/img/kakaoBtn.png"
-                             onclick="location.href='<c:url value="/kakao/login"/>';">
-                       <img alt="네이버로그인" src="<c:url value="/assets/img/naverBtn.png"/>" width="200"
-                           onclick="location.href='<c:url value="/naver/login"/>';">
-                     </a>  -->
+                 
                   </div>
                </div>
                 <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">

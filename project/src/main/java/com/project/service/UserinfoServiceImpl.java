@@ -50,7 +50,19 @@ public class UserinfoServiceImpl implements UserinfoService {
 		return userinfoDAO.findUserByEmail(email);
 	}
 
+	// 아이디 중복 검사
+	@Override
+	public int idCheck(String id) throws Exception {
+		return userinfoDAO.idCheck(id);
+	}
 
+	// 이메일 중복 검사
+	@Override
+	public int emailCheck(String email) throws Exception {
+		return userinfoDAO.emailCheck(email);
+	}
+
+	
 	/* 마이페이지 */
 
 	

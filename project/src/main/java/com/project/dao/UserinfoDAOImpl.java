@@ -24,6 +24,17 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    public int insertUserinfo(Userinfo userinfo) {
       return sqlSession.getMapper(UserinfoMapper.class).insertUserinfo(userinfo);
    }
+   
+   // 아이디 중복검사
+   @Override
+   public int idCheck(String id) {
+      return sqlSession.getMapper(UserinfoMapper.class).idCheck(id);
+   }
+   // 이메일 중복 검사
+   @Override
+   public int emailCheck(String email) {
+      return sqlSession.getMapper(UserinfoMapper.class).emailCheck(email);
+   }
 
    /* 로그인 */
 

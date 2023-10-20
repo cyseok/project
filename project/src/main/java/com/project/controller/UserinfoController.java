@@ -49,13 +49,27 @@ public class UserinfoController {
 
    // 회원가입
    @RequestMapping(value = "/join", method = RequestMethod.POST)
-   public String joinPOST(@ModelAttribute("Userinfo") Userinfo userinfo,
+   public String joinPOST(@Valid @ModelAttribute("Userinfo") Userinfo userinfo,
          @RequestParam("userinfoRole") String userinfoRole) throws Exception {
 
       userinfoservice.registerUser(userinfo, userinfoRole); // 회원가입 서비스 호출
       return "redirect:/user/login"; // 로그인 페이지로 리다이렉트
    }
+   
+   @RequestMapping(value = "/memberDuplicateCheck", method = RequestMethod.POST)
+   @ResponseBody
+   public String memberDuplicateCheck(@RequestParam String id, @RequestParam String email) throws Exception {
+       int idResult = userinfoservice.idCheck(id);
+       int emailResult = userinfoservice.emailCheck(email);
 
+       if (idResult != 0) {
+           return "failId"; // 중복된 아이디가 존재
+       } else if (emailResult != 0) {
+           return "failEmail"; // 중복된 이메일이 존재
+       } else {
+           return "success"; // 중복 없음
+       }
+   }
 
    /* 로그인 */
 
