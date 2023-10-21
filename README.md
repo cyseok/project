@@ -5,6 +5,8 @@
 ## 적용 사항들
 * Spring Security
 * RESTful API
+* 소셜 로그인 (kakao, naver, google)
+
 
 ***
 
