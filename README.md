@@ -1,9 +1,8 @@
 # 📌 (프로젝트 내용 적기) project
 
+***
 
 ## 적용 사항들
-
-
 * Spring Security
 * RESTful API
 
