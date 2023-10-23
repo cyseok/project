@@ -26,13 +26,13 @@
  			<img id="preview" style="width:30%; height: 30%;">
  		</div>
 	    <label for="noticeImg">사진 올리기
- 			<input type="file" class="" id="noticeImg" name="noticeImgFile" onchange="readURL(this);">
+ 			<input type="file" class="" id="noticeImg" name="noticeImgUpload" onchange="readURL(this);">
  		</label>
 	  </div>
 	  
 	  <div class="">
 	    <label>파일 첨부</label>
-	    <input type="file" id="noticeFile" name="noticeFileUpload">
+	      <input type="file" id="noticeFile" name="noticeFileUpload" >
 	    <div class=""></div>
 	  </div>
 	  <br>
@@ -53,15 +53,16 @@ $(document).ajaxSend(function(e, xhr){
 	xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
 });
 
-// 수정
+// 등록
 $("form").submit(function(e) {
     e.preventDefault(); // Prevent the default form submission
 
     var formData = new FormData();
-    formData.append("noticeTitle", $("[name='noticeTitle']").val());
-    formData.append("noticeContent", $("[name='noticeContent']").val());
-    formData.append("noticeImgFile", $("[name='noticeImgFile']")[0].files[0]);
-    formData.append("noticeFileUpload", $("[name='noticeFileUpload']")[0].files[0]);
+    formData.append("noticeTitle", $("#noticeTitle").val());
+    formData.append("noticeContent", $("#noticeContent").val());
+    formData.append("noticeFileName", $("#noticeFileName").val());
+    formData.append("noticeImgUpload", $("#noticeImg")[0].files[0]);
+    formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
 
     $.ajax({
         type: "POST",
@@ -86,10 +87,10 @@ $(document).ready(function(){
     	var formData = new FormData();
 		// var idx=${sessionScope.idx};
 		
-		formData.append("noticeTitle", $("#noticeTitle").val());
-        formData.append("noticeContent", $("#noticeContent").val());
-        formData.append("noticeImg", $("#noticeImg")[0].files[0]);
-        formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
+	formData.append("noticeTitle", $("#noticeTitle").val());
+    formData.append("noticeContent", $("#noticeContent").val());
+    formData.append("noticeImgUpload", $("#noticeImg")[0].files[0]);
+    formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
         
         
         $.ajax({
@@ -112,64 +113,32 @@ $(document).ready(function(){
     });
 });
     */
-    /*
-// 업로드 이미지 파일 미리보기
-function previewURL(input) {
- 	  if (input.images && input.images[0]) {
- 	    var reader = new FileReader();
- 	    reader.onload = function(e) {
- 	      document.getElementById('preview').src = e.target.result;
- 	    };
- 	    reader.readAsDataURL(input.images[0]);
- 	  } else {
- 	    document.getElementById('preview').src = "";
- 	  }
- 	}
- 	
-$(document).ready(function(){
-    $("#noticeImg").on('change', function() {
-        var input = this;
-        if (input.images && input.images[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $("#preview").attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.images[0]);
-        } else {
-            $("#preview").attr('src', "");
+
+// 이미지 확장자 유효성 검사 & 이미지 미리보기
+function readURL(input) {
+	  if (input.files && input.files[0]) {
+	    var file = input.files[0];
+        var fileName = file.name;
+        var fileExtension = fileName.split('.').pop().toLowerCase();
+        var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        
+       if (allowedExtensions.indexOf(fileExtension) === -1) {
+            alert("선택한 파일은 이미지 파일이 아닙니다. 유효한 이미지 파일을 선택해주세요.");
+            input.value = "";
+            return;
         }
-    });
-    
-});
- 	
- 	*/
- 	function readURL(input) {
- 		  if (input.files && input.files[0]) {
- 		    var reader = new FileReader();
- 		    reader.onload = function(e) {
- 		      document.getElementById('preview').src = e.target.result;
- 		    };
- 		    reader.readAsDataURL(input.files[0]);
- 		  } else {
- 		    document.getElementById('preview').src = "";
- 		  }
- 		}
- 	
- 	
-//확장자가 이미지 파일인지 확인
-function isImageFile(file) {
+	    var reader = new FileReader();
+       
+	    reader.onload = function(e) {
+	      document.getElementById('preview').src = e.target.result;
+	    };
+	    reader.readAsDataURL(input.files[0]);
+	  } else {
+	    document.getElementById('preview').src = "";
+	  }
+	}
 
-    var ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 가져온다. 
 
-    var isImage = $.inArray(ext, ["jpg", "jpeg", "gif", "png"]) !== -1;
-
-    if (!isImage) {
-        console.log("이미지 파일이 아닙니다. 확장자를 다시 확인해주세요.");
-        alert("이미지 파일이 아닙니다. 확장자를 다시 확인해주세요.");
-    }
-
-    return isImage;
-}
     
     
 </script>

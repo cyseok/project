@@ -17,17 +17,26 @@
 		<div class="">
            <div class="view">
               <h3 class="tit">제목 : ${notice.noticeTitle}</h3>
-              <p class="t1">작성자: ${notice.userinfoId}</p>
-              <p class="t1">작성일: ${notice.noticeRegDate }</p>
+              <p class="t1">작성일: ${notice.noticeRegdate }</p>
               <p class="t1">조회수: ${notice.noticeViewcnt }</p>
            </div>
            <hr>
            <div class="view_con" style="white-space:pre;">${notice.noticeContent}</div>
            
+           <c:if test="${not empty notice.noticeImg}">
+             <img src="<c:url value='/resources/upload/${notice.noticeImg}' />" >
+       	   </c:if>
+           <c:if test="${not empty notice.noticeFile}">
+               <!-- 파일 다운로드 링크 -->
+               <p>첨부 파일 다운로드 : 
+                 <a href="<c:url value='/resources/upload/${notice.noticeFile}' />" download="${notice.noticeFile}">${notice.noticeFileName}</a>
+               </p>
+              <hr>
+    	</c:if>
 
            <div class="">
               <div class="">
-              	<button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/list'">목록으로</button>
+              	<button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice'">목록으로</button>
               	<button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/modify/${notice.noticeIdx}'">수정하기</button>
               </div>
 
