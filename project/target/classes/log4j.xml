@@ -31,6 +31,40 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
+	
+	<logger name="jdbc.sqlonly">
+		<level value="info"/>
+	</logger>
+	
+	<!-- jdbc.sqltiming : SQL 명령의 실행시간(ms) 기록 -->
+	<logger name="jdbc.sqltiming">
+		<level value="info"/>
+	</logger>
+	
+	<!-- jdbc.audit : ResultSet 관련 매핑정보를 제외한 모든 JDBC 관련 정보 기록 -->
+	<logger name="jdbc.audit">
+		<level value="info"/>
+	</logger>
+	
+	<!-- jdbc.resultset : ResultSet 관련 매핑정보를 포함한 모든 JDBC 관련 정보 기록 -->
+	<logger name="jdbc.resultset">
+		<level value="info"/>
+	</logger>
+	 
+	 
+	<!-- jdbc.resultsettable : ResultSet 관련 매핑정보를 표(Table)형식으로 기록 -->
+	<logger name="jdbc.resultsettable">
+		<level value="info"/>
+	</logger>
+	
+	<!-- jdbc.connection : Connection 객체 관련 정보 기록 - Open 또는 Close -->
+	<logger name="jdbc.connection">
+		<level value="info"/>
+	</logger>
+	
+	<logger name="com.project.auth">
+      <level value="info" />
+	</logger>
 
 	<!-- Root Logger -->
 	<root>
