@@ -6,9 +6,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,12 +40,58 @@ public class NoticeRestController {
 		return noticeService.getSelectNoticeList(pageNum, pageSize, selectKeyword);
 	}
 	
+	// 공지사항 삭제
+	@DeleteMapping("/{noticeIdx}")
+	public String noticeDelete(@PathVariable("noticeIdx") int noticeIdx) {
+		
+		noticeService.removeNotice(noticeIdx);
+		// 목록페이지로 이동시켜주기 
+		return "success";
+	}
+	
+	// 공지사항 등록 요청
+	// @PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PostMapping
+	public String noticeModisadfy(@ModelAttribute Notice notice
+			, @RequestParam(value="noticeFile", required = false) MultipartFile noticeFileUpload
+			, @RequestParam(value = "noticeImg" ,required = false) MultipartFile noticeImg
+			) throws IllegalStateException, IOException {
+		System.out.println("등록 컨트롤러 실행");
+		// 첨부 파일을 저장하기 위한 서버 디렉토리의 시스템 경로 반환
+		String uploadDirectory = context.getServletContext().getRealPath("/resources/upload"); // 업로드할 디렉토리 경로
+		
+		String uniqueFilename = UUID.randomUUID().toString() + "_" + noticeFileUpload.getOriginalFilename();
+		String filePath = uploadDirectory + File.separator + uniqueFilename;
+		
+		// 파일 저장
+        File addFile = new File(filePath);
+        noticeFileUpload.transferTo(addFile);
+		
+		// 새로 업로드한 파일로 설정
+		notice.setNoticeFile(uniqueFilename);
+		
+		//파일 저장
+		noticeFileUpload.transferTo(new File(filePath));
+		
+		//============================================================
+		// 사진 저장
+		String uploadNoticeImg = UUID.randomUUID().toString()+"-"+noticeImg.getOriginalFilename();
+		notice.setNoticeImg(uploadNoticeImg);
+		
+		// 파일 업로드 처리 - 서버에 넣음
+		noticeImg.transferTo(new File(uploadDirectory, uploadNoticeImg));
+		
+		noticeService.addNotice(notice);
+		
+		return "success";
+	}
+	
 	// 공지사항 수정
 	// ROLE_ADMIN만 공지사항 수정 가능
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PatchMapping("/{noticeIdx}")
 	public String noticeModify(@ModelAttribute Notice notice
-			, @RequestParam(value="noticeFile", required = false) MultipartFile noticeFileUpload
+			, @RequestParam(value="noticeImgFile", required = false) MultipartFile noticeImgFile
 			, @RequestParam(value = "noticeImg" ,required = false) MultipartFile noticeImg 
 			) throws IllegalStateException, IOException {
 		
@@ -51,9 +99,9 @@ public class NoticeRestController {
 		// notice 테이블의  notice_idx로 기존의 정보를 가져옴
 		Notice existingNotice = noticeService.getSelectNotice(notice.getNoticeIdx());
 		
-			if(!noticeFileUpload.isEmpty()) {
+			if(!noticeImgFile.isEmpty()) {
 				   String uploadDirectory = context.getServletContext().getRealPath("/resources/upload"); // 업로드할 디렉토리 경로
-	               String originalFilename = noticeFileUpload.getOriginalFilename();
+	               String originalFilename = noticeImgFile.getOriginalFilename();
 	               String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
 	               //String filePath = uploadDirectory + File.separator + uniqueFilename;
 
@@ -61,7 +109,7 @@ public class NoticeRestController {
 	               notice.setNoticeFile(uniqueFilename);
 	               
 	               // 파일 저장
-	               noticeFileUpload.transferTo(new File(uploadDirectory, uniqueFilename));
+	               noticeImgFile.transferTo(new File(uploadDirectory, uniqueFilename));
 
             } else {
                // 파일이 업로드되지 않았을 때 기존 파일 정보를 그대로 사용
@@ -86,38 +134,6 @@ public class NoticeRestController {
 		
 	}
 	
-	// 공지사항 등록 요청
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PostMapping
-	public String noticeModisadfy(@ModelAttribute Notice notice
-			, @RequestParam(value="noticeFile", required = false) MultipartFile noticeFileUpload
-			, @RequestParam(value = "noticeImg" ,required = false) MultipartFile noticeImg
-			) throws IllegalStateException, IOException {
-		
-		// 첨부 파일을 저장하기 위한 서버 디렉토리의 시스템 경로 반환
-		String uploadDirectory = context.getServletContext().getRealPath("/resources/upload"); // 업로드할 디렉토리 경로
-        String originalFilename = noticeFileUpload.getOriginalFilename();
-        String uniqueFilename = UUID.randomUUID().toString() + "_" + originalFilename;
-        //String filePath = uploadDirectory + File.separator + uniqueFilename;
-
-        // 새로 업로드한 파일로 설정
-        notice.setNoticeFile(uniqueFilename);
-        
-        // 파일 저장
-        noticeFileUpload.transferTo(new File(uploadDirectory, uniqueFilename));
-		
-		//============================================================
-		// 사진 저장
-		String uploadNoticeImg = UUID.randomUUID().toString()+"-"+noticeImg.getOriginalFilename();
-		notice.setNoticeImg(uploadNoticeImg);
-		
-		// 파일 업로드 처리 - 서버에 넣음
-		noticeImg.transferTo(new File(uploadDirectory, uploadNoticeImg));
-		
-		noticeService.modifyNotice(notice);
-		
-		return "success";
-	}
 
 	
 

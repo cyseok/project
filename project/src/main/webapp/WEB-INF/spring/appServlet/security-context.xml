@@ -10,6 +10,7 @@
 
    <http auto-config="true" use-expressions="true">
       <intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+      <intercept-url pattern="/user/**" access="hasRole('ROLE_USER')" />
       <intercept-url pattern="/**" access="permitAll" /> 
  
       <!-- authentication-success-handler-ref 속성: AuthenticationSuccessHandler 인터페이스를 상속받은 클래스에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
@@ -73,13 +74,14 @@
 
    <context:component-scan base-package="com.project.dao" />
    <context:component-scan base-package="com.project.security" />
+   <context:component-scan base-package="com.project.repository" />
    
    
    <!-- Spring Security 관련 클래스를 Spring Bean으로 등록 -->
    <beans:bean class="com.project.security.CustomAccessDeniedHandler" id="customAccessDeniedHandler" />
    <beans:bean class="com.project.security.CustomLoginSuccessHandler" id="customLoginSuccessHandler" />
    <beans:bean class="com.project.security.CustomLoginFailureHandler" id="customLoginFailureHandler" />
-   <beans:bean class="com.project.security.CustomPasswordEncoder" id="customPasswordEncoder" /> 
+  <!--  <beans:bean class="com.project.security.CustomPasswordEncoder" id="customPasswordEncoder" />  -->
    
    
    <!-- BCryptPasswordEncoder: 문자열을 암호화 처리하거나 비교 결과를 제공하기 위한 클래스 -->  

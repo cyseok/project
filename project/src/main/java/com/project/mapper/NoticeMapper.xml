@@ -4,12 +4,13 @@
 	
 	<!-- 공지사항 등록 -->
 	<insert id="insertNotice" parameterType="com.project.dto.Notice">
-		INSERT INTO NOTICE(
+		INSERT INTO 
+			notice(
 	        notice_idx
             , notice_title 
             , notice_content
             , notice_regDate
-            ,  notice_img
+            , notice_img
             , notice_viewcnt
             , notice_file
             , notice_status
@@ -53,7 +54,8 @@
             , notice_img
             , notice_viewcnt
             , notice_file
-         FROM NOTICE 
+         FROM 
+         	notice 
          WHERE notice_idx=#{noticeIdx}
 	</select>
 	

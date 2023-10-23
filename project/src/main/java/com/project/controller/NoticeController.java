@@ -61,7 +61,7 @@ public class NoticeController {
 	}
 	
 	// 공지사항 상세보기
-	@GetMapping("/detail/{noticeIdx}")
+	@GetMapping("/{noticeIdx}")
 	public String noticeDetail(@PathVariable("noticeIdx") int noticeIdx
 			, Model model) {
 		// 상세보기 클릭 시 조회수 1 증가
@@ -90,25 +90,6 @@ public class NoticeController {
 		return "notice/write";
 	}
 	
-	// 공지사항 등록
-	@PostMapping("/add")
-	public String noticeWrite(Model model
-			, Notice notice) {
-		
-		noticeService.addNotice(notice);
-		
-		return "redirect:/notice/list";
-	}
-	
-	// 공지사항 삭제 
-	@GetMapping("/remove/{noticeIdx}")
-	public String noticeDelete(@PathVariable("noticeIdx") int noticeIdx) {
-		
-		noticeService.removeNotice(noticeIdx);
-		
-		return "redirect:/notice/list";
-	}
-	
 	// 공지사항 수정 페이지 
 	@GetMapping("/modify/{noticeIdx}")
 	public String noticeModify(@PathVariable("noticeIdx") int noticeIdx
@@ -118,6 +99,26 @@ public class NoticeController {
 		
 		return "/notice/modify";
 	}
+	
+//	// 공지사항 등록
+//	@PostMapping("/add")
+//	public String noticeWrite(Model model
+//			, Notice notice) {
+//		
+//		noticeService.addNotice(notice);
+//		
+//		return "redirect:/notice/list";
+//	}
+	
+//	// 공지사항 삭제 
+//	@GetMapping("/remove/{noticeIdx}")
+//	public String noticeDelete(@PathVariable("noticeIdx") int noticeIdx) {
+//		
+//		noticeService.removeNotice(noticeIdx);
+//		
+//		return "redirect:/notice/list";
+//	}
+	
 	
 
 }

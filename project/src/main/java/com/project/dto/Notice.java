@@ -25,7 +25,7 @@ public class Notice {
     private String noticeImg;  // 썸네일 or 사진
 	private int noticeViewcnt;  // 조회수 
 	private String noticeFile;  // 첨부파일 저장
-	private MultipartFile noticeFileUpload;  // 첨부파일 다운로드
+	private MultipartFile noticeFileUpload;  // 첨부파일 업로드
 	private int noticeStatus; // 상태등록(1:진행중, 2:종료 or 삭제...)
 	private int prevNum; // 이전글의 글 번호 저장 
 	private int nextNum; // 다음글의 글 번호 저장

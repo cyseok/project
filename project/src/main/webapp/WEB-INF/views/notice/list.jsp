@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- 'ROLE_ADMIN'만 공지사항 등록 -->
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
@@ -93,13 +95,15 @@
     <div id="searchDiv"></div>
 
 	<!-- 게시글 목록 출력 -->
-    <div id="infoListDiv"></div>
+    <div id="noticeListInfo"></div>
     
     <sec:authorize access="hasRole('ROLE_ADMIN')">
     <button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/write'">
     글쓰기
     </button>
     </sec:authorize>
+    
+    <input type="hidden" name="_csrf" value="${_csrf.token}">
     
     <!-- 페이지 번호 출력 -->
     <div id="pageNumDiv"></div>
@@ -118,7 +122,6 @@ $(document).ajaxSend(function(e, xhr){
 var page = 1; // 기본 페이지 번호 설정
 var size = 10; // 기본 페이지 크기 설정
 var keyword = ''; // 기본 검색어 = NULL String
-var infoType = ''; // 기본 검색 타입 나중에 추가해주기 => NULL String(notice, qa 등등)
 
 //공지 사항 목록 출력 함수
 function noticeListDisplay(pageNum, pageSize, selectKeyword) {
@@ -135,7 +138,8 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
         data: {"pageNum": pageNum, "pageSize": pageSize, "selectKeyword": selectKeyword},
         dataType: "json",
         success: function(result) {
-            $("#infoListDiv").empty();
+        	
+            $("#noticeListInfo").empty();
             
             var table = $("<table>").attr("id", "noticeInfoTable");
             var thead = $("<thead>").append(
@@ -157,9 +161,9 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
             } 
             for (var i = 0; i < result.noticeList.length; i++) {
                 var noticeList = result.noticeList[i];
-                var row = "<tr data-idx='" + noticeList.noticeidx + "'>" +
-                    "<td>" + noticeList.noticeidx + "</td>" +
-                    "<td><a href=\"<c:url value='/notice/detail/{noticeIdx}' />?idx=" + noticeList.noticeidx + "\">" + 
+                var row = "<tr data-idx='" + noticeList.noticeIdx + "'>" +
+                    "<td>" + noticeList.noticeIdx + "</td>" +
+                    "<td><a href=\"<c:url value='/notice'/>/" + noticeList.noticeIdx + "\">" + 
                     noticeList.noticeTitle + "</a></td>" +
                     "<td>" + noticeList.noticeRegdate + "</td>" +
                     "<td>" + noticeList.noticeViewcnt + "</td>" +
@@ -170,7 +174,7 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 
             table.append(thead, tbody);
             
-            $("#infoListDiv").append(table);
+            $("#noticeListInfo").append(table);
             
             var searchDiv = $("#searchDiv");
            
@@ -179,14 +183,18 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 
          searchDiv.append(
              "<button id='searchButton' class='' style='float:right; margin-right:150px; height:48px;'>검색</button>"+
+             "<button id='resetButton' class='' style='float:right; margin-right:150px; height:48px;'>초기화</button>"+
+             "<button id='addButton' class='' style='float:right; margin-right:150px; height:48px;'>작성하기</button>"+
             "<input type='text' class='' id='selectKeyword' placeholder='제목, 내용으로 검색해보세요!' style='width:250px; height:4px; float:right; margin-right:10px;'>"
-            )
+            );
           
             // 페이지 번호 출력
-            pageNumDisplay(result.pager, infoType);
+            pageNumDisplay(result.pager);
             
             // 페이지 당 출력 갯수를 출력
            pageSizeDisplay();
+            
+           // window.location.href = "${pageContext.request.contextPath}/notice/list";
             
         },
         
@@ -198,24 +206,24 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 
 
 //페이지 번호를 출력하는 함수
-function pageNumDisplay(pager, infoType) {
+function pageNumDisplay(pager) {
     var html = "";
     if (pager.startPage > pager.blockSize) {
-        html += "<a href=\"javascript:" + infoType + "ListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class=''/></a>";
+        html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class=''/></a>";
     } else {
         html += "<a class='' disabled ><i class=''/></a>";
     }
 
     for (var i = pager.startPage; i <= pager.endPage; i++) {
         if (pager.pageNum != i) {
-            html += "<a class='' href=\"javascript:" + infoType + "ListDisplay(" + i + ", " + size + ", '" + keyword + "');\">" + i + "</a>";
+            html += "<a class='' href=\"javascript:noticeListDisplay(" + i + ", " + size + ", '" + keyword + "');\">" + i + "</a>";
         } else {
             html += "<a class='' disabled>" + i + "</a>";
         }
     }
 
     if (pager.endPage != pager.totalPage) {
-        html += "<a href=\"javascript:" + infoType + "ListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class=''/></a>";
+        html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class=''/></a>";
     } else {
         html += "<a class='' disabled><i class=''/></a>";
     }
@@ -248,12 +256,12 @@ function pageSizeDisplay() {
 function noticeDetail(noticeidx) {
     $.ajax({
         method: "GET",
-        url: "<c:url value='/notice/detail'/>?noticeidx=" + noticeidx,
+        url: "<c:url value='/notice'/>/" + noticeidx,
         data: {"noticeidx": noticeidx},
         dataType: "html",
         success: function(html) {
             var noticeDetailDiv = $("<div>").html(html); // HTML을 DOM 요소로 변환
-            $("#infoListDiv").empty().append(noticeDetailDiv); // 기존 내용 지우고 새로운 내용 삽입
+            $("#noticeListInfo").empty().append(noticeDetailDiv); // 기존 내용 지우고 새로운 내용 삽입
         },
         error: function(xhr) {
             alert("공지 사항 상세보기를 불러오는 중에 오류가 발생했습니다. 에러 코드 = (" + xhr.status + ")");
@@ -264,11 +272,8 @@ function noticeDetail(noticeidx) {
 //검색하는 함수
 function performSearch() {
     var selectKeyword = $("#selectKeyword").val();
-      if (infoType == "question") {
-        questionListDisplay(1, size, selectKeyword);
-    } else if (infoType == "notice") {
+      
         noticeListDisplay(1, size, selectKeyword);
-    }
 }
 
 $(document).ready(function() { // JSP가 렌더링되자마자,
@@ -276,11 +281,10 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
       page = 1;
       size = 10;
       keyword ='';   
-      infoType = "notice";
       noticeListDisplay(page, size, keyword);
 
       $("#pageSizeSelect").change(function() {
-    	  var functionName = infoType + "ListDisplay";
+    	  var functionName =  "noticeListDisplay";
     	  
           var selectedPageSize = parseInt($(this).val());
           window[functionName](page, selectedPageSize, keyword);
@@ -293,7 +297,6 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
 	      page = 1;
 	      size = 10;
 	      keyword ='';
-	      infoType = "notice";
 	       noticeListDisplay(page, size, keyword);
 	       
 	       $("#pageSizeSelect").val(size);
@@ -302,6 +305,16 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
 	   // 검색 버튼 클릭 시
 	   $("#searchDiv").on("click", "#searchButton", function() {
 	        performSearch();
+	    });
+	   
+	   // 초기화 버튼
+	   $("#searchDiv").on("click", "#resetButton", function() {
+		   noticeListDisplay();
+	    });
+	   
+	   // 작성 버튼
+	   $("#searchDiv").on("click", "#addButton", function() {
+		   window.location.href = "${pageContext.request.contextPath}/notice/write";
 	    });
 	
 	    // Enter 키를 눌렀을 때 검색 버튼 클릭과 동일한 기능 실행
@@ -312,9 +325,9 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
 	    });
 	    
 	 // 공지사항 tr 태그 클릭 시 상세 정보 보기로 이동
-	    $("#infoListDiv").on("click", "#noticeInfoTable tbody tr", function() {
+	    $("#noticeListInfo").on("click", "#noticeInfoTable tbody tr", function() {
 	        var idx = $(this).data("idx");
-	        window.location.href = "<c:url value='/notice/detail' />?noticeidx=" + noticeidx;
+	        window.location.href = "<c:url value='/notice'/>" + noticeidx;
 	    });
 
 
