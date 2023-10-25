@@ -18,6 +18,7 @@ notice_status	char(1)	        YES		        1
 @Data
 public class Notice {
 	
+	private int rownum;  // pk
 	private int noticeIdx;  // pk
 	private String noticeTitle;  // 제목 
 	private String noticeContent;  // 내용 

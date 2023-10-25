@@ -88,14 +88,47 @@
 </head>  
   
 <body>
+	<div>
+		<span>전체 게시글 수 : <b><span id="totalBoard"></span></b>개</span>
+	</div>
 	<!-- 게시글 수를 출력 -->
     <select id="pageSizeSelect"></select>
     
     <!-- 검색 창 출력 -->
     <div id="searchDiv"></div>
+  <form action="<c:url value="/notice"/>" method="GET" class="">
+	<div style="text-align:right;">
+  	  <button class="" name="type" value="recently" type="submit" style="padding: 9px 20px; margin-top: -18px;">
+        최신순
+      </button>
+      <button class="" name="type" value="count" type="submit" style="padding: 9px 20px; margin-top: -18px;" >
+        조회순
+      </button>
+    </div>
+   </form>
 
 	<!-- 게시글 목록 출력 -->
-    <div id="noticeListInfo"></div>
+    <div id="noticeListInfo">
+		<table border="1">
+			<colgroup>
+				<col width="10%" />
+				<col width="25%" />
+				<col width="15%" />
+				<col width="20%" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th>글번호</th>
+					<th>제목</th>
+					<th>작성일!</th>
+					<th>조회수</th>
+				</tr>
+			</thead>
+			
+			<tbody id="tbody" style="text-align:center;">
+			</tbody>
+		</table>
+	</div>
     
     <sec:authorize access="hasRole('ROLE_ADMIN')">
     <button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/write'">
@@ -109,7 +142,7 @@
     <div id="pageNumDiv"></div>
     
 <script type="text/javascript">
-//CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
+//CSRF 토큰 관련 정보 저장
 var csrfHeaderName = "${_csrf.headerName}";
 var csrfTokenValue = "${_csrf.token}";
 
@@ -119,15 +152,62 @@ $(document).ajaxSend(function(e, xhr){
 	xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
 });
 
+$(document).ready(function() { // JSP가 렌더링되자마자,
+	
+    $("#pageSizeSelect").hide(); 
+    page = 1;
+    size = 10;
+    keyword ='';   
+    noticeListDisplay(page, size, keyword);
+
+    $("#pageSizeSelect").change(function() {
+  	  var functionName =  "noticeListDisplay";
+  	  
+        var selectedPageSize = parseInt($(this).val());
+        window[functionName](page, selectedPageSize, keyword);
+   });
+    
+ 
+	   // 공지 사항 버튼 클릭 시
+	   $("#notice-info").click(function() {
+		   $("#pageSizeSelect").show();
+		   $("#pageNumDiv").show();
+		   $("#searchDiv").show();
+	      page = 1;
+	      size = 10;
+	      keyword ='';
+	       noticeListDisplay(page, size, keyword);
+	       
+	       $("#pageSizeSelect").val(size);
+	    });
+	
+	   // 검색 버튼 클릭 시
+	   $("#searchDiv").on("click", "#searchButton", function() {
+	        performSearch();
+	    });
+	   
+	   // 초기화 버튼
+	   $("#searchDiv").on("click", "#resetButton", function() {
+		   noticeListDisplay();
+	    });
+	   
+	   // 작성 버튼
+	   $("#searchDiv").on("click", "#addButton", function() {
+		   window.location.href = "${pageContext.request.contextPath}/notice/write";
+	    });
+
+	});
+
 var page = 1; // 기본 페이지 번호 설정
 var size = 10; // 기본 페이지 크기 설정
-var keyword = ''; // 기본 검색어 = NULL String
+var keyword = ''; // 기본 검색어 = NULL
 
-//공지 사항 목록 출력 함수
+//공지 사항 목록 출력
 function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 	$("#pageSizeSelect").show();
 	$("#pageNumDiv").show();
 	$("#searchDiv").show();
+	
    page=pageNum;
    size=pageSize;
    keyword=selectKeyword;
@@ -139,79 +219,56 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
         dataType: "json",
         success: function(result) {
         	
-            $("#noticeListInfo").empty();
+        	var totalBoard = result.pager.totalBoard;
+			
+        	$("#totalBoard").html(totalBoard);
+            $("#tbody").empty();
             
-            var table = $("<table>").attr("id", "noticeInfoTable");
-            var thead = $("<thead>").append(
-                "<tr>" +
-                "<th>번호</th>" +
-                "<th>제목</th>" +
-                "<th>작성일</th>" +
-                "<th>조회수</th>" +
-                "</tr>"
-            );
-
-            var tbody = $("<tbody>");
-
-            if (result.noticeList.length == 0) { // 검색된 게시글이 없을 때
-                var row = "<tr>" +
-                    "<td colspan='10'>검색된 공지 사항이 없습니다.</td>" +
-                    "</tr>";
-                tbody.append(row);
-            } 
-            for (var i = 0; i < result.noticeList.length; i++) {
-                var noticeList = result.noticeList[i];
-                var row = "<tr data-idx='" + noticeList.noticeIdx + "'>" +
-                    "<td>" + noticeList.noticeIdx + "</td>" +
-                    "<td><a href=\"<c:url value='/notice'/>/" + noticeList.noticeIdx + "\">" + 
-                    noticeList.noticeTitle + "</a></td>" +
-                    "<td>" + noticeList.noticeRegdate + "</td>" +
-                    "<td>" + noticeList.noticeViewcnt + "</td>" +
-                    "</tr>";
-                tbody.append(row);
+            if (result.noticeList.length == 0) { 
+            	("#tbody").append("<tr><td colspan='4'>등록된 공지 사항이 없습니다.</td></tr>");
+            } else {
+            
+	            for (var i = 0; i < result.noticeList.length; i++) {
+	                var noticeList = result.noticeList[i];
+	                var row = "<tr data-idx='" + noticeList.noticeIdx + "'>" +
+	                   		  "<td>" + noticeList.noticeIdx + "</td>" +
+	                   		  "<td><a href=\"<c:url value='/notice'/>/" + noticeList.noticeIdx + "\">" + noticeList.noticeTitle + "</a></td>" +
+	                   		  "<td>" + noticeList.noticeRegdate + "</td>" +
+	                   		  "<td>" + noticeList.noticeViewcnt + "</td>" +
+	                   		  "</tr>";
+	                $("#tbody").append(row);
+	            }
             }
-
-
-            table.append(thead, tbody);
-            
-            $("#noticeListInfo").append(table);
-            
             var searchDiv = $("#searchDiv");
            
             // 기존 테이블 및 내용 삭제
             searchDiv.empty();
 
-         searchDiv.append(
-             "<button id='searchButton' class='' style='float:right; margin-right:150px; height:48px;'>검색</button>"+
-             "<button id='resetButton' class='' style='float:right; margin-right:150px; height:48px;'>초기화</button>"+
-             "<button id='addButton' class='' style='float:right; margin-right:150px; height:48px;'>작성하기</button>"+
-            "<input type='text' class='' id='selectKeyword' placeholder='제목, 내용으로 검색해보세요!' style='width:250px; height:4px; float:right; margin-right:10px;'>"
-            );
+         	searchDiv.append(
+             	"<button id='searchButton' class='' style='float:right; margin-right:150px; height:48px;'>검색</button>"+
+            	"<button id='resetButton' class='' style='float:right; margin-right:150px; height:48px;'>초기화</button>"+
+             	"<button id='addButton' class='' style='float:right; margin-right:150px; height:48px;'>작성하기</button>"+
+             	"<input type='text' class='' id='selectKeyword' placeholder='제목, 내용으로 검색해보세요!' style='width:250px; height:4px; float:right; margin-right:10px;'>"
+            	);
           
             // 페이지 번호 출력
             pageNumDisplay(result.pager);
-            
             // 페이지 당 출력 갯수를 출력
            pageSizeDisplay();
-            
-           // window.location.href = "${pageContext.request.contextPath}/notice/list";
-            
         },
-        
         error: function(xhr) {
             alert("공지 사항 목록을 불러오는 중에 오류가 발생했습니다. (에러 코드 = " + xhr.status + ")");
         }
     });
 }
 
-
-//페이지 번호를 출력하는 함수
+//페이지 번호를 출력
 function pageNumDisplay(pager) {
     var html = "";
     if (pager.startPage > pager.blockSize) {
-        html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class=''/></a>";
+        html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class='fa fa-long-arrow-left'/></a>";
     } else {
-        html += "<a class='' disabled ><i class=''/></a>";
+        html += "<a class='' disabled ><i class='dasasd'><</i></a>";
     }
 
     for (var i = pager.startPage; i <= pager.endPage; i++) {
@@ -223,15 +280,15 @@ function pageNumDisplay(pager) {
     }
 
     if (pager.endPage != pager.totalPage) {
-        html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class=''/></a>";
+        html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class='fa fa-long-arrow-left'/></a>";
     } else {
-        html += "<a class='' disabled><i class=''/></a>";
+        html += "<a class='' disabled><i class='asdasd'>></i></a>";
     }
 
     $("#pageNumDiv").html(html);
 }
 
-// 페이지 당 출력 갯수를 설정하는 함수
+// 페이지 당 출력 갯수를 설정
 function pageSizeDisplay() {
     // 페이지 크기 선택
     var pageSizeSelect = $("#pageSizeSelect");
@@ -269,175 +326,19 @@ function noticeDetail(noticeidx) {
     });
 }
 
-//검색하는 함수
+//검색
 function performSearch() {
     var selectKeyword = $("#selectKeyword").val();
       
         noticeListDisplay(1, size, selectKeyword);
 }
 
-$(document).ready(function() { // JSP가 렌더링되자마자,
-      $("#pageSizeSelect").hide(); 
-      page = 1;
-      size = 10;
-      keyword ='';   
-      noticeListDisplay(page, size, keyword);
-
-      $("#pageSizeSelect").change(function() {
-    	  var functionName =  "noticeListDisplay";
-    	  
-          var selectedPageSize = parseInt($(this).val());
-          window[functionName](page, selectedPageSize, keyword);
-     });
-	   // 공지 사항 버튼 클릭 시
-	   $("#notice-info").click(function() {
-		   $("#pageSizeSelect").show();
-		   $("#pageNumDiv").show();
-		   $("#searchDiv").show();
-	      page = 1;
-	      size = 10;
-	      keyword ='';
-	       noticeListDisplay(page, size, keyword);
-	       
-	       $("#pageSizeSelect").val(size);
-	    });
-	
-	   // 검색 버튼 클릭 시
-	   $("#searchDiv").on("click", "#searchButton", function() {
-	        performSearch();
-	    });
-	   
-	   // 초기화 버튼
-	   $("#searchDiv").on("click", "#resetButton", function() {
-		   noticeListDisplay();
-	    });
-	   
-	   // 작성 버튼
-	   $("#searchDiv").on("click", "#addButton", function() {
-		   window.location.href = "${pageContext.request.contextPath}/notice/write";
-	    });
-	
-	    // Enter 키를 눌렀을 때 검색 버튼 클릭과 동일한 기능 실행
-	    $(document).on("keydown", "#selectKeyword", function(event) {
-	        if (event.key === "Enter") {
-	            performSearch();
-	        }
-	    });
-	    
-	 // 공지사항 tr 태그 클릭 시 상세 정보 보기로 이동
-	    $("#noticeListInfo").on("click", "#noticeInfoTable tbody tr", function() {
-	        var idx = $(this).data("idx");
-	        window.location.href = "<c:url value='/notice'/>" + noticeidx;
-	    });
-
-
+document.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        alert('Enter is pressed!');
+    }
 });
+
 </script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-<!--  기존 테이블 데이터 불러오는 방식  
-		<form action="<c:url value="/notice/"/>" method="get" class="search-area">   
-   			<div class="">
-       			<input type="text" class="" id="" name="selectKeyword" placeholder="제목, 내용 검색어를 입력하세요">
-       			<button type="submit" class="" id="" >
-       			검색
-       			</button>
-   			</div>
-		</form>
-		
-	<table>
-		<colgroup>
-		<col width="10%">
-		<col width="20%">
-		<col width="55%">
-		<col width="10%">
-		<col width="5%">
-		</colgroup>
-		
-		<tr>
-			<td>번호</td>
-			<td>제목</td>
-			<td>내용</td>
-			<td>작성자</td>
-			<td>작성일</td>
-			<td style="white-space: nowrap;">조회수</td>
-		</tr>
-		
-		<c:choose>
-			<c:when test="${empty result.noticeList}">
-			<tr>
-				<td colspan="5">게시글이 없습니다.</td>
-			</tr>	
-			</c:when>
-			<c:otherwise>  
-			                     
-				<c:forEach var="noticeList" items="${result.noticeList }">
-				<tr data-idx="noticeList.noticeIdx">
-					<td>${noticeList.noticeIdx }</td>
-					<td><a href="${pageContext.request.contextPath}/notice/detail/${noticeList.noticeIdx}" >${noticeList.noticeTitle}</a></td>
-					<td>${noticeList.userinfoId }</td>
-					<td>${noticeList.noticeContent }</td>
-					<td>${noticeList.noticeRegDate }</td>
-					<td>${noticeList.noticeViewcnt }</td>
-				</tr>
-				</c:forEach>
-			</c:otherwise>
-		</c:choose>
-	</table>
-	
-    <button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/write'">글쓰기</button>
-	 ======================================================== 
-	<div class="page_t">
-        <%-- 페이지 번호 출력 --%>
-        <c:choose>
-           <c:when test="${result.pager.startPage > result.pager.blockSize }">
-              <a
-                 href="<c:url value="/notice/list"/>?pageNum=${result.pager.prevPage}&keyword=${search.keyword}">
-                 [이전]
-              </a>
-           </c:when>
-           <c:otherwise>
-               [이전]
-           </c:otherwise>
-        </c:choose>
-        <c:forEach var="i" begin="${result.pager.startPage }" end="${result.pager.endPage }" step="1">
-           <c:choose>
-              <c:when test="${result.pager.pageNum != i  }">
-                 <a href="<c:url value="/notice/list"/>?pageNum=${i}&keyword=${search.selectKeyword}"><span class="p_num">${i }</span></a>
-              </c:when>
-              <c:otherwise>
-                 <span class="p_num">${i }</span>
-              </c:otherwise>
-           </c:choose>
-        </c:forEach>
-        <c:choose>
-           <c:when test="${result.pager.endPage != result.pager.totalPage }">
-              <a href="<c:url value="/notice/list"/>?pageNum=${result.pager.nextPage}&keyword=${search.selectKeyword}"><span class="p_next">
-                    [다음]</span>
-              </a>
-           </c:when>
-           <c:otherwise>
-               [다음] 
-        </c:otherwise>
-      </c:choose>
-    </div>
--->
-
 </body>
 </html>

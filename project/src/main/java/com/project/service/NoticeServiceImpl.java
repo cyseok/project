@@ -55,6 +55,7 @@ public class NoticeServiceImpl implements NoticeService{
     	Map<String, Object> pageMap = new HashMap<String, Object>();  // 페이지 정보 담을 맵 객체
 		pageMap.put("startRow", pager.getStartRow());  // 시작 행 번호 추가
 		pageMap.put("endRow", pager.getEndRow());  // 마지막 행 번호 추가
+		pageMap.put("totalBoard", pager.getTotalBoard());  // 전체 글 개수
 		pageMap.put("selectKeyword", selectKeyword);  // 검색 키워드 추가
     	
 		List<Notice> noticeList = noticeDAO.selectNoticeList(pageMap);

@@ -36,7 +36,7 @@
             , notice_content=#{noticeContent}
             , notice_img=#{noticeImg} 
             , notice_file=#{noticeFile}
-            , notice_filename=#{notice_filename}
+            , notice_filename=#{noticeFilename}
             
         WHERE notice_idx=#{noticeIdx}
 	</update>
@@ -58,6 +58,7 @@
             , notice_viewcnt
             , notice_file
             , notice_filename
+            , notice_status
          FROM 
          	notice 
          WHERE notice_idx=#{noticeIdx}
@@ -76,11 +77,12 @@
 		
 		FROM notice
 		
+		
         <!-- 검색어 조건 처리 -->
         <choose>
             <when test="selectKeyword != null and selectKeyword != ''">
-                 WHERE notice_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-                 OR notice_content LIKE CONCAT('%', #{selectKeyword}, '%')
+                 WHERE notice_status=1 and notice_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+                 OR notice_status=1 and notice_content LIKE CONCAT('%', #{selectKeyword}, '%')
             </when>
             <otherwise>
                 WHERE notice_status=1 <!-- 검색어가 없는 경우 status=1 데이터 검색 -->
@@ -89,18 +91,28 @@
 	</select>
 	
 	<select id="selectNoticeList" resultType="com.project.dto.Notice">
-		SELECT * FROM (
+		SELECT 
+			notice_idx
+            , notice_title
+            , notice_content 
+            , date_format(notice_regdate, '%y-%m-%d') as notice_regdate
+            , notice_viewcnt
+            , notice_status 
+            , ROWNUM 
+		FROM (
+		
           SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM
-          		 , RN.* FROM (
+          		 , RN.* 
+          FROM (
           
           	SELECT
                   notice_idx
                   , notice_title
                   , notice_content
-                  , date_format(notice_regdate, '%y-%m-%d') as notice_regdate
+                  , notice_regdate
                   , notice_viewcnt
+                  , notice_status
            FROM notice
-           <!-- 검색어 조건 처리 -->
 	        <choose>
 	            <when test="selectKeyword != null and selectKeyword != ''">
 	                 WHERE (notice_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -108,30 +120,40 @@
 	                 AND notice_status = 1
 	            </when>
 	            <otherwise>
-	                WHERE notice_status=1 <!-- 검색어가 없는 경우 모든 데이터 검색 -->
+	                WHERE notice_status=1 
 	            </otherwise>
 	        </choose>
-	              ORDER BY notice_regDate DESC
+	            <if test='type == "recently"'>
+				ORDER BY notice_regdate DESC
+				</if>
+				<if test='type == "count"'>
+				ORDER BY notice_viewcnt DESC
+				</if>
+				<if test='type == null'>
+				ORDER BY notice_regDate DESC
+				</if>
+	              
           ) RN, (SELECT @ROWNUM := 0) tmp
-      ) SUB WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
-      <!-- 페이징 처리 -->
+      ) SUB 
+      WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
 	</select>
 	
 	<select id="selectPreNumNextNum" resultType="com.project.dto.Notice">
-		SELECT notice_idx
+		SELECT
+		  
+			(SELECT notice_idx 
+		  		FROM notice 
+		  		WHERE notice_status = 1 AND notice_idx <![CDATA[<]]> #{noticeIdx} 
+			  	ORDER BY notice_regDate DESC LIMIT 1) AS prevnum
+			  	
+			  	, (SELECT notice_idx 
+			  	   FROM notice 
+			       WHERE notice_status = 1 AND notice_idx <![CDATA[>]]> #{noticeIdx} 
+			       ORDER BY notice_regDate ASC LIMIT 1) AS nextnum
+		  
 		FROM notice
-		WHERE notice_idx IN(
-		
-		  	(SELECT notice_idx AS PREVNUM
-		  	FROM notice 
-		  	WHERE notice_idx <![CDATA[<]]> #{noticeIdx} AND notice_status = 1 
-		  	ORDER BY notice_regDate DESC LIMIT 1) 
-		  	
-		  	, (SELECT notice_idx AS NEXTNUM
-		  	   FROM notice 
-		       WHERE notice_idx <![CDATA[>]]> #{noticeIdx} AND notice_status = 1
-		       ORDER BY notice_regDate ASC LIMIT 1) 
-		)
+		WHERE notice_status = 1 AND notice_idx = #{noticeIdx} 
+		ORDER BY notice_regDate DESC
 	</select>
 	
 	

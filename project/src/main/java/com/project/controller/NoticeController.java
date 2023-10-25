@@ -60,16 +60,25 @@ public class NoticeController {
 	   return "notice/list";
 	}
 	
+//	// 공지사항 상세보기
+//	@GetMapping("/{noticeIdx}")
+//	public String noticeDetail(@PathVariable("noticeIdx") int noticeIdx
+//			, Model model) {
+//		// 상세보기 클릭 시 조회수 1 증가
+//		noticeService.getViewNoticeCount(noticeIdx);
+//		model.addAttribute("notice", noticeService.getSelectNotice(noticeIdx));
+//	    model.addAttribute("preNumNextNum", noticeService.getSelectPreNumNextNum(noticeIdx));
+//		
+//	   return "notice/detail";
+//	}
 	// 공지사항 상세보기
-	@GetMapping("/{noticeIdx}")
-	public String noticeDetail(@PathVariable("noticeIdx") int noticeIdx
-			, Model model) {
-		// 상세보기 클릭 시 조회수 1 증가
-		noticeService.getViewNoticeCount(noticeIdx);
-		model.addAttribute("notice", noticeService.getSelectNotice(noticeIdx));
-		
-	   return "notice/detail";
-	}
+		@GetMapping("/{noticeIdx}")
+		// @PathVariable("noticeIdx") int noticeIdx
+		public String noticeDetail(@PathVariable("noticeIdx") int noticeIdx) {
+			// 상세보기 클릭 시 조회수 1 증가
+			
+		   return "notice/detail";
+		}
 	
 	// 공지사항 등록 페이지 요청
 	@GetMapping("/write")
