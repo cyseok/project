@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.dto.Notice;
+import com.project.security.CustomUserDetails;
 import com.project.service.NoticeService;
 
 import lombok.RequiredArgsConstructor;
@@ -56,12 +58,10 @@ public class NoticeRestController {
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("notice", noticeService.getSelectNotice(noticeIdx));
-        resultMap.put("preNumNextNum", noticeService.getSelectPreNumNextNum(noticeIdx));
+        resultMap.put("prevNumNextNum", noticeService.getSelectPreNumNextNum(noticeIdx));
         
 		// 상세보기 클릭 시 조회수 1 증가
 		noticeService.getViewNoticeCount(noticeIdx);
-		//noticeService.getSelectNotice(noticeIdx);
-	    //noticeService.getSelectPreNumNextNum(noticeIdx);
 		
 	   return resultMap;
 	}
@@ -69,48 +69,50 @@ public class NoticeRestController {
 	// 공지사항 삭제
 	@DeleteMapping("/{noticeIdx}")
 	public String noticeDelete(@PathVariable("noticeIdx") int noticeIdx) {
-		
 		noticeService.removeNotice(noticeIdx);
-		// 목록페이지로 이동시켜주기 
 		return "success";
 	}
+	
 	// 공지사항 등록 요청
 	// @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	public String noticeAdd(@ModelAttribute Notice notice
 			, @RequestParam("noticeFileUpload") MultipartFile noticeFileUpload
 			, @RequestParam("noticeImgUpload") MultipartFile noticeImgUpload
-			) throws IllegalStateException, IOException {
-		
+			, Authentication authentication) throws IllegalStateException, IOException {
 		// 업로드할 디렉토리 경로 서버 디렉토리의 시스템 경로 반환
 		String uploadDirectory = context.getServletContext().getRealPath("/resources/upload"); 
 		
 		if (noticeFileUpload != null && !noticeFileUpload.isEmpty()) {
-			// 인코딩
-			String fileNameEncoding = new String((noticeFileUpload.getOriginalFilename()).getBytes("8859_1"),"utf-8");
-			String uniqueFilename = UUID.randomUUID().toString() + "_" + fileNameEncoding;
-			//String filePath = uploadDirectory + File.separator + uniqueFilename;
-			//파일 저장
-			noticeFileUpload.transferTo(new File(uploadDirectory, uniqueFilename));
-			
-			// 새로 업로드한 파일로 설정
-			notice.setNoticeFile(uniqueFilename);
-			// 업로드 파일 이름 설정
-			notice.setNoticeFileName(fileNameEncoding);
+			try {
+				// 인코딩
+				// String fileNameEncoding = new String((noticeFileUpload.getOriginalFilename()).getBytes("8859_1"),"utf-8");
+				String uniqueFilename = UUID.randomUUID().toString();
+				//String filePath = uploadDirectory + File.separator + uniqueFilename;
+				//파일 저장
+				noticeFileUpload.transferTo(new File(uploadDirectory, uniqueFilename));
+				// 새로 업로드한 파일로 설정
+				notice.setNoticeFile(uniqueFilename);
+				// 업로드 파일 이름 설정
+				String fileNameEncoding = noticeFileUpload.getOriginalFilename();
+				notice.setNoticeFileName(fileNameEncoding);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} else {
 			notice.setNoticeFile(null);
 	        notice.setNoticeFileName("null");
 		}
-		
-		//============================================================
+		//  사진업로드
 		if (noticeImgUpload != null && !noticeImgUpload.isEmpty()) {
 			// 인코딩
-			String imgNameEncoding = new String(noticeFileUpload.getOriginalFilename().getBytes("UTF-8"), "UTF-8");
+			// String imgNameEncoding = new String(noticeImgUpload.getOriginalFilename().getBytes("UTF-8"), "UTF-8");
 			// 사진 저장
-			String uploadNoticeImg = UUID.randomUUID().toString()+"-"+imgNameEncoding;
-			notice.setNoticeImg(uploadNoticeImg);
+			String uploadNoticeImg = UUID.randomUUID().toString();
 			// 파일 업로드 처리 - 서버에 넣음
 			noticeImgUpload.transferTo(new File(uploadDirectory, uploadNoticeImg));
+			
+			notice.setNoticeImg(uploadNoticeImg);
 		} else {
 			notice.setNoticeImg("null");
 		}
@@ -129,8 +131,6 @@ public class NoticeRestController {
 			, @RequestParam(value = "noticeImgUpload" ,required = false) MultipartFile noticeImgUpload
 			) throws IllegalStateException, IOException {
 		
-		// => 파일 업로드 방법 
-		// notice 테이블의  notice_idx로 기존의 정보를 가져옴
 		Notice existingNotice = noticeService.getSelectNotice(notice.getNoticeIdx());
 		
 			if(!noticeFileUpload.isEmpty()) {
@@ -148,18 +148,14 @@ public class NoticeRestController {
                // 파일이 업로드되지 않았을 때 기존 파일 정보를 그대로 사용
                notice.setNoticeFile(existingNotice.getNoticeFile());
             }
-		
 	    //============================================================
 		// =>︎ 사진 업로드 방법 
 	    // 전달파일(사진)을 저장하기 위한 서버 디렉토리의 시스템 경로 반환
 		String uploadDirectory = context.getServletContext().getRealPath("/resources/upload");
-		
 		String uploadNoticeImg = UUID.randomUUID().toString()+"-"+noticeImgUpload.getOriginalFilename();
 		notice.setNoticeImg(uploadNoticeImg);
-		
 		// 파일 업로드 처리 - 서버에 넣음
 		noticeImgUpload.transferTo(new File(uploadDirectory, uploadNoticeImg));
-		
 	    // 공지사항 수정 
 	    noticeService.modifyNotice(notice);
 		
