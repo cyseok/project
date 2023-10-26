@@ -143,6 +143,40 @@
     
    <!-- 관리자 -->
    
+      <select id="selectUserinfoCount">
+      SELECT COUNT(*) FROM Userinfo
+   </select>
+   
+    <!-- 전체 유저 정보 검색 -->
+   <select id="selectUserinfoOrderById" resultType="Userinfo">
+      SELECT 
+         id
+         , pw
+         , name
+         , email
+         , regdate
+         , logdate
+         , status
+         , enabled 
+      FROM userinfo 
+      ORDER BY id
+   </select>
+   
+<select id="selectUserinfoList" resultType="Userinfo">
+  SELECT 
+    id,
+    pw,
+    name,
+    email,
+    regdate,
+    logdate,
+    status,
+    enabled
+  FROM userinfo
+  ORDER BY id DESC
+  LIMIT #{startRow}, #{endRow}
+</select>
+   
    
    <!-- 조건에 따른 유저 정보 검색 -->
    <sql id="search">

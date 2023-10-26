@@ -151,7 +151,7 @@ $(document).ready(function() {
 	             success: function(response) {
 	               console.log(response);
 	               alert('가입 완료');
-	               window.location.href = '/login';
+	               window.location.href = '/user/login';
 	             },
 	             error: function(xhr, status, error) {
 	               console.error(error);

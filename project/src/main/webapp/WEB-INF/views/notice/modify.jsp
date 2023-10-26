@@ -10,6 +10,7 @@
   </head> 
   
 <body>
+<!--  수정 랜더링되면 URL 값 가져와서 기존 폼에 붙여넣고 수정하는 거해서 ajax 두개 쓰기???  -->
 	<form class="" action="${pageContext.request.contextPath}/notice/modify" method="post" id="modifyForm" enctype="multipart/form-data">            
 	   <p>공지사항 번호</p>
 	        <input class="text" type="text" name="noticeIdx" value="${notice.noticeIdx }" readonly>

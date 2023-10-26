@@ -88,6 +88,7 @@
 </head>  
   
 <body>
+
 	<div>
 		<span>전체 게시글 수 : <b><span id="totalBoard"></span></b>개</span>
 	</div>
@@ -96,6 +97,13 @@
     
     <!-- 검색 창 출력 -->
     <div id="searchDiv"></div>
+    
+    <button id='searchButton' class='' style='float:right; margin-right:150px; height:48px;' onclick="performSearch();">검색</button>
+    <button id='resetButton' class='' style='float:right; margin-right:150px; height:48px;' onclick="noticeListDisplay();">초기화</button>
+    <button id='addButton' class='' style='float:right; margin-right:150px; height:48px;' onclick="addButton();">작성하기</button>
+    <input type='text' class='' id='selectKeyword' placeholder='제목, 내용으로 검색해보세요!' style='width:250px; height:4px; float:right; margin-right:10px;'>
+             	
+  <%-- 
   <form action="<c:url value="/notice"/>" method="GET" class="">
 	<div style="text-align:right;">
   	  <button class="" name="type" value="recently" type="submit" style="padding: 9px 20px; margin-top: -18px;">
@@ -105,7 +113,8 @@
         조회순
       </button>
     </div>
-   </form>
+  </form>
+   --%>
 
 	<!-- 게시글 목록 출력 -->
     <div id="noticeListInfo">
@@ -130,11 +139,11 @@
 		</table>
 	</div>
     
-    <sec:authorize access="hasRole('ROLE_ADMIN')">
+    <%-- <sec:authorize access="hasRole('ROLE_ADMIN')">
     <button type="button" id="" onclick="location.href='${pageContext.request.contextPath}/notice/write'">
     글쓰기
     </button>
-    </sec:authorize>
+    </sec:authorize> --%>
     
     <input type="hidden" name="_csrf" value="${_csrf.token}">
     
@@ -166,37 +175,8 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
         var selectedPageSize = parseInt($(this).val());
         window[functionName](page, selectedPageSize, keyword);
    });
-    
  
-	   // 공지 사항 버튼 클릭 시
-	   $("#notice-info").click(function() {
-		   $("#pageSizeSelect").show();
-		   $("#pageNumDiv").show();
-		   $("#searchDiv").show();
-	      page = 1;
-	      size = 10;
-	      keyword ='';
-	       noticeListDisplay(page, size, keyword);
-	       
-	       $("#pageSizeSelect").val(size);
-	    });
-	
-	   // 검색 버튼 클릭 시
-	   $("#searchDiv").on("click", "#searchButton", function() {
-	        performSearch();
-	    });
-	   
-	   // 초기화 버튼
-	   $("#searchDiv").on("click", "#resetButton", function() {
-		   noticeListDisplay();
-	    });
-	   
-	   // 작성 버튼
-	   $("#searchDiv").on("click", "#addButton", function() {
-		   window.location.href = "${pageContext.request.contextPath}/notice/write";
-	    });
-
-	});
+});
 
 var page = 1; // 기본 페이지 번호 설정
 var size = 10; // 기본 페이지 크기 설정
@@ -206,7 +186,7 @@ var keyword = ''; // 기본 검색어 = NULL
 function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 	$("#pageSizeSelect").show();
 	$("#pageNumDiv").show();
-	$("#searchDiv").show();
+	/* $("#searchDiv").show(); */
 	
    page=pageNum;
    size=pageSize;
@@ -239,17 +219,6 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 	                $("#tbody").append(row);
 	            }
             }
-            var searchDiv = $("#searchDiv");
-           
-            // 기존 테이블 및 내용 삭제
-            searchDiv.empty();
-
-         	searchDiv.append(
-             	"<button id='searchButton' class='' style='float:right; margin-right:150px; height:48px;'>검색</button>"+
-            	"<button id='resetButton' class='' style='float:right; margin-right:150px; height:48px;'>초기화</button>"+
-             	"<button id='addButton' class='' style='float:right; margin-right:150px; height:48px;'>작성하기</button>"+
-             	"<input type='text' class='' id='selectKeyword' placeholder='제목, 내용으로 검색해보세요!' style='width:250px; height:4px; float:right; margin-right:10px;'>"
-            	);
           
             // 페이지 번호 출력
             pageNumDisplay(result.pager);
@@ -326,7 +295,7 @@ function noticeDetail(noticeidx) {
     });
 }
 
-//검색
+// 검색
 function performSearch() {
     var selectKeyword = $("#selectKeyword").val();
       
@@ -338,6 +307,11 @@ document.addEventListener("keyup", function(event) {
         alert('Enter is pressed!');
     }
 });
+
+// 작성 버튼 클릭
+function addButton() {     
+	window.location.href = "${pageContext.request.contextPath}/notice/write";
+}
 
 </script>
 </body>
