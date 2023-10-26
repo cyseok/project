@@ -94,6 +94,28 @@ public class UserinfoServiceImpl implements UserinfoService {
 		}
 		return userinfo;
 	}
+	//회원 리스트 조회 기능
+	@Override
+	public Map<String, Object> getUserinfoList(int pageNum, int pageSize) {
+		int totalBoard = userinfoDAO.selectUserinfoCount();
+		int blockSize = 10;
+		Pager pager = new Pager(pageNum, totalBoard, pageSize, blockSize);
+
+		Map<String, Object> pageMap = new HashMap<String, Object>();
+		pageMap.put("startRow", pager.getStartRow());
+		pageMap.put("endRow", pager.getEndRow());
+
+		List<Userinfo> userinfoList = userinfoDAO.selectUserinfoList(pageMap);
+
+		Map<String, Object> userinfoMap = new HashMap<String, Object>();
+		userinfoMap.put("userinfoList", userinfoList);
+		userinfoMap.put("pager", pager);
+
+		return userinfoMap;
+	}
+	
+	
+	
 
 	/* Auth */
 	@Override

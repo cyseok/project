@@ -30,6 +30,8 @@ public interface UserinfoService {
 
 	/*관리자*/
 	Userinfo getUserinfo(String id) throws UserinfoNotFoundException;//아이디로 전달값을 제공받아 회원정보 받음
+	Map<String, Object> getUserinfoList(int pageNum, int pageSize);//회원목록 출력
+
 
 	
 	/*Auth*/

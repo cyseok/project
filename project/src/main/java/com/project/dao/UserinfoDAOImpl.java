@@ -65,7 +65,17 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    }
    /* 관리자 */
 
+   @Override
+   public int selectUserinfoCount() {
+	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoCount();
+   }
 
+   
+   // 전체 유저 검색
+   @Override
+   public List<Userinfo> selectUserinfoList(Map<String, Object> map) {
+	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoList(map);
+   }
 
    // 아이디로 유저 검색
    @Override

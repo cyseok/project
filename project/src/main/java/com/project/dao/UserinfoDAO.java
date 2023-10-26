@@ -27,7 +27,10 @@ public interface UserinfoDAO {
    Userinfo selectUserinfoById(String id);//아이디로 유저 정보 검색
    
    /*관리자*/
+   int selectUserinfoCount();
    Userinfo selectUserinfo(String id);//조건에 따른 유저 정보 검색
+   List<Userinfo> selectUserinfoList(Map<String, Object> map);//전체 유저 정보 검색
+
 
    
    /*Auth*/
