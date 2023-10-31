@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.PostMapper">
+
+	<select id="selectPostList" resultType="com.project.dto.Post">
+		SELECT 
+			post_idx
+			, post_loc
+			, post_daytype
+			, post_title
+			, post_content
+			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, post_tag
+			, post_viewcnt
+			, post_likes
+			, post_status
+		FROM post
+		  <choose>
+	           <when test="selectKeyword != null and selectKeyword != ''">
+	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND post_status = 1
+	           </when>
+	           <otherwise>
+	               WHERE post_status=1 
+	           </otherwise>
+	      </choose>
+	    ORDER BY post_regdate DESC
+	</select>
+	
+	<!-- 공지사항 상세보기 -->
+	<select id="selectPost" resultType="com.project.dto.Post">
+		SELECT
+         	post_idx
+			, post_loc
+			, post_daytype
+			, post_title
+			, post_content
+			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, post_tag
+			, post_viewcnt
+			, post_likes
+			, post_status
+		FROM post
+        WHERE post_idx=#{postIdx}
+	</select>
+	
+	<select id="selectPreNumNextNum" resultType="com.project.dto.Post">
+		SELECT
+			(SELECT post_idx 
+		  		FROM post 
+		  		WHERE post_status = 1 AND post_idx <![CDATA[<]]> #{postIdx} 
+			  	ORDER BY post_regdate DESC LIMIT 1) AS prevnum
+			  	
+			  	, (SELECT post_idx 
+			  	   FROM post 
+			       WHERE post_status = 1 AND post_idx <![CDATA[>]]> #{postIdx} 
+			       ORDER BY post_regdate ASC LIMIT 1) AS nextnum
+		  
+		FROM post
+		WHERE post_status = 1 AND post_idx = #{noticeIdx} 
+		ORDER BY post_regdate DESC
+	</select>
+</mapper>

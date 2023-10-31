@@ -14,17 +14,16 @@
 	<form enctype="multipart/form-data">
 	  <div class="">
 	    <label for="noticeTitle">제목</label>
-	      <input name="noticeTitle" id="noticeTitle" type="text" class="" placeholder="제목을 입력해주세요" required>
-	      <div class=""></div>
+	      <textarea name="noticeTitle" id="noticeTitle" class="" placeholder="제목을 입력해주세요"></textarea>
 	  </div>
 	    <div class="">
 	      <label for="noticeContent">내용</label>
-	      <textarea name="noticeContent" id="noticeContent" class="form-control" rows="15" placeholder="내용을 입력해주세요" required></textarea>
-	    <div class=""></div>
-	    
+	      <textarea name="noticeContent" id="noticeContent" class="form-control" rows="15" placeholder="내용을 입력해주세요"></textarea>
+	    </div>
  		<div>
  			<img id="preview" style="width:30%; height: 30%;">
  		</div>
+      <div>
 	    <label for="noticeImg">사진 올리기
  			<input type="file" class="" id="noticeImg" name="noticeImgUpload" onchange="readURL(this);">
  		</label>
@@ -33,11 +32,10 @@
 	  <div class="">
 	    <label>파일 첨부</label>
 	      <input type="file" id="noticeFile" name="noticeFileUpload" >
-	    <div class=""></div>
 	  </div>
 	  <br>
 	    <button type="button" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
-	    <button type="submit" id="enrollBtn" class="" >등 록</button>
+	    <button type="submit" class="" >등 록</button>
 	    <div class=""></div>
 	  <sec:csrfInput/>
 	</form>
@@ -55,7 +53,7 @@ $(document).ajaxSend(function(e, xhr){
 
 // 등록
 $("form").submit(function(e) {
-    e.preventDefault(); // Prevent the default form submission
+    e.preventDefault(); // 
 
     var formData = new FormData();
     formData.append("noticeTitle", $("#noticeTitle").val());
@@ -81,38 +79,6 @@ $("form").submit(function(e) {
         }
     });
 });
-    /*
-$(document).ready(function(){
-    $("#enrollBtn").click(function() {
-    	var formData = new FormData();
-		// var idx=${sessionScope.idx};
-		
-	formData.append("noticeTitle", $("#noticeTitle").val());
-    formData.append("noticeContent", $("#noticeContent").val());
-    formData.append("noticeImgUpload", $("#noticeImg")[0].files[0]);
-    formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
-        
-        
-        $.ajax({
-            type: "POST",
-            url: "<c:url value='/notice'/>",
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: "text",
-            success: function(result) {
-                if (result == "success") {
-	                alert("공지 사항을 등록하였습니다.");
-	                window.location.href = "${pageContext.request.contextPath}/notice"
-                    // notice_detail(idx);
-                } else {
-                	alert("글 등록을 실패하였습니다.");
-                }
-            }
-        });
-    });
-});
-    */
 
 // 이미지 확장자 유효성 검사 & 이미지 미리보기
 function readURL(input) {
@@ -137,10 +103,6 @@ function readURL(input) {
 	    document.getElementById('preview').src = "";
 	  }
 	}
-
-
-    
-    
 </script>
 </body>
 </html>
