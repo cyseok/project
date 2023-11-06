@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=true)
 @Data
+
 public class Post extends RepresentationModel<Post> {
 	
 	private int rownum;  // ROWNUM 번호 
@@ -22,6 +23,6 @@ public class Post extends RepresentationModel<Post> {
     private int postStatus; // 1:작성글, 0:삭제글
     private int prevnum; // 이전글 번호 
 	private int nextnum; // 다음글 번호
-	private int conmmentCount;  // 댓글 수
+	private int postComment;  // 댓글 수
     
 }

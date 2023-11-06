@@ -21,13 +21,7 @@ public interface PostService {
    
     // 공지사항 조회수 
     void getPostViewCount(int postIdx);
-   
-    // 전체 게시글 수 조회 (최근순, 추천순, 댓글순)
-    //void getSelectPostCount(String selectKeyword);
-    //void getSelectResentlyPostCount(String selectKeyword);
-    //void getSelectLikesPostCount(String selectKeyword);
-    //void getSelectPostCommentCount(String selectKeyword);
-   
+    
     // 공지사항 목록 조회 (최근순, 추천순, 댓글순)
     List<Post> getSelectPostList(String selectKeyword);
     List<Post> getSelectResentlyPostList(String selectKeyword);

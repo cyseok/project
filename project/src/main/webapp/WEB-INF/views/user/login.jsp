@@ -101,7 +101,7 @@
                   </div>
                   <div class="pw_wrap">
                      <div class="pw_input_box">
-                        <input type="password" class="pw_iput input_f" name="pw"
+                        <input type="password" class="pw_iput input_f" name="pw" id="pwInput"
                            placeholder="비밀번호를 입력하세요.">
                      </div>
                   </div>
@@ -137,6 +137,18 @@
          $("#login_form").attr("action", "login");
          $("#login_form").submit();
 
+      });
+      
+      $("#idInput").keypress(function(){
+  		if(event.keyCode == 13) {
+  			$("#pwInput").focus();
+  		}
+      });
+      
+      $("#pwInput").keypress(function(){
+    		if(event.keyCode == 13) {
+    			$("#login_form").submit();
+    		}
       });
    </script>
 </body>

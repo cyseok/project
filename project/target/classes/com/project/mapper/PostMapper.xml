@@ -2,6 +2,70 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.PostMapper">
 
+	<!-- 게시글 등록 -->
+	<insert id="insertPost" parameterType="com.project.dto.Post">
+		INSERT INTO post(
+	        post_idx
+            , userinfo_id 
+            , post_loc
+            , post_daytype
+            , post_title
+            , post_content
+            , post_regdate
+            , post_tag
+            , post_viewcnt
+            , post_likes
+            , post_comment
+            , post_status
+	        )
+	    VALUES(
+	        #{postIdx} 
+	        , #{userinfoId}
+	        , #{postLoc}
+	        , #{postDayType}
+	        , #{postTitle}
+	        , #{postContent}
+	        , NOW()
+	        , #{postTag}
+	        , 0
+	        , 0
+	        , 0
+	        , 1
+	        )
+	</insert>
+	
+	<!-- 게시글 수정 -->
+	<update id="updatePost" parameterType="com.project.dto.Post">
+		UPDATE post SET
+			post_title=#{postTitle} 
+            , post_content=#{postContent}
+            
+        WHERE post_idx=#{postIdx}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<update id="deletePost" parameterType="com.project.dto.Post">
+		UPDATE post SET
+			post_status=0
+		WHERE post_idx=#{postIdx}
+	</update>
+	
+	<!-- 게시글 개수 -->
+	<select id="selectPostCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM post
+        <!-- 검색어 조건 처리 -->
+        <choose>
+            <when test="selectKeyword != null and selectKeyword != ''">
+                 WHERE post_status=1 and post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+                 OR post_status=1 and post_content LIKE CONCAT('%', #{selectKeyword}, '%')
+            </when>
+            <otherwise>
+                WHERE post_status=1 <!-- 검색어가 없는 경우 status=1 데이터 검색 -->
+            </otherwise>
+        </choose>
+	</select>
+	
 	<select id="selectPostList" resultType="com.project.dto.Post">
 		SELECT 
 			post_idx
@@ -14,6 +78,7 @@
 			, post_viewcnt
 			, post_likes
 			, post_status
+			, post_comment
 		FROM post
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
@@ -26,6 +91,87 @@
 	           </otherwise>
 	      </choose>
 	    ORDER BY post_regdate DESC
+	</select>
+	
+	<select id="selectResentlyPostList" resultType="com.project.dto.Post">
+		SELECT 
+			post_idx
+			, post_loc
+			, post_daytype
+			, post_title
+			, post_content
+			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, post_tag
+			, post_viewcnt
+			, post_likes
+			, post_status
+			, post_comment
+		FROM post
+		  <choose>
+	           <when test="selectKeyword != null and selectKeyword != ''">
+	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND post_status = 1
+	           </when>
+	           <otherwise>
+	               WHERE post_status=1 
+	           </otherwise>
+	      </choose>
+	    ORDER BY post_regdate DESC
+	</select>
+	
+	<select id="selectLikesPostList" resultType="com.project.dto.Post">
+		SELECT 
+			post_idx
+			, post_loc
+			, post_daytype
+			, post_title
+			, post_content
+			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, post_tag
+			, post_viewcnt
+			, post_likes
+			, post_status
+			, post_comment
+		FROM post
+		  <choose>
+	           <when test="selectKeyword != null and selectKeyword != ''">
+	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND post_status = 1
+	           </when>
+	           <otherwise>
+	               WHERE post_status=1 
+	           </otherwise>
+	      </choose>
+	    ORDER BY post_likes DESC
+	</select>
+	
+	<select id="selectPostCommentList" resultType="com.project.dto.Post">
+		SELECT 
+			post_idx
+			, post_loc
+			, post_daytype
+			, post_title
+			, post_content
+			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, post_tag
+			, post_viewcnt
+			, post_likes
+			, post_status
+			, post_comment
+		FROM post
+		  <choose>
+	           <when test="selectKeyword != null and selectKeyword != ''">
+	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND post_status = 1
+	           </when>
+	           <otherwise>
+	               WHERE post_status=1 
+	           </otherwise>
+	      </choose>
+	    ORDER BY post_comment DESC
 	</select>
 	
 	<!-- 공지사항 상세보기 -->
@@ -58,7 +204,7 @@
 			       ORDER BY post_regdate ASC LIMIT 1) AS nextnum
 		  
 		FROM post
-		WHERE post_status = 1 AND post_idx = #{noticeIdx} 
+		WHERE post_status = 1 AND post_idx = #{postIdx} 
 		ORDER BY post_regdate DESC
 	</select>
 </mapper>

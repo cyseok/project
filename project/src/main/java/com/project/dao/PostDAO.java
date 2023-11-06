@@ -21,11 +21,8 @@ public interface PostDAO {
     // 공지사항 조회수 
     int postViewCount(int postIdx);
    
-    // 전체 게시글 수 조회 (최근순, 추천순, 댓글순)
+    // 전체 게시글 수 조회 
     int selectPostCount(String selectKeyword);
-    int selectResentlyPostCount(String selectKeyword);
-    int selectLikesPostCount(String selectKeyword);
-    int selectPostCommentCount(String selectKeyword);
    
     // 공지사항 목록 조회 (최근순, 추천순, 댓글순)
     List<Post> selectPostList(String selectKeyword);

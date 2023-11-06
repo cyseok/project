@@ -36,14 +36,17 @@
             , notice_content=#{noticeContent}
             , notice_img=#{noticeImg} 
             , notice_file=#{noticeFile}
-            , notice_filename=#{noticeFilename}
+            , notice_filename=#{noticeFileName}
             
         WHERE notice_idx=#{noticeIdx}
 	</update>
 	
 	<!-- 공지사항 삭제 -->
 	<delete id="deleteNotice" parameterType="com.project.dto.Notice">
-		DELETE FROM notice
+		<!-- DELETE FROM notice
+		WHERE notice_idx=#{noticeIdx} -->
+		UPDATE notice SET
+			notice_status=1
 		WHERE notice_idx=#{noticeIdx}
 	</delete>
 	
@@ -123,15 +126,7 @@
 	                WHERE notice_status=1 
 	            </otherwise>
 	        </choose>
-	            <if test='type == "recently"'>
-				ORDER BY notice_regdate DESC
-				</if>
-				<if test='type == "count"'>
-				ORDER BY notice_viewcnt DESC
-				</if>
-				<if test='type == null'>
-				ORDER BY notice_regDate DESC
-				</if>
+	            
 	              
           ) RN, (SELECT @ROWNUM := 0) tmp
       ) SUB 
