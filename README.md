@@ -1,47 +1,19 @@
-# 📌 (프로젝트 이름) project
+# 📌 REST API project
+
+## 개요
+
+HTTP Method만 구현되어 있는 REST API에서 HATEOAS 제약조건을 만족 시킨 REST API로 개발한다.
 
 ***
 
 ## 적용 사항
 * Spring Security
-* RESTful API
-* 소셜 로그인 (kakao, naver, google)
-
-
-***
-
-## ✅ 공지사항(Notice) 페이지 
-
-### 1. 기능
-* 검색
-* 페이징
-* 파일 다운로드
-
-
-### 2. 고려사항
-
-
-### 3. 문제점, 해결 과정 등등
+* HATEOAS
+  * ResponseEntity, CollectionModel 클래스를 이용해 구현
 
 
 
-***
 
-## ✅ 질의응답(Qa) 페이지
-
-
-
-### 1. 기능 
-* editor 사용 (목표...)
-* 좋아요
-* 댓글, 대댓글
-
-### 2. ...
-
-
-***
-
-## ✅ ... 페이지
 
 
 
