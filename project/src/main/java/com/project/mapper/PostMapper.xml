@@ -74,6 +74,12 @@
 			, post_title
 			, post_content
 			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, CASE
+       			 WHEN TIMESTAMPDIFF(WEEK, post_regdate, NOW()) <![CDATA[<]]> 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, post_regdate, NOW()), '시간 전')
+      			 WHEN TIMESTAMPDIFF(MONTH, post_regdate, NOW()) <![CDATA[<]]> 1 THEN CONCAT(TIMESTAMPDIFF(DAY, post_regdate, NOW()), '일 전')
+      			 WHEN TIMESTAMPDIFF(YEAR, post_regdate, NOW()) <![CDATA[>]]> 1 THEN CONCAT(TIMESTAMPDIFF(YEAR, post_regdate, NOW()), '년 전')
+        	     ELSE CONCAT(TIMESTAMPDIFF(MONTH, post_regdate, NOW()), '개월 전')
+   				 END as time_ago
 			, post_tag
 			, post_viewcnt
 			, post_likes
