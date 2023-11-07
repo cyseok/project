@@ -105,7 +105,7 @@ public class UserinfoController {
             lto.setPw("");
             session.setAttribute("userinfo", lto);
             userinfoservice.updateUserLogindate(lto.getId());
-            return "redirect:/";
+            return "redirect:/post";
          } else {
             rttr.addFlashAttribute("result", 0);
             return "redirect:/user/login";

@@ -13,8 +13,6 @@
 	
 	<!-- DataSource 관련 클래스를 Spring Bean으로 등록 -->
 	<!-- ▶ Connection 객체를 생성하기 위한 값을 클래스 필드에 저장되도록 값 주입 - Setter Injection -->
-	
-		
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	  <!-- <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" /> --> <!-- MySQL 8.x 이상을 위한 드라이버 클래스 -->
 	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />

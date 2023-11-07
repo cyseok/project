@@ -5,5 +5,10 @@
 		<setting name="callSettersOnNulls" value="true"/>
 		<setting name="jdbcTypeForNull" value="NULL"/>
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- 순환 참조를 막거나 반복된 쿼리의 속도를 높히기 위해 로컬 캐시 사용 -->
+		<setting name="localCacheScope" value="SESSION"/>
+		<!-- 동일한 SQL을 여러번 호출할 떄 쿼리 수를 줄이고 성능 향상 -->
+		<setting name="cacheEnabled" value="true"/>
+		
 	</settings>
 </configuration>
