@@ -10,7 +10,7 @@ public interface UserinfoMapper {
    /*회원가입*/
    int insertUserinfo(Userinfo userinfo);//회원정보삽입(회원가입)
    int idCheck(String id);//아이디 중복검사
-   int emailCheck(String id); // 이메일 중복검
+   int emailCheck(String id); // 이메일 중복검사
 
    
    /*로그인*/

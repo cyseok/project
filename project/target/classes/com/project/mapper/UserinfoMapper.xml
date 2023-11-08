@@ -32,7 +32,7 @@
       INSERT INTO security_auth 
       VALUES (
             #{id}
-            , #{auth}
+          , #{auth}
             )
    </insert>
    
@@ -55,18 +55,18 @@
    
   
     <select id="selectUserinfoById" resultMap="securityUserinfoResultMap">
-		SELECT users.id
-        	 , pw
-         	, name
-         	, email
-         	, regdate
-         	, status  
-         	, enabled
-         	, auth
-    	FROM userinfo users
-    	LEFT JOIN security_auth auth
-    	ON users.id=auth.id
-    	WHERE users.id=#{id}
+		SELECT userinfo.id
+        	 , userinfo.pw
+         	 , userinfo.name
+          	 , userinfo.email
+           	 , userinfo.regdate
+         	 , userinfo.status  
+         	 , userinfo.enabled
+         	 , security_auth.auth
+    	FROM userinfo
+    	LEFT JOIN security_auth
+    	ON userinfo.id=security_auth.id
+    	WHERE userinfo.id=#{id}
 	</select>
 
 
@@ -84,62 +84,30 @@
   
  
    
-   <!--로그인 -->
    
-   <!-- 비밀번호 인코딩 전 -->
-   <!-- 
-   <select id="userinfoLogin" resultType="Userinfo">
-      SELECT *
-      FROM userinfo
-      WHERE id=#{id} and pw = #{pw}
-   </select> -->
-   
-      <!-- 로그인 시간 변경 -->
-   <update id="updateLogdate"> 
+  	 <!-- 로그인 시간 변경 -->
+  	 <update id="updateLogdate"> 
         UPDATE userinfo
         SET logdate= Now()
         WHERE id= #{id}
-   </update>
+     </update>
    
-   <!-- 비밀번호 인코딩 후 -->
-   <select id="userinfoLogin" resultType="Userinfo">
-      SELECT *
-      FROM userinfo
-      WHERE id=#{id}
-   </select>
+     <!-- 비밀번호 인코딩 후 -->
+     <select id="userinfoLogin" resultType="Userinfo">
+        SELECT *
+        FROM userinfo
+        WHERE id=#{id}
+     </select>
 
-   <!-- 이메일로 사용자 ID 찾기 -->
-    <select id="findUserByEmail" parameterType="string" resultType="com.project.dto.Userinfo">
-        SELECT * 
-        FROM userinfo 
-        WHERE email = #{email}
-    </select>   
-
-
-   
-   
-   <!-- 마이페이지 -->
-   
+     <!-- 이메일로 사용자 ID 찾기 -->
+      <select id="findUserByEmail" parameterType="string" resultType="com.project.dto.Userinfo">
+          SELECT * 
+          FROM userinfo 
+          WHERE email = #{email}
+      </select>   
 
 
-   <!-- 새로 추가했음 -->
-   <!-- 아이디로 유저 정보 검색 - 삭제하면 안되어요
-   <select id="selectUserinfoById" resultType="Userinfo">
-      SELECT id
-         , pw
-         , name
-         , gender 
-         , email
-         , birth
-         , address
-         , phone
-         , regdate
-         , logdate
-         , status 
-      FROM userinfo
-      WHERE id=#{id}
-   </select>   
-    -->
+
     
    <!-- 관리자 -->
    
@@ -162,20 +130,20 @@
       ORDER BY id
    </select>
    
-<select id="selectUserinfoList" resultType="Userinfo">
-  SELECT 
-    id,
-    pw,
-    name,
-    email,
-    regdate,
-    logdate,
-    status,
-    enabled
-  FROM userinfo
-  ORDER BY id DESC
-  LIMIT #{startRow}, #{endRow}
-</select>
+	<select id="selectUserinfoList" resultType="Userinfo">
+	  SELECT 
+	    id,
+	    pw,
+	    name,
+	    email,
+	    regdate,
+	    logdate,
+	    status,
+	    enabled
+	  FROM userinfo
+	  ORDER BY id DESC
+	  LIMIT #{startRow}, #{endRow}
+	</select>
    
    
    <!-- 조건에 따른 유저 정보 검색 -->
@@ -205,31 +173,7 @@
       </sql>
       
       
-      <select id="selectUserinfo" resultType="Userinfo">
-      SELECT 
-         id
-         , pw
-         , name
-         , email
-         , regdate
-         , logdate
-         , status
-         , enabled 
-      FROM userinfo 
-      WHERE 1 = 1
-       <include refid="search" />
-   </select>
-   
-   
-   <!-- 가입일에 따른 유저 정보 검색 -->
-   <!--  
-   <choose>
-      가입일 
-      <when test="optionDate == 1"> 
-      AND regdate BETWEEN #{startDatePicker} AND #{endDatePicker}</when>
-      <when test="shOptionDate == 2">
-      AND a.modDateTime BETWEEN #{shDateStart} AND #{shDateEnd}</when>
-   </choose> -->
+
    
    
 </mapper>

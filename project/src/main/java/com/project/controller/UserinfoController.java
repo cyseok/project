@@ -53,7 +53,7 @@ public class UserinfoController {
          @RequestParam("userinfoRole") String userinfoRole) throws Exception {
 
       userinfoservice.registerUser(userinfo, userinfoRole); // 회원가입 서비스 호출
-      return "redirect:/user/login"; // 로그인 페이지로 리다이렉트
+      return "redirect:/post"; // 로그인 페이지로 리다이렉트
    }
    
    @RequestMapping(value = "/memberDuplicateCheck", method = RequestMethod.POST)
@@ -73,12 +73,6 @@ public class UserinfoController {
 
    /* 로그인 */
 
-   // 로그인 페이지 이동
-   @RequestMapping(value = "/login", method = RequestMethod.GET)
-   public String loginGET() {
-
-      return "user/login";
-   }
    
    //로그인
    @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -92,7 +86,7 @@ public class UserinfoController {
          if (lto.getStatus() == 3) {
             // 탈퇴 회원은 로그인 차단
             rttr.addFlashAttribute("result", 0);
-            return "redirect:/user/login";
+            return "redirect:/post";
          } else if (lto.getStatus() == 2) {
             // 휴면 계정은 활성화 요구 페이지로 바로 이동
             return "redirect:/user/dormantAccount";
@@ -108,11 +102,11 @@ public class UserinfoController {
             return "redirect:/post";
          } else {
             rttr.addFlashAttribute("result", 0);
-            return "redirect:/user/login";
+            return "redirect:/post";
          }
       } else {
          rttr.addFlashAttribute("result", 0);
-         return "redirect:/user/login";
+         return "redirect:/post";
       }
    }
 

@@ -37,7 +37,7 @@
     )
 </insert>
 	
-	<resultMap type="UserinfoSecurity" id="userinfoSecurityResultMap">
+	<resultMap type="Userinfo" id="userinfoSecurityResultMap">
 		<id column="id" property="id"/>
 		<result column="pw" property="pw"/>
 		<result column="name" property="name"/>
