@@ -1,0 +1,82 @@
+	.bg-white.m-body {
+	    border: 2px solid #d3d3d3; 
+	    padding: 10px; 
+	    width: 280px; 
+	    height: 300px; 
+	    border-radius: 35px;
+	  }
+	  .bg-white.m-body {
+	  position: relative;
+	}
+	/* 날짜 */
+	.bg-white.m-body > span.date {
+	  position: absolute;
+	  top: 10%;
+	  left: 10%;
+	  font-size: 13px;
+	}
+	/* 지역이름 */
+	.bg-white.m-body > span.float-right {
+	  position: absolute;
+	  top: 10%;
+	  right: 10%;
+	  font-size: 16px;
+	}
+	/* 평일, 공휴일 */
+	.bg-white.m-body > span.float-left {
+	  position: absolute;
+	  top: 17%;
+	  right: 10%;
+	  font-size: 14px;
+	 
+	}
+	/* 제목 */
+	.bg-white.m-body > p.styled-text {
+	  position: absolute;
+	  top: 31%;
+	  width: 80%;
+	  transform: translateX(5%);
+	  left: 5%;
+	  font-size: 23px !important;
+      font-weight: bold;
+	  
+	  white-space: normal;
+      overflow: hidden;
+      line-height: 1.3;
+      height: 3.9em;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp : 3;
+      -webkit-box-orient: vertical;
+	}
+	/* 선 */
+	.bg-white.m-body > hr.position-line {
+	  position: absolute;
+	  top: 73%;
+	  width: 90%;
+	  margin: 5% 5%;
+	  border: 1px solid black;
+	  left: 0;
+	}
+	/* 아이디 사진 */
+	.bg-white.m-body > img.login-image {
+	  position: absolute;
+	  bottom: 5%;
+	  left: 5%;
+	  width: 38px;
+	  height: 38px;
+	}
+	/* 아이디(닉네임) */
+	.bg-white.m-body > span.bottom-left {
+	  position: absolute;
+	  bottom: 8%;
+	  left: 20%;
+	  font-size: 13px;
+	}
+	/* 조회수 */
+	.bg-white.m-body > span.bottom-right {
+	  position: absolute;
+	  bottom: 8%;
+	  right: 13%;
+	  font-size: 13px;
+	}
