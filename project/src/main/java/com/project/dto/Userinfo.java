@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull; 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +39,18 @@ public class Userinfo {
    private int status;
    
    private String enabled;
+   
+   // 비빌번호 변경
+   @Size(min = 8, max = 12, message = "현재 비밀번호를 입력해주세요.")
+   @Pattern(regexp = "^(?=.*[0-9a-zA-Z@#$%^&+=!]).{6,}$")
+   private String currentPassword;
+	
+   @Size(min = 8, max = 12, message = "비밀번호는 8자~12자 사이여야 합니다.")
+   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,12}$", message = "비밀번호는 영어 대소문자, 숫자, 특수문자가 꼭 포함되어야 합니다.")
+   private String newPassword;
+
+   private String confirmPassword;
+	
    private List<SecurityAuth> securityAuthList;
   
 }
