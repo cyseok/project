@@ -10,9 +10,13 @@
 	  width: 70px;
 	  height: 70px;
 	}
+	.col-lg-6.d-none.d-lg-inline-block.text-center.nav-center-wrap {
+	  margin-top: -20px; /* Adjust the value as needed */
+	}
+	
 	.modal-dialog {  
       top: 200px; 
-    }
+    } 
     .naver-login-img {
         width: 58px;
 	    height: 57px;
@@ -35,7 +39,7 @@
         left: 41.3%;
     }
     .id-button {
-    position: absolute;
+      position: absolute;
 	  text-decoration: underline;
 	  text-align: center;
 	  font-size: 14px;
@@ -43,20 +47,26 @@
 	  
 	}
 	.pw-button {
-	position: absolute;
+	  position: absolute;
 	  text-decoration: underline;
 	  left: 42.5%;
 	  text-align: center;
 	  font-size: 14px;
 	}
 	.join-button {
-	position: absolute;
+	  position: absolute;
 	  text-decoration: underline;
 	  left: 63%;
 	  text-align: center;
 	  font-size: 14px;
 	}
+	.col-6.col-lg-3.text-lg-end {
+      position: relative;
+      top: -13px; 
+   }
+	
 </style>
+<div id="header-wrapper">
 <header>
 	<nav class="site-nav mt-3">
 		<div class="container">
@@ -64,15 +74,14 @@
 			<div class="site-navigation">
 				<div class="row">
 					<div class="col-6 col-lg-3">
-						<a href="${pageContext.request.contextPath}/post" class="logo m-0 float-start">Waiting Check</a>
+						<a href="${pageContext.request.contextPath}/post" class="logo m-0 float-start" style="color: gray;">Waiting Check</a>
 					</div>
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About us</a></li>
-							<li><a href="services.html">Services</a></li>
-							<li class="active"><a href="">xxxxx</a></li>
-
+							<li><a href="" style="color: gray; font-size: 19px;">Home</a></li>
+							<li><a href="" style="color: gray; font-size: 19px;">About us</a></li>
+							<li><a href="" style="color: gray; font-size: 19px;">Services</a></li>
+							<li class="active"><a href="" style="color: gray; font-size: 19px;">xxxxx</a></li>
 						</ul>
 					</div>
 					
@@ -81,7 +90,7 @@
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
 							<li class="has-children">
-								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image">
+								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
 									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
@@ -99,7 +108,7 @@
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
 							<li class="has-children">
-								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image">
+								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
 									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
@@ -115,6 +124,7 @@
 				  <div class="col-6 col-lg-3 text-lg-end">
 					 <ul class="js-clone-nav d-none d-lg-inline-block text-end site-menu">
 						<li class="cta-button"><a role="button" id="login-button">로그인</a></li>
+						
 					 </ul>
 				  </div>
 				</sec:authorize>
@@ -125,9 +135,9 @@
 			
 		</div>
 	</nav>
-					<form id="logoutForm" action="<c:url value='/logout'/>" method="post">
+				<%-- <form id="logoutForm" action="<c:url value='/logout'/>" method="post">
 				  <sec:csrfInput />
-				</form>
+				</form> --%>
 	
   <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modal-label" aria-hidden="true">
     <div class="modal-dialog" style="max-height: 600px;">
@@ -136,8 +146,8 @@
           <h5 class="modal-title" id="login-modal-label">로그인</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <form action="${pageContext.request.contextPath}/user/login" method="post">
+        <div class="modal-body" >
+          <form id="loginForm">
             <div class="mb-3">
               <label for="idInput" class="form-label">아이디</label>
               <input type="text" class="form-control" name="id" id="idInput" placeholder="아이디를 입력하세요">
@@ -148,12 +158,41 @@
               <input type="password" class="form-control" name="pw" id="pwInput" placeholder="비밀번호를 입력하세요">
             </div>
             
-            <c:if test="${result == 0}">
-               <div class="login_warn">사용자 ID 또는 비밀번호를 잘못 입력하셨습니다.</div>
-            </c:if>
-                  
             <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-primary" style="width: 350px;" id="loginButton">로그인</button>
+              <button type="submit" class="btn btn-primary" style="width: 350px;">로그인</button>
+              <script>
+				$(function() {
+			        $("#loginForm").submit(function(e) {
+			          e.preventDefault();
+				
+                   /*  var formData = new FormData();
+                    formData.append("id", $("#idInput").val());
+                    formData.append("pw", $("#pwInput").val()); */
+                    
+                    var id = $("#idInput").val();
+                    var pw = $("#pwInput").val();
+                    
+				    $.ajax({
+				        type: "POST",
+				        url: "<c:url value='/user/login'/>",
+				        data: {"id":id, "pw":pw},
+				        dataType: "text",
+				        success: function (result) {
+				            if (result == "success") {
+				            	alert(result.success);
+				            	location.reload();
+				
+				            } else {
+				                alert("아이디와 비밀번호를 확인해주세요.");
+				            }
+				        },
+				          error: function(error) {
+				            alert("에러가 발생했습니다.");
+			            }
+				     });
+				  });
+			   });
+			</script>
             </div>
 
             <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
@@ -176,21 +215,39 @@
     </div>
   </div>
   
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
 	<script>
       function logout() {
-        alert("로그아웃하시겠습니까?");
-        if (confirm("확인")) {
-        	document.getElementById('logoutForm').submit();
+        if (confirm("로그아웃 하시겠습니까?")) {
+        	
+        	$.ajax({
+
+        	    
+
+        		type: 'POST',
+
+        		url: "<c:url value='/logout'/>",
+
+        	    success : function(data) {
+
+        	    	location.reload();
+
+        	
+
+        	    },error : function(data){
+
+        	    	alert("실패");
+
+        	    }
+
+        	});
         }
       }
       
-	  $(function() {
 	    // 로그인 버튼을 클릭하면 모달창을 열기
 	    $("#login-button").click(function() {
 	      $("#login-modal").modal("show");
 	    });
-	  });
 	  
 	  $("#idInput").keypress(function(){
 	  		if(event.keyCode == 13) {
@@ -200,12 +257,16 @@
 	      
       $("#pwInput").keypress(function(){
     		if(event.keyCode == 13) {
-    			$("#login_form").submit();
+    			$("#loginForm").submit();
     		}
       });
-	</script>
+      
+      </script>
+     
+	
+	
 
 </header>
-   </body>
+</div>
 </html>
    
