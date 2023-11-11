@@ -89,6 +89,7 @@ public class KaKaoLoginController {
 		// 네이버 로그인 사용자의 정보를 SECURITY_USERS 테이블과 SECURITY_AUTH 테이블에 저장
 		userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
 		userinfoService.addUserinfoAuth(auth);
+		userinfoService.updateUserLogindate(userinfo.getId());
 	    
 		
 		//카카오 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
@@ -102,10 +103,10 @@ public class KaKaoLoginController {
 		//SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		System.out.println("name : "+userinfo.getName());
+		System.out.println("name : "+userinfo.getId());
 		
 		
-		return "redirect:/";
+		return "redirect:/post";
 	}
 	
 }
