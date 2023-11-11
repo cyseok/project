@@ -2,71 +2,91 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.UserinfoMapper">
 
-   <!--회원가입 -->
+	<!--회원가입 -->
+	<insert id="insertUserinfo">
+		INSERT INTO userinfo (
+			id
+			, pw
+			, name
+			, nickname
+			, address
+			, email
+			, regdate
+			, status  
+			, enabled
+		)
+		VALUES (
+			#{id}
+			, #{pw}
+			, #{name}
+			, #{nickname}
+			, #{address}
+			, #{email}
+			, Now()
+			, 1
+			, 0
+		)
+		IF NOT EXISTS (
+			SELECT *
+			FROM userinfo
+			WHERE id = #{id}
+		)
+	</insert>
    
-   <!-- 회원정보 삽입 -->
-   <insert id="insertUserinfo">
-      INSERT INTO 
-      userinfo (
-         id
-         , pw
-         , name
-         , email
-         , regdate
-         , status  
-         , enabled
-      )
-      VALUES (
-         #{id}
-         , #{pw}
-         , #{name}
-         , #{email}
-         , Now()
-         , #{status}
-         , 0
-      )
-   </insert>
+	<insert id="insertSecurityAuth">
+		INSERT INTO userinfo_auth (
+			id,
+	        auth
+		)
+	    VALUES (
+	        #{id},
+	        #{auth}
+	    )
+	    IF NOT EXISTS (
+	        SELECT *
+	        FROM userinfo_auth
+	        WHERE id = #{id}
+	        AND auth = #{auth}
+	    )
+	</insert>
    
-   <!-- Auth -->
-   <insert id="insertSecurityAuth">
-      INSERT INTO security_auth 
-      VALUES (
-            #{id}
-          , #{auth}
-            )
-   </insert>
    
-   <resultMap type="Userinfo" id="securityUserinfoResultMap">
-      <id column="id" property="id"/>
-      <result column="pw" property="pw"/>
-      <result column="name" property="name"/>
-      <result column="regdate" property="regdate"/>
-      <result column="status" property="status"/>
-      <result column="enabled" property="enabled"/>
-      <collection property="securityAuthList" select="selectSecurityAuthById" column="id"/>
-   </resultMap> 
+	<resultMap type="Userinfo" id="securityUserinfoResultMap">
+		<id column="id" property="id"/>
+		<result column="pw" property="pw"/>
+		<result column="name" property="name"/>
+		<result column="nickname" property="nickname"/>
+		<result column="address" property="address"/>
+		<result column="regdate" property="regdate"/>
+		<result column="status" property="status"/>
+		<result column="enabled" property="enabled"/>
+		<collection property="securityAuthList" select="selectUserinfoAuthById" column="id"/>
+	</resultMap> 
    
-   <select id="selectSecurityAuthById" resultType="SecurityAuth">
-      SELECT id
-         , auth 
-      FROM security_auth 
-      WHERE id=#{id}
-   </select>
-   
+	<select id="selectUserinfoAuthById" resultType="UserinfoAuth">
+		SELECT 
+			id
+			, auth 
+		FROM userinfo_auth 
+		WHERE id=#{id}
+	</select>
   
-    <select id="selectUserinfoById" resultMap="securityUserinfoResultMap">
-		SELECT userinfo.id
-        	 , userinfo.pw
-         	 , userinfo.name
-          	 , userinfo.email
-           	 , userinfo.regdate
-         	 , userinfo.status  
-         	 , userinfo.enabled
-         	 , security_auth.auth
-    	FROM userinfo
-    	LEFT JOIN security_auth
-    	ON userinfo.id=security_auth.id
-    	WHERE userinfo.id=#{id}
+	<select id="selectUserinfoLogin" resultMap="securityUserinfoResultMap">
+		SELECT 
+			user.id
+			, user.pw
+			, user.name
+			, user.nickname
+			, user.address
+			, user.email
+			, user.regdate
+			, user.status  
+			, user.enabled
+			, auth.auth
+		FROM userinfo user
+    	LEFT JOIN userinfo_auth auth
+    	ON user.id=userinfo_auth.id
+    	WHERE user.id=#{id}
 	</select>
 
 
@@ -81,9 +101,6 @@
         SELECT count(*) FROM userinfo 
         WHERE email = #{email}
      </select>
-  
- 
-   
    
   	 <!-- 로그인 시간 변경 -->
   	 <update id="updateLogdate"> 
@@ -93,56 +110,58 @@
      </update>
    
      <!-- 비밀번호 인코딩 후 -->
-     <select id="userinfoLogin" resultType="Userinfo">
+     <select id="selectUserinfoById" resultType="Userinfo">
         SELECT *
         FROM userinfo
         WHERE id=#{id}
      </select>
 
      <!-- 이메일로 사용자 ID 찾기 -->
-      <select id="findUserByEmail" parameterType="string" resultType="com.project.dto.Userinfo">
-          SELECT * 
-          FROM userinfo 
-          WHERE email = #{email}
-      </select>   
-
-
+	<select id="findUserByEmail" parameterType="string" resultType="com.project.dto.Userinfo">
+		SELECT * 
+		FROM userinfo 
+		WHERE email = #{email}
+	</select>   
 
     
-   <!-- 관리자 -->
-   
-      <select id="selectUserinfoCount">
-      SELECT COUNT(*) FROM Userinfo
-   </select>
+	<!-- 관리자 -->
+	<select id="selectUserinfoCount">
+		SELECT COUNT(*) 
+		FROM userinfo
+    </select>
    
     <!-- 전체 유저 정보 검색 -->
-   <select id="selectUserinfoOrderById" resultType="Userinfo">
-      SELECT 
-         id
-         , pw
-         , name
-         , email
-         , regdate
-         , logdate
-         , status
-         , enabled 
-      FROM userinfo 
-      ORDER BY id
-   </select>
+	<select id="selectUserinfoOrderById" resultType="Userinfo">
+		SELECT 
+			id
+			, pw
+			, name
+			, nickname
+			, address
+			, email
+			, regdate
+			, logdate
+			, status
+			, enabled 
+		FROM userinfo 
+		ORDER BY id
+	</select>
    
 	<select id="selectUserinfoList" resultType="Userinfo">
-	  SELECT 
-	    id,
-	    pw,
-	    name,
-	    email,
-	    regdate,
-	    logdate,
-	    status,
-	    enabled
-	  FROM userinfo
-	  ORDER BY id DESC
-	  LIMIT #{startRow}, #{endRow}
+		SELECT 
+			id
+			, pw
+			, name
+			, nickname
+			, address
+			, email
+			, regdate
+			, logdate
+			, status
+			, enabled
+		FROM userinfo
+		ORDER BY id DESC
+		LIMIT #{startRow}, #{endRow}
 	</select>
    
    

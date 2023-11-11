@@ -9,8 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.dao.UserinfoDAO;
-import com.project.dto.SecurityAuth;
+import com.project.dto.UserinfoAuth;
 import com.project.dto.Userinfo;
+import com.project.exception.LoginAuthFailException;
 import com.project.exception.UserinfoNotFoundException;
 import com.project.util.Pager;
 
@@ -23,25 +24,32 @@ public class UserinfoServiceImpl implements UserinfoService {
 	private final BCryptPasswordEncoder pwEncoder;
 
 	/* 회원가입 */
-
-	// 회원가입
 	@Override
-	public void registerUser(Userinfo userinfo, String userinfoRole) {
+	public void addUserinfo(Userinfo userinfo, String userinfoRole) {
 		String rawPw = userinfo.getPw(); // 사용자가 입력한 원래의 비밀번호
 		String encodePw = pwEncoder.encode(rawPw); // 비밀번호 인코딩
 		userinfo.setPw(encodePw); // 인코딩된 비밀번호를 설정
 
 		userinfoDAO.insertUserinfo(userinfo);
 		
+		/* 권한 설정 */
 		if(userinfoRole.equals("ROLE_USER")) {
-			userinfoDAO.insertSecurityAuth(new SecurityAuth(userinfo.getId(),"ROLE_USER"));
+			userinfoDAO.insertSecurityAuth(new UserinfoAuth(userinfo.getId(),"ROLE_USER"));
+		}
+		if(userinfoRole.equals("ROLE_ADMIN")) {
+			userinfoDAO.insertSecurityAuth(new UserinfoAuth(userinfo.getId(),"ROLE_ADMIN"));
 		}
 	}
 
+	@Override
+	public void addUserinfoAuth(UserinfoAuth auth) {
+		userinfoDAO.insertSecurityAuth(auth);
+	}
+	
 	/* 로그인 */
 	@Override
-	public Userinfo userLogin(Userinfo userinfo) {
-		return userinfoDAO.userinfoLogin(userinfo);
+	public Userinfo getUserinfoLogin(String id) throws LoginAuthFailException{
+		return userinfoDAO.selectUserinfoLogin(id);
 	}
 
 	/* 아이디 찾기 */
@@ -61,13 +69,8 @@ public class UserinfoServiceImpl implements UserinfoService {
 	public int emailCheck(String email) throws Exception {
 		return userinfoDAO.emailCheck(email);
 	}
-
 	
 	/* 마이페이지 */
-
-	
-	/* 로그인 */
-	// 아이디로 유저 정보 검색
 	@Override
 	public Userinfo getUserinfoById(String id) throws UserinfoNotFoundException {
 		Userinfo userinfo = userinfoDAO.selectUserinfoById(id);
@@ -77,15 +80,14 @@ public class UserinfoServiceImpl implements UserinfoService {
 		}
 		return userinfo;
 	}
-	// 마지막 로그인 시간
+	
+	// 마지막 로그인 시간 갱신 
 	@Override
 	public void updateUserLogindate(String id) {
 		userinfoDAO.updateLogdate(id);
 	}
 
-
 	/* 관리자 */
-	//회원 정보 조회 기능
 	@Override
 	public Userinfo getUserinfo(String id) throws UserinfoNotFoundException {
 		Userinfo userinfo = userinfoDAO.selectUserinfo(id);
@@ -94,6 +96,7 @@ public class UserinfoServiceImpl implements UserinfoService {
 		}
 		return userinfo;
 	}
+	
 	//회원 리스트 조회 기능
 	@Override
 	public Map<String, Object> getUserinfoList(int pageNum, int pageSize) {
@@ -113,19 +116,5 @@ public class UserinfoServiceImpl implements UserinfoService {
 
 		return userinfoMap;
 	}
-	
-	
-	
-
-	/* Auth */
-	@Override
-	public void addSecurityAuth(SecurityAuth auth) {
-		userinfoDAO.insertSecurityAuth(auth);
-	}
-
-	@Override
-	public SecurityAuth getSecurityAuthById(String id) {
-		return userinfoDAO.selectSecurityAuthById(id);
-	}	
 		
 }

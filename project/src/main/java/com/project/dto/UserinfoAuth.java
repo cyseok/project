@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SecurityAuth {
+public class UserinfoAuth {
 	private String id;
 	private String auth;
 }

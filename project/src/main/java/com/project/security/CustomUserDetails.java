@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.project.dto.SecurityAuth;
+import com.project.dto.UserinfoAuth;
 import com.project.dto.Userinfo;
 
 import lombok.Data;
@@ -26,6 +26,8 @@ public class CustomUserDetails implements UserDetails {
    private String id;
    private String pw;
    private String name;
+   private String nickname;
+   private String address;
    private String email;
    private String regdate;
    private String logdate;
@@ -33,7 +35,7 @@ public class CustomUserDetails implements UserDetails {
 
    
    private String enabled;
-   // private List<SecurityAuth> securityAuths; ◀ 실제로 권한이 저장되지 않음
+   
    // private List<SecurityAuth> securityAuthList; ◀ 실제로 권한이 저장되지 않음
    // 인증된 사용자의 권한 정보가 저장될 필드 선언
    private List<GrantedAuthority> userinfoAuthList;
@@ -43,6 +45,8 @@ public class CustomUserDetails implements UserDetails {
       this.id = userinfo.getId();
       this.pw = userinfo.getPw();
       this.name = userinfo.getName();
+      this.nickname = userinfo.getNickname();
+      this.address = userinfo.getAddress();
       this.email = userinfo.getEmail();
       this.regdate = userinfo.getRegdate();
       this.logdate = userinfo.getLogdate();
@@ -52,10 +56,9 @@ public class CustomUserDetails implements UserDetails {
       
       // 검색된 사용자의 권한(String 객체)은 GrantedAuthority 객체로 생성하여 저장
       this.userinfoAuthList= new ArrayList<GrantedAuthority>();
-      for (SecurityAuth auth : userinfo.getSecurityAuthList()) {
+      for (UserinfoAuth auth : userinfo.getSecurityAuthList()) {
     	  userinfoAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
       }
-     
    }
 
    // 인증된 사용자의 권한 정보를 반환하는 메소드
@@ -101,6 +104,10 @@ public class CustomUserDetails implements UserDetails {
    // ▶ false: 사용자 비활성화 상태 / true: 사용자 활성화 상태
    @Override
    public boolean isEnabled() {
-     return enabled.equals("0");
+	   if (enabled.equals("0")) {
+			return false;
+		} else {
+			return true;
+		}
    }
 }

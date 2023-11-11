@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.project.dto.SecurityAuth;
+import com.project.dto.UserinfoAuth;
 import com.project.dto.Userinfo;
 import com.project.mapper.UserinfoMapper;
 
@@ -18,11 +18,14 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    private final SqlSession sqlSession;
 
    /* 회원가입 */
-
-   // 회원가입
    @Override
    public int insertUserinfo(Userinfo userinfo) {
       return sqlSession.getMapper(UserinfoMapper.class).insertUserinfo(userinfo);
+   }
+   
+   @Override
+   public int insertSecurityAuth(UserinfoAuth auth) {
+	   return sqlSession.getMapper(UserinfoMapper.class).insertSecurityAuth(auth);
    }
    
    // 아이디 중복검사
@@ -37,10 +40,9 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    }
 
    /* 로그인 */
-
    @Override
-   public Userinfo userinfoLogin(Userinfo userinfo) {
-      return sqlSession.getMapper(UserinfoMapper.class).userinfoLogin(userinfo);
+   public Userinfo selectUserinfoLogin(String id) {
+      return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoLogin(id);
    }
 
    @Override
@@ -56,21 +58,17 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    }
 
    /* 마이페이지 */
-
-
-   // 아이디로 유저 검색
    @Override
    public Userinfo selectUserinfoById(String id) {
 	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoById(id);
    }
+   
    /* 관리자 */
-
    @Override
    public int selectUserinfoCount() {
 	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoCount();
    }
 
-   
    // 전체 유저 검색
    @Override
    public List<Userinfo> selectUserinfoList(Map<String, Object> map) {
@@ -84,14 +82,4 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    }
 
 
-	/* Auth */
-	@Override
-	public int insertSecurityAuth(SecurityAuth auth) {
-		return sqlSession.getMapper(UserinfoMapper.class).insertSecurityAuth(auth);
-	}
-
-	@Override
-	public SecurityAuth selectSecurityAuthById(String id) {
-		return sqlSession.getMapper(UserinfoMapper.class).selectSecurityAuthById(id);
-	}
 }
