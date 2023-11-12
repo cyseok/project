@@ -21,12 +21,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 	//UserDetails 객체를 생성하여 반환하는 메소드
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-		Userinfo userinfo=userinfoDAO.selectUserinfoById(id);
+		Userinfo userinfo=userinfoDAO.selectUserinfoLogin(id);
 		
 		if(userinfo == null) {
 			throw new UsernameNotFoundException(id);
 		}
-		
 		return new CustomUserDetails(userinfo);
 	}
 }

@@ -35,7 +35,7 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 	    request.getSession().setAttribute("userid", request.getParameter("userid"));
 	    
 	    // 실패 URL로 포워딩합니다.
-	    request.getRequestDispatcher("/user/login").forward(request, response);
+	    request.getRequestDispatcher("/post").forward(request, response);
 	}
 
 }

@@ -1,9 +1,6 @@
 package com.project.controller;
 
-import java.util.List;
-import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -11,15 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +23,7 @@ import com.project.service.UserinfoService;
 
 
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping("/user")
 public class UserinfoController {
    private static final Logger logger = LoggerFactory.getLogger(UserinfoController.class);
 
@@ -78,15 +70,17 @@ public class UserinfoController {
    }
 
    //로그인
-   @RequestMapping(value = "/login", method = RequestMethod.POST)
+   @PostMapping("/login")
    @ResponseBody
-   public ResponseEntity<String> loginPOST(@ModelAttribute Userinfo userinfo
-		   , @PathVariable("id") String id
-		   , @PathVariable("pw") String pw
+   public ResponseEntity<String> loginPOST(Userinfo userinfo
+		   , @RequestParam String id
+		   , @RequestParam String pw
 		   , RedirectAttributes rttr
 		   , HttpSession session) throws Exception {
-
-      session.setAttribute("userinfoId", id);
+	   System.out.println("컨트롤러실행 ");
+	   
+	   
+      // session.setAttribute("userinfoId", id);
             System.out.println("아이디 : " +id + "비번 : " +pw);
       Userinfo userinfoAuth = userinfoservice.getUserinfoLogin(id);
             System.out.println(userinfoAuth);
