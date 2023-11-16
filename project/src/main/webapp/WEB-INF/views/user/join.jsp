@@ -12,118 +12,9 @@
 <header>
   <jsp:include page="/WEB-INF/views/include/header.jsp"/>
 </header>
-  <style>
-/* 전체 폼 컨테이너 */
-.join_section {
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 100px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  position: relative;
-  top: 130px;
-}
+<style>
 
-/* 폼 헤더 */
-.title_f {
-  font-size: 26px;
-  font-weight: bold;
-  text-align: center;
-}
-
-/* 폼 그룹 */
-.form-group {
-  margin-bottom: 20px;
-}
-
-/* 라벨 */
-.sp {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* 입력 필드 */
-input {
-  width: 100%;
-  height: 45px;
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-
-/* 비밀번호 확인 필드 */
-input[name='confirmPw'] {
-  margin-top: 10px;
-}
-
-/* 에러 메시지 */
-.with-errors {
-  color: red;
-}
-
-/* 회원구분 라디오 버튼 */
-.radio-inline {
-  margin-right: 10px;
-}
-
-/* 가입하기 버튼 */
-.join_button {
-  width: 100px;
-  height: 40px;
-  background-color: #000;
-  color: #fff;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-}
-
-/* container의 margin-top 제거 */
-.container {
-  margin-top: 0;
-}
-
-/* 폼 테두리 추가 */
-.join_section {
-  border-radius: 5px;
-}
-/* 폼 테두리 추가 */
-.sp {
-  font-size: 17px;
-  font-weight: bold;
-}
-
-/* 폼 가로 길이 조정 */
-.join_section {
-  width: 700px;
-}
-
-/* 폼 헤더의 위치 조정 */
-.join_section .title_f {
-  position: relative;
-  top: -5px;
-}
-
-/* 폼과 푸터 사이의 여백 추가 */
-.join_section,
-.footer {
-  margin-bottom: 200px;
-}
-/* 체크박스 크기 조정 */
-.radio-inline {
-  width: auto;
-}
-.join_form_section {
-  margin-top: 50px;
-}
-#check-email {
-  color: red;
-  font-size: 30px;
-  float: right;
-}
-#email-confirm-text {
-  position: relative;
-  width: calc(100% - 50px);
-}
-   </style>
+</style>
 <body>
    <section class="join_section">
       <div class="container">
@@ -666,7 +557,7 @@ var emailCheck = false;          // 이메일 중복 검사 실행 여부
 var emailConfirmCheck = false;   // 이메일 인증번호 확인
 
 /* 회원 가입 */
-$("form").submit(function(event) {
+$("#join_form").submit(function(event) {
 		event.preventDefault();
 		
 	    var formDataId = $('#id').val(); 
