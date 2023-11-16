@@ -4,13 +4,14 @@
 
 	<!--회원가입 -->
 	<insert id="insertUserinfo">
-		INSERT INTO userinfo (
+		INSERT IGNORE INTO userinfo (
 			id
 			, pw
 			, name
 			, nickname
 			, address
 			, email
+			, birth
 			, regdate
 			, status  
 			, enabled
@@ -22,31 +23,21 @@
 			, #{nickname}
 			, #{address}
 			, #{email}
+			, #{birth}
 			, Now()
 			, 1
 			, 0
 		)
-		IF NOT EXISTS (
-			SELECT *
-			FROM userinfo
-			WHERE id = #{id}
-		)
 	</insert>
    
 	<insert id="insertSecurityAuth">
-		INSERT INTO userinfo_auth (
+		INSERT IGNORE INTO userinfo_auth (
 			id,
 	        auth
 		)
 	    VALUES (
 	        #{id},
 	        #{auth}
-	    )
-	    IF NOT EXISTS (
-	        SELECT *
-	        FROM userinfo_auth
-	        WHERE id = #{id}
-	        AND auth = #{auth}
 	    )
 	</insert>
    
@@ -85,7 +76,7 @@
 			, auth.auth
 		FROM userinfo user
     	LEFT JOIN userinfo_auth auth
-    	ON user.id=userinfo_auth.id
+    	ON user.id=auth.id
     	WHERE user.id=#{id}
 	</select>
 

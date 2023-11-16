@@ -37,7 +37,10 @@ public class Userinfo {
    @NotEmpty(message = "닉네임을 입력해주세요.")
    private String nickname;
    
-   @NotEmpty(message = "우편번호 찾기를 선택해주세요.")
+   @NotEmpty(message = "생년월일을 입력해주세요.")
+   private String birth;
+   
+   @NotEmpty
    private String address;
     
    @NotBlank(message = "이메일을 반드시 입력해주세요.")
@@ -49,19 +52,19 @@ public class Userinfo {
    private int status;
    private String enabled;
    
-   // 비빌번호 변경
-   @NotBlank(message = "현재 비밀번호를 반드시 입력해주세요.")
-   @Size(min = 8, max = 15, message = "비밀번호는 8자~15자 사이여야 합니다.")
-   @Pattern(regexp = "^(?=.*[0-9a-zA-Z@#$%^&+=!]).{6,}$")
-   private String currentPassword;
-	
-   @NotBlank(message = "새 비밀번호를 반드시 입력해주세요.")
-   @Size(min = 8, max = 15, message = "비밀번호는 8자~15자 사이여야 합니다.")
-   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,12}$", message = "비밀번호는 영어 대소문자, 숫자, 특수문자가 꼭 포함되어야 합니다.")
-   private String newPassword;
-
-   @NotBlank(message = "새 비밀번호 확인을 반드시 입력해주세요.")
-   private String confirmPassword;
+//   // 비빌번호 변경
+//   @NotBlank(message = "현재 비밀번호를 반드시 입력해주세요.")
+//   @Size(min = 8, max = 15, message = "비밀번호는 8자~15자 사이여야 합니다.")
+//   @Pattern(regexp = "^(?=.*[0-9a-zA-Z@#$%^&+=!]).{6,}$")
+//   private String currentPassword;
+//	
+//   @NotBlank(message = "새 비밀번호를 반드시 입력해주세요.")
+//   @Size(min = 8, max = 15, message = "비밀번호는 8자~15자 사이여야 합니다.")
+//   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,12}$", message = "비밀번호는 영어 대소문자, 숫자, 특수문자가 꼭 포함되어야 합니다.")
+//   private String newPassword;
+//
+//   @NotBlank(message = "새 비밀번호 확인을 반드시 입력해주세요.")
+//   private String confirmPassword;
 	
    private List<UserinfoAuth> securityAuthList;
   
