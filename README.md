@@ -2,7 +2,7 @@
 
 ## 개요
 
-HTTP Method만 구현되어 있는 REST API에서 HATEOAS 제약조건을 만족 시킨 REST API로 개발한다.
+* REST API구현 (HATEOAS 제약조건을 최대한 만족시키려 노력했습니다.)
 
 ***
 
