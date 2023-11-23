@@ -7,13 +7,15 @@
 	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.8.xsd
 		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	 
@@ -41,6 +43,7 @@
 	<context:component-scan base-package="com.project.util"/>
 	<context:component-scan base-package="com.project.auth" />
 	<context:component-scan base-package="com.project.repository" />
+	
 	
 	<!-- 파일 다운로드 기능을 제공하는 클래스를 Spring Bean으로 등록 - @Component 어노테이션을 사용해도 됨! -->
 	<!-- ▶ Spring Bean의 식별자(beanName)을 반드시 요청 처리 메소드의 반환값가 같도록 작성 -->

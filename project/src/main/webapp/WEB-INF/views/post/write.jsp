@@ -6,51 +6,90 @@
 
 <!DOCTYPE html>
 <html lang="UTF-8">
-   <head>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdn.ckeditor.com/ckeditor5/38.0.0/classic/ckeditor.js"></script>
+<head>
+	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<title>게시글 작성</title>
 <style>
-.ck.ck-editor {
-	width: 80%;
-	max-width: 800px;
-	margin: 0 auto;
-}
+	.ck.ck-editor {
+		width: 80%;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	
+	.ck-editor__editable {
+		height: 70vh;
+	}
+	form {
+	  position: relative;
+	  top: 10px;
+	  width: 500px;
+	}
 
-.ck-editor__editable {
-	height: 80vh;
-}
-</style>
-  </head>
+	</style>
+</head>
   
+<header>
+  <jsp:include page="/WEB-INF/views/include/header.jsp"/>
+</header>
+
 <body>
+<div class="section">
+  <div class="container">
+  <div class="row">
+  
 	<form enctype="multipart/form-data">
 	  <div class="">
-	    <label for="noticeTitle">제목</label>
-	      <textarea name="noticeTitle" id="noticeTitle" class="" placeholder="제목을 입력해주세요"></textarea>
+	    <label for="postTitle">제목</label>
+	    <textarea name="postTitle" id="postTitle" class="form-control" rows="2" placeholder="제목을 입력해주세요"></textarea>
 	  </div>
-	    <div class="">
-	      <label for="noticeContent">내용</label>
-	      <textarea name="noticeContent" id="noticeContent" class="form-control" rows="15" placeholder="내용을 입력해주세요"></textarea>
-	    </div>
-	    <div id="editor"></div>
- 		<div>
- 			<img id="preview" style="width:30%; height: 30%;">
- 		</div>
-      <div>
-	    <label for="noticeImg">사진 올리기</label>
- 			<input type="file" class="" id="noticeImg" name="noticeImgUpload" onchange="readURL(this);">
+	  <hr>
+	  <div>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postDayType" id="dayType" value="1" style="width: 20%">
+		  <span>평일</span>
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postDayType" id="dayType" value="2" style="width: 20%">
+		  <span>주말, 공휴일</span>				
+	    </label>
+	  </div>
+	  <hr>
+	  <div>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTag" value="1" style="width: 20%">
+		  <span>사람없음</span>
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTag" value="2" style="width: 20%">
+		  <span>웨이팅없음</span>				
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTag" value="3" style="width: 20%">
+		  <span>웨이팅 조금</span>
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTag" value="4" style="width: 20%">
+		  <span>웨이팅 김</span>				
+	    </label>
 	  </div>
 	  
 	  <div class="">
-	    <label for="noticeFile">파일 첨부</label>
-	      <input type="file" id="noticeFile" name="noticeFileUpload" >
+	      <label for="postLoc">지역</label>
+	      <input name="postLoc" id="postLoc" class="form-control" placeholder="내용을 입력해주세요">
 	  </div>
-	  <br>
-	    <button type="button" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
-	    <button type="submit" class="" >등 록</button>
-	    <div class=""></div>
+						  
+	  <textarea name="postContent" id="editor"></textarea>
+	  
+	    <div>
+	      <button type="button" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
+	      <button type="submit" class="" >등 록</button>
+	    </div>
 	  <sec:csrfInput/>
 	</form>
+  </div>
+  </div>
+</div>
+<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 
 <script>
 //CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
@@ -91,37 +130,14 @@ $("form").submit(function(e) {
         }
     });
 });
-
-// 이미지 확장자 유효성 검사 & 이미지 미리보기
-function readURL(input) {
-	  if (input.files && input.files[0]) {
-	    var file = input.files[0];
-        var fileName = file.name;
-        var fileExtension = fileName.split('.').pop().toLowerCase();
-        var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-        
-       if (allowedExtensions.indexOf(fileExtension) === -1) {
-            alert("선택한 파일은 이미지 파일이 아닙니다. 유효한 이미지 파일을 선택해주세요.");
-            input.value = "";
-            return;
-        }
-	    var reader = new FileReader();
-       
-	    reader.onload = function(e) {
-	      document.getElementById('preview').src = e.target.result;
-	    };
-	    reader.readAsDataURL(input.files[0]);
-	  } else {
-	    document.getElementById('preview').src = "";
-	  }
-	}
 </script>
-<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+
 <script>		
 	ClassicEditor
 	.create(document.querySelector('#editor'), {
 		ckfinder: {
 			uploadUrl : "/post/imgUpload"
+			,uploadMethod : "json"
 		},
 		image: {
 	        toolbar: [  'imageTextAlternative',

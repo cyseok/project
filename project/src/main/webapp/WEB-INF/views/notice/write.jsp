@@ -53,7 +53,7 @@ $(document).ajaxSend(function(e, xhr){
 
 // 등록
 $("form").submit(function(e) {
-    e.preventDefault(); // 
+    e.preventDefault(); 
 
     var formData = new FormData();
     formData.append("noticeTitle", $("#noticeTitle").val());

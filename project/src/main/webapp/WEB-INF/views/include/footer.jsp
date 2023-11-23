@@ -1,6 +1,6 @@
  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <!-- ====================================
     ——— FOOTER SECTION
     ===================================== -->
@@ -52,11 +52,11 @@
 
 
 <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/tiny-slider.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/aos.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/navbar.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/counter.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/rellax.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/flatpickr.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/glightbox.min.js"></script>
-		<script src="${pageContext.request.contextPath}/assets/js/custom.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/tiny-slider.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/aos.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/navbar.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/counter.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/rellax.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/flatpickr.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/glightbox.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/custom.js"></script>

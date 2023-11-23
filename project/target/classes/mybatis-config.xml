@@ -9,6 +9,5 @@
 		<setting name="localCacheScope" value="SESSION"/>
 		<!-- 동일한 SQL을 여러번 호출할 떄 쿼리 수를 줄이고 성능 향상 -->
 		<setting name="cacheEnabled" value="true"/>
-		
 	</settings>
 </configuration>

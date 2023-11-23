@@ -33,7 +33,7 @@
 						        </div>
 						    </div>
 						<div class="">    
-                          <span id="check-id" class="">영문, 숫자만 가능하며 4 ~ 15자리까지 가능합니다.</span>
+                          <span id="check-id" class="">영문, 숫자만 가능하며 5 ~ 15자리까지 가능합니다.</span>
                         </div>
                         <div class="">  
                           <span id="id-check-message" style="color: red;" class="">아이디 중복체크를 완료해주세요.</span>
@@ -49,7 +49,7 @@
                       <div class="form-group">
                         <label for="confirmPw" class="sp">비밀번호 확인</label>
                         <input type="password" id="confirmPw" placeholder="*********" maxlength="16">
-                        <span id="check-confirmPw" class="">비밀번호가 일치합니다.</span>
+                        <span id="check-confirmPw" class="">비밀번호가 일치하지 않습니다.</span>
                       </div> 
                       
                       <div class="form-group">
@@ -94,11 +94,11 @@
 				                <button type="button" id="check-email-button" class="btn btn-secondary float-right" style="border-radius: 10px;">이메일 중복체크</button>
 				              </div>
 				          </div>
-                        <span id="email-check-message" class="">이메일 중복체크를 실행해주세요.</span>
+                        <span id="email-check-message" style="color: red;" class="">이메일 중복체크를 실행해주세요.</span>
                         <br><br>
                         <div class="mail-check-box">
                           <input type="text" id="email-confirm-text" placeholder="인증번호 6자리를 입력해주세요!" maxlength="6" disabled>
-                          <span id="check-email">✓</span>
+                          <span id="check-email">x</span>
                         </div>
                         <div class="input-group-addon join_left">
                           <button type="button" class="btn btn-primary me_btn" id="mail-send-Btn" style="border-radius: 10px; width: 100%;">이메일 인증번호 발송</button>
@@ -556,7 +556,17 @@ var birthCheck = false;          // 생년월일 유효성 검사 통과 여부
 var emailCheck = false;          // 이메일 중복 검사 실행 여부
 var emailConfirmCheck = false;   // 이메일 인증번호 확인
 
-/* 회원 가입 */
+/* 회원 가입, 중복 제출 방지 */
+var joinButton = document.getElementById("loginButton");
+ function joinDisableButton() {
+
+	 joinButton.disabled = true;
+		
+   setTimeout(function () {
+	   joinButton.disabled = false;
+   }, 3000);
+ } 
+
 $("#join_form").submit(function(event) {
 		event.preventDefault();
 		
@@ -574,16 +584,70 @@ $("#join_form").submit(function(event) {
 	    
         var formDataRole = $('#userRole:checked').val();
         
+        /* 아이디 작성 여부 확인 */
+	    if (formDataId === "") {
+	      alert('아이디를 작성해주세요.');
+	      var idFocus = document.getElementById("id");
+	      idFocus.focus();
+	      window.scrollTo(0, idFocus.offsetTop, { behavior: "instant" });
+
+	      return false;
+	    }
         /* 아이디 체크 여부 확인 */
 	    if (idCheck === false) {
 	      alert('아이디 중복 체크를 해주세요.');
+	      var idFocus = document.getElementById("id");
+	      idFocus.focus();
+	      window.scrollTo(0, idFocus.offsetTop, { behavior: "instant" });
+
 	      return false;
 	    }
+	    /* 비밀번호 작성 여부 */
+	    if (formDataPw === "") {
+	      alert('비밀번호를 작성해주세요.');
+	      var pwFocus = document.getElementById("pw");
+	      pwFocus.focus();
+	      window.scrollTo(0, pwFocus.offsetTop, { behavior: "instant" });
+	      
+	      return false;
+	    }        
 	    /* 비밀번호 일치 여부 */
 	    if (pwConfirmCheck === false) {
 	      alert('비밀번호가 일치하지 않습니다.');
+	      var pwConfirmFocus = document.getElementById("confirmPw");
+	      pwConfirmFocus.focus();
+	      window.scrollTo(0, pwConfirmFocus.offsetTop, { behavior: "instant" });
+	      
 	      return false;
 	    }
+	    /* 이름 작성 여부 확인 */
+	    if (formDataName === "") {
+	      alert('이름을 작성해주세요.');
+	      var nameFocus = document.getElementById("name");
+	      nameFocus.focus();
+	      window.scrollTo(0, nameFocus.offsetTop, { behavior: "instant" });
+
+	      return false;
+	    }
+	    /* 이름 유효성 검사 체크 여부 확인 */
+	    if (nameCheck === false) {
+	      alert('이름의 형식을 확인해주세요.');
+	      var nameFocus = document.getElementById("name");
+	      nameFocus.focus();
+	      window.scrollTo(0, nameFocus.offsetTop, { behavior: "instant" });
+
+	      return false;
+	    }
+	    
+	    /*=============================
+	    	닉네임 작성 여부,닉네임 유효성검사여부
+	         생년월일도...
+	         주소는 작성 여부만 상세주소는 빼고
+	         이메일 작성여부도 추가 하기 ========
+	        	 ====================*/
+	    
+	    
+	    
 	    /* 이메일 중복 검사 여부 */
 	    if (emailCheck === false) {
 	      alert('이메일 중복검사를 실행해주세요.');
@@ -607,7 +671,9 @@ $("#join_form").submit(function(event) {
             alert("약관에 동의해주세요.");
             return false;
         }
-	    
+        /* 버튼 비활성화 */
+        joinDisableButton();
+        
 		var formData = new FormData();
 		formData.append("id", formDataId);
 	    formData.append("pw", formDataPw);
@@ -665,7 +731,7 @@ $("#join_form").submit(function(event) {
 /* 아이디 유효성 검사 */
    function checkId() {
      var id = idInput.value;
-     var regExp = /^[A-Za-z\d]{4,15}$/;
+     var regExp = /^[A-Za-z\d]{5,15}$/;
 
      if (regExp.test(id)) {
     	 checkIdSpan.style.color = "green";
@@ -693,9 +759,11 @@ $("#join_form").submit(function(event) {
 
        if (confirmPw === pw) {
     	   pwConfirmSpan.style.color = "green";
+    	   pwConfirmSpan.textContent = "비밀번호가 일치합니다.";
     	   pwConfirmCheck = true; 
        } else {
     	   pwConfirmSpan.style.color = "red";
+    	   pwConfirmSpan.textContent = "비밀번호가 일치하지 않습니다.";
     	   pwConfirmCheck = false; 
        }
      }
@@ -747,9 +815,11 @@ $("#join_form").submit(function(event) {
 
      if (emailConfirm === emailConfirmNumber) {
     	 emailConfirmSpan.style.color = "green";
+    	 emailConfirmSpan.textContent = "✓";
     	 emailConfirmCheck = true;     
      } else {
     	 emailConfirmSpan.style.color = "red";
+    	 emailConfirmSpan.textContent = "x";
     	 emailConfirmCheck = false;     
      }
    }
@@ -776,11 +846,28 @@ $("#join_form").submit(function(event) {
 	 });
 </script>      
 <script>
-/* 아이디 중복 체크 */
+/* 아이디 중복 체크, 중복 클릭 방지 */
+ var idButton = document.getElementById("check-id-button");
+ function idDisableButton() {
+
+	 idButton.disabled = true;
+		
+   setTimeout(function () {
+   	idButton.disabled = false;
+   }, 3000);
+ }
+ 
 $(function() {
   $("#check-id-button").click(function() {
     var id = $("#id").val();
 
+	  if(id === "") {
+		  alert("아이디를 입력해주세요.");
+		  $("#id").focus();
+			return;
+	   }
+	idDisableButton();
+	  
     $.ajax({
       url: "<c:url value='/user/id-check'/>",
       type: "POST",
@@ -805,18 +892,32 @@ $(function() {
 });
 </script>   
 <script>
-/* 이메일 중복 체크 */
+/* 이메일 중복 체크, 중복 클릭 방지 */
+var emailButton = document.getElementById("check-email-button");
+function emailDisableButton() {
+
+	emailButton.disabled = true;
+	
+    setTimeout(function () {
+    	emailButton.disabled = false;
+    }, 3000);
+  }
 $(function() {
   $("#check-email-button").click(function() {
-	  
       var email = $("#email").val();
 	  var emailPattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 	  
+	  if(email === "") {
+		  alert('이메일을 작성해주세요.');
+		  $("#email").focus();
+			return;
+	   }
 	  if(!emailPattern.test(email)) {
 		  alert('이메일 형식을 확인해주세요.');
 		  $("#email").focus();
 			return;
 	   }
+	  emailDisableButton();
 
     $.ajax({
       url: "<c:url value='/user/email-check'/>",
@@ -842,14 +943,25 @@ $(function() {
 });
 </script> 
 <script>
-/* 이메일 발송 */
+/* 이메일 발송, 중복 클릭 방지 */
+ var emailConfirmButton = document.getElementById("mail-send-Btn");
+ function emailConfirmDisableButton() {
+
+	 emailConfirmButton.disabled = true;
+		
+   setTimeout(function () {
+	   emailConfirmButton.disabled = false;
+   }, 3000);
+ } 
+ 
   $("#mail-send-Btn").click(function() {
 	$("#email-confirm-text").attr("disabled", false);
 	
 	if(emailCheck === false) {
-		alert("이메일 중복 검사를 실행해주세요.");
+		alert("이메일 중복 검사를 먼저 실행해주세요.");
 		return;
 	}
+	emailConfirmDisableButton();
     var email = $("#email").val();
 
     $.ajax({
@@ -861,7 +973,8 @@ $(function() {
     	  	$("#check-email").css("color", "red");
     	 	emailConfirmCheck = false;
     	  	emailConfirmNumber = response;
-    	  	alert('인증번호가 전송되었습니다.')
+    	  	alert('인증번호가 전송되었습니다.');
+    	  	$("#mail-send-Btn").text("재전송");
       }, error: function(error) {
     	  alert("Error:" + error.responseText);
       }

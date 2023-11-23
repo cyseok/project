@@ -35,7 +35,7 @@ public class PostRestController {
 	private final PostService postService;
 	
 	@GetMapping(value = "/list")
-	public ResponseEntity<CollectionModel<Post>> getNoticeList(
+	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "") String selectKeyword
 			, @RequestParam(defaultValue = "all") String viewType
 			) {
@@ -76,7 +76,7 @@ public class PostRestController {
 	}
 	
 	@GetMapping("{noticeIdx}")
-	public ResponseEntity<CollectionModel<Map<String, Object>>> getNotice(@PathVariable("noticeIdx") int postIdx) {
+	public ResponseEntity<CollectionModel<Map<String, Object>>> getPost(@PathVariable("noticeIdx") int postIdx) {
 		
 		try {
 			Post post = postService.getSelectPost(postIdx);

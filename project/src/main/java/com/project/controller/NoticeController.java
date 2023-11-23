@@ -30,7 +30,7 @@ public class NoticeController {
 		return "/notice/modify";
 	}
 	
-	// 공지사항 등록 페이지 요청
+	// 공지사항 작성 페이지 요청
 	@GetMapping("/write")
 	public String diyAdd() {
 		return "notice/write";

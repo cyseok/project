@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.dto.Post;
+import com.project.exception.PostNotFoundException;
 
 public interface PostService {
 	
@@ -17,7 +18,7 @@ public interface PostService {
     void removePost(int postIdx);
  
     // 공지사항 상세 보기
-    Post getSelectPost(int postIdx);
+    Post getSelectPost(int postIdx) throws PostNotFoundException;
    
     // 공지사항 조회수 
     void getPostViewCount(int postIdx);

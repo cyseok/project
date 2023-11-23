@@ -113,7 +113,6 @@ public class NoticeRestController {
 			        fileExtension = originalFileName.substring(lastDotIndex);
 			    }
 			}
-
 			String uploadNoticeImg = UUID.randomUUID().toString() + fileExtension;
 
 			noticeImgUpload.transferTo(new File(uploadDirectory, uploadNoticeImg));

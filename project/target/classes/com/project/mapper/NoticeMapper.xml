@@ -79,8 +79,6 @@
 		SELECT COUNT(*) 
 		
 		FROM notice
-		
-		
         <!-- 검색어 조건 처리 -->
         <choose>
             <when test="selectKeyword != null and selectKeyword != ''">
@@ -126,8 +124,6 @@
 	                WHERE notice_status=1 
 	            </otherwise>
 	        </choose>
-	            
-	              
           ) RN, (SELECT @ROWNUM := 0) tmp
       ) SUB 
       WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
