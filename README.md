@@ -1,8 +1,8 @@
-# 📌 REST API project
+# 📌 Project
 
 ## 개요
 
-HTTP Method만 구현되어 있는 REST API에서 HATEOAS 제약조건을 만족 시킨 REST API로 개발한다.
+* 프로젝트 소개 
 
 ***
 
@@ -10,6 +10,36 @@ HTTP Method만 구현되어 있는 REST API에서 HATEOAS 제약조건을 만족
 * Spring Security
 * HATEOAS
   * ResponseEntity, CollectionModel 클래스를 이용해 구현
+
+***
+
+## 페이지 구현 기능
+
+## ✅ 공지사항(Notice) 페이지 
+
+### 1. 기능
+* 검색
+* 페이징
+* 파일 다운로드
+
+### 2. 고려사항
+
+## ✅ 로그인
+* 소셜로그인 구현 (카카오, 네이버, 구글)
+* 모달창을 이용해 로그인하는 방식
+
+## ✅ 회원가입
+* 아이디, 이메일 중복검사
+* 이메일 인증 메일 발송
+* 다음 주소 API
+* 유효성 검사
+
+## ✅ 게시글
+* Editor5  
+* 추천기능
+* 댓글...
+
+
 
 
 
