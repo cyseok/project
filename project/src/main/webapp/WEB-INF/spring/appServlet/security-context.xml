@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:beans="http://www.springframework.org/schema/beans"
-   xmlns:context="http://www.springframework.org/schema/context"
-   xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
    
 
 	<http auto-config="true" use-expressions="true">
@@ -16,21 +16,8 @@
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		
 		<!-- authentication-success-handler-ref 속성: AuthenticationSuccessHandler 인터페이스를 상속받은 클래스에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
-		<form-login login-page="/user/login"
-		         login-processing-url="/user/login"
-		         username-parameter="id"
-		         password-parameter="pw"
-		         default-target-url="/"
-		         authentication-success-handler-ref="customLoginSuccessHandler"
-		         authentication-failure-handler-ref="customLoginFailureHandler"
-		/>
-     
-		<access-denied-handler ref="customAccessDeniedHandler"/>
-		 
-		<logout logout-url="/logout" logout-success-url="/post" invalidate-session="true" delete-cookies="JSESSIONID"/>
-		
-		<!-- <remember-me data-source-ref="dataSource" token-validity-seconds="604800"/> -->
-      
+<!-- 		         default-target-url="/post" -->
+        
 		<!-- session-management: 로그인 정보가 저장된 세션을 관리하기 위한 엘리먼트 -->
 		<session-management>
 		   <concurrency-control max-sessions="1" expired-url="/sessionError"/>

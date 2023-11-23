@@ -35,11 +35,11 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 		// Collection<T>.contains(T obj): Collection 객체(자료 구조 객체)에 저장된 요소의 존재 유무를 확인하여
 		// 요소의 객체가 없는 경우 [false] / 있는 경우 [true] 반환하는 메소드
-		if(roleNames.contains("ROLE_ADMIN")) {
-			response.sendRedirect(request.getContextPath() + "/admin/main");
+		if(roleNames.contains("ROLE_MASTER")) {
+			response.sendRedirect(request.getContextPath() + "/admin");
 			return;			
 		} else {
-			response.sendRedirect(request.getContextPath() + "/");
+			response.sendRedirect(request.getContextPath() + "/post");
 			return;
 		}
 	}

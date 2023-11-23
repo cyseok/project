@@ -15,8 +15,8 @@ import lombok.Data;
 
 
 // 인증된 사용자 정보를 저장하기 위한 클래스
-// ▶ UserDetails 인터페이스를 상속받아 작성
-// ▶ UserDetails 인터페이스를 상속받은 User 클래스를 상속받아 작성 또한 가능
+// 1. UserDetails 인터페이스를 상속받아 작성
+// 2. UserDetails 인터페이스를 상속받은 User 클래스를 상속받아 작성 또한 가능
 
 @Data
 public class CustomUserDetails implements UserDetails {
@@ -32,8 +32,6 @@ public class CustomUserDetails implements UserDetails {
    private String regdate;
    private String logdate;
    private int status;
-
-   
    private String enabled;
    
    // private List<SecurityAuth> securityAuthList; ◀ 실제로 권한이 저장되지 않음
