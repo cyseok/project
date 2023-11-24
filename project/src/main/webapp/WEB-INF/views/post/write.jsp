@@ -10,22 +10,72 @@
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
 	<title>게시글 작성</title>
 <style>
-	.ck.ck-editor {
-		width: 80%;
-		max-width: 800px;
-		margin: 0 auto;
-	}
-	
-	.ck-editor__editable {
-		height: 70vh;
-	}
-	form {
-	  position: relative;
-	  top: 10px;
-	  width: 500px;
-	}
+#post-form {
+    margin-top: 80px; 
+}
+#postTitle {
+    font-size: 25px;
+}
+.ck.ck-editor {
+	width: 100%;
+	max-width: 100%;
+	margin: 0 auto;
+}
+.ck-editor__editable {
+	height: 60vh;
+}
+.post-label {
+    font-size: 18px;
+}
+.post-form {
+    max-width: 65%;
+    margin: 0 auto 30px;
+    border-radius: 8px;
+}
 
-	</style>
+#resultContainer {
+    border: 1px solid #ccc; /* Add a border to the container */
+    background-color: #fff; /* Set a background color to make it visually separate from the content below */
+    z-index: 999; /* Set a higher z-index to position it above other elements */
+    width: 100% !important;
+}
+#resultContainer p {
+    box-sizing: border-box; /* Include border and padding in the total width and height */
+    padding: 10px; /* Optional: Add padding for better visual appearance */
+    margin: 0; /* Remove default margin */
+}
+  
+  
+/* 검색이미지 */
+.post-search {
+  position: relative;
+}
+
+.post-search input {
+  padding-right: 30px; /* Adjust the padding based on the image size */
+}
+
+#searchImg {
+  position: absolute;
+  top: 50%;
+  right: 20px; /* Adjust the right distance based on your design */
+  transform: translateY(-50%);
+}
+
+.post-form .btn-primary {
+    border: 1px; /* Darker blue border */
+    border-radius: 8px; /* Slightly rounded corners for a more square shape */
+}
+
+.post-form .btn-secondary {
+    background-color: #6c757d; /* Gray background color */
+    color: #fff; /* White text color */
+    border: 1px; /* Darker gray border */
+    border-radius: 8px; /* Slightly rounded corners for a more square shape */
+    padding: 10px 20px; /* Adjust padding as needed */
+    margin-left: 10px; /* Add some space between the buttons */
+}
+</style>
 </head>
   
 <header>
@@ -37,52 +87,66 @@
   <div class="container">
   <div class="row">
   
-	<form enctype="multipart/form-data">
-	  <div class="">
-	    <label for="postTitle">제목</label>
-	    <textarea name="postTitle" id="postTitle" class="form-control" rows="2" placeholder="제목을 입력해주세요"></textarea>
+	<form id="post-form" enctype="multipart/form-data">
+	
+	<input type="hidden" name="userinfoId" id="userinfoId" value="${sessionScope.userinfoId}"> 
+	  <div class="post-form">
+	    <label for="postTitle" class="post-label">제목</label>
+	    <textarea name="postTitle" id="postTitle" class="form-control" rows="2" placeholder="제목을 입력해주세요."></textarea>
 	  </div>
 	  <hr>
-	  <div>
+	  <div class="post-form">
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postDayType" id="dayType" value="1" style="width: 20%">
+		  <br>
 		  <span>평일</span>
 	    </label>
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postDayType" id="dayType" value="2" style="width: 20%">
+		  <br>
 		  <span>주말, 공휴일</span>				
 	    </label>
 	  </div>
 	  <hr>
-	  <div>
+	  <div class="post-form">
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postTag" id="postTag" value="1" style="width: 20%">
+		  <br>
 		  <span>사람없음</span>
 	    </label>
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postTag" id="postTag" value="2" style="width: 20%">
+		  <br>
 		  <span>웨이팅없음</span>				
 	    </label>
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postTag" id="postTag" value="3" style="width: 20%">
+		  <br>
 		  <span>웨이팅 조금</span>
 	    </label>
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postTag" id="postTag" value="4" style="width: 20%">
+		  <br>
 		  <span>웨이팅 김</span>				
 	    </label>
 	  </div>
 	  
-	  <div class="">
-	      <label for="postLoc">지역</label>
-	      <input name="postLoc" id="postLoc" class="form-control" placeholder="내용을 입력해주세요">
+	  <div class="post-form">
+	      <label for="postLoc" class="post-label">지역</label>
+	      <div class="post-search">
+	        <input name="postLoc" id="postLoc" class="form-control" placeholder="내용을 입력해주세요.">
+	        <img id="searchImg" role="button" src="${pageContext.request.contextPath}/assets/images/search.png" width="20" height="20">
+	      </div>
+	      <div id="resultContainer"></div>
 	  </div>
-						  
-	  <textarea name="postContent" id="editor"></textarea>
 	  
-	    <div>
-	      <button type="button" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
-	      <button type="submit" class="" >등 록</button>
+	  <div class="post-form">
+	    <textarea name="postContent" id="editor"></textarea>
+	  </div>  
+	  
+	    <div class="post-form d-flex justify-content-end">
+	      <button type="submit" class="btn btn-primary" >등 록</button>
+	      <button type="button" id="cancelBtn" class="btn btn-secondary ml-2" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
 	    </div>
 	  <sec:csrfInput/>
 	</form>
@@ -104,32 +168,108 @@ $(document).ajaxSend(function(e, xhr){
 
 // 등록
 $("form").submit(function(e) {
-    e.preventDefault(); // 
+    e.preventDefault(); 
+    
+    $('#loading').show();
 
     var formData = new FormData();
-    formData.append("noticeTitle", $("#noticeTitle").val());
-    formData.append("noticeContent", $("#noticeContent").val());
-    formData.append("noticeFileName", $("#noticeFileName").val());
-    formData.append("noticeImgUpload", $("#noticeImg")[0].files[0]);
-    formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
+    formData.append("postTitle", $("#postTitle").val());
+    formData.append("userinfoId", $("#userinfoId").val());
+    formData.append("postDayType", $("#dayType").val());
+    formData.append("postTag", $("#postTag").val());
+    formData.append("postLoc", $("#postLoc").val());
+    formData.append("postContent", $("#editor").val());
 
     $.ajax({
         type: "POST",
-        url: "<c:url value='/notice'/>",
+        url: "<c:url value='/post'/>",
         data: formData,
         contentType: false,
         processData: false,
         dataType: "text",
-        success: function (result) {
-            if (result == "success") {
-                alert("공지 사항을 등록하였습니다.");
-                window.location.href = "${pageContext.request.contextPath}/notice"
+        success: function (data, textStatus, xhr) {
+        	console.log(xhr.status);
+            if (xhr.status == 201) {
+            	$('#loading').hide();
+                alert("게시글을 등록하였습니다.");
+                window.location.href = "${pageContext.request.contextPath}/post"
             } else {
                 alert("글 등록을 실패하였습니다.");
             }
+        }, error: function(error) {
+        	$('#loading').hide();
+            console.log("post-Error:", error);
         }
     });
 });
+</script>
+
+<script>
+$(document.body).on("click", function(event) {
+    // Check if the clicked element is not inside #resultContainer
+    if (!$(event.target).closest("#resultContainer").length) {
+        // Clicked outside #resultContainer, so clear it
+        $("#resultContainer").empty();
+    }
+});
+
+$("#postLoc, #searchImg").on("input keypress click", function(event) {
+	
+	if(event.keyCode == 13) {
+		event.preventDefault();
+	}
+	
+	$("#resultContainer").empty();
+	
+	var text = $("#postLoc").val();
+	
+	if (text.trim() !== "") {
+		
+	    $.ajax({
+	      url: "<c:url value='/naver/search'/>",
+	      type: "GET",
+	      data: {"text": text},
+	      dataType: "json",
+	      success: function(result) {
+	    	  
+	    	  if (result && result.items.length > 0) {
+	              
+	              for (var i = 0; i < 5; i++) {
+	            	  
+	                  var item = result.items[i];
+	                  
+	                  console.log("Title: " + item.title);
+	                  console.log("Link: " + item.link);
+	                  $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
+	              }
+	              
+	              $("#resultContainer p").on("click", function() {
+                      // Set the clicked item's title as the input value
+                      var titleWithoutTags = $(this).text(); // Get title without HTML tags
+    				  var address = $(this).data("address");
+    				  var combinedText = titleWithoutTags + "\n" + address;
+
+    				    // Set the combined text as the input value
+    				    $("#postLoc").val(combinedText);
+    				    $("#resultContainer").empty();
+                  });
+	              
+	          } else {
+	        	  $("#resultContainer").empty();
+	              console.log("No results found.");
+	          }
+	      }, error: function(error) {
+	    	  $("#resultContainer").empty();
+	    	  console.log("Error:" + error.responseText);
+	      }
+	    });
+	    
+	} else {
+		$("#resultContainer").empty();
+		return;
+	}
+});
+
 </script>
 
 <script>		
