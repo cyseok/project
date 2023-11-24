@@ -21,12 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 public class GoogleLoginBean {
-	private final static String GOOGLE_CLIENT_ID = "74522840672-c2abqt0pmnip6qkk1fq7g89d247la27b.apps.googleusercontent.com";
-    private final static String GOOGLE_CLIENT_SECRET = "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";
-    private final static String GOOGLE_REDIRECT_URI = "http://www.itwill.xyz/funfun/google/callback";
+	private final static String GOOGLE_CLIENT_ID = "120474968905-90shjv7bufr1im7jrkun3v6iaeugmbn7.apps.googleusercontent.com";
+    private final static String GOOGLE_CLIENT_SECRET = "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";
+    private final static String GOOGLE_REDIRECT_URI = "http://localhost:8000/google/callback";
     private final static String GOOGLE_SCOPE = "email openid profile";
     private final static String PROFILE_API_URL ="https://www.googleapis.com/oauth2/v2/userinfo";
-	private static final String SESSION_STATE="googleState";
+	private static final String SESSION_STATE="googleSessionState";
 	
 	//구글 로그인 기능을 제공하는 API를 호출하여 결과(code와 stae)를 반환하는 메소드
 	public String getAuthorizationUrl(HttpSession session) {

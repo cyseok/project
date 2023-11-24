@@ -56,8 +56,6 @@ public class GoogleLoginController {
 		String id = (String) responseObject.get("id");
 		String email = (String) responseObject.get("email");
 		String name = (String) responseObject.get("name");
-		// String genderStr = (String)responseObject.get("gender");
-		// String birth = (String)responseObject.get("birth");
 
 		UserinfoAuth auth = new UserinfoAuth();
 		auth.setId("google_" + id);
