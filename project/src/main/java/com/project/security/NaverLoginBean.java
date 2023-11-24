@@ -31,6 +31,7 @@ public class NaverLoginBean {
 		
 		// 생성한 난수 값을 session에 저장 - CSRF 토큰과 동일한 역활
 		session.setAttribute(SESSION_STATE, state);
+		session.setMaxInactiveInterval(60 * 60); 
 		
 		// 로그인 기능을 요청하기 위한 정보가 저장된 OAuth20Service 객체 생성
 		OAuth20Service oAuth20Service=new ServiceBuilder()
