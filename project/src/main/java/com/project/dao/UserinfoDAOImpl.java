@@ -53,7 +53,6 @@ public class UserinfoDAOImpl implements UserinfoDAO {
    /* 아이디 찾기 */
    @Override
    public Userinfo findUserByEmail(String email) {
-      //return sqlSession.selectOne("userinfoMapper.findUserByEmail", email);
       return sqlSession.getMapper(UserinfoMapper.class).findUserByEmail(email);
    }
 

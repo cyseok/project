@@ -4,6 +4,8 @@ package com.project.controller;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.Userinfo;
@@ -93,6 +96,8 @@ public class UserinfoRestController {
    public ResponseEntity<String> loginPOST(
 		   @RequestBody Userinfo userinfo
 		   , HttpSession session) throws Exception {
+	   
+	   Logger logger = LoggerFactory.getLogger(this.getClass());
 
             try {
             	Userinfo userinfoAuth = userinfoservice.getUserinfoLogin(userinfo.getId());
@@ -101,19 +106,20 @@ public class UserinfoRestController {
 		              // 로그인 시
 		              if (pwEncoder.matches(userinfo.getPw(), userinfoAuth.getPw())) {
 		            	  
-		            	  userinfoAuth.setPw("");
 		            	  CustomUserDetails customUserDetails=new CustomUserDetails(userinfoAuth);
-		          		
-		          		  // 인증 사용자로 등록 처리
-		          		  Authentication authentication=new UsernamePasswordAuthenticationToken
-		          				(customUserDetails, null, customUserDetails.getAuthorities());
-		          		
-		          		  // 인증 사용자의 권한 정보를 저장
-		          		  SecurityContextHolder.getContext().setAuthentication(authentication);
-		          		
+		            	  
+		            	  // 인증 사용자로 등록 처리
+		            	  Authentication authentication=new UsernamePasswordAuthenticationToken
+		            			  (customUserDetails, null, customUserDetails.getAuthorities());
+		            	  
+		            	  // 인증 사용자의 권한 정보를 저장
+		            	  SecurityContextHolder.getContext().setAuthentication(authentication);
+		            	  
+		            	  userinfoAuth.setPw("");
 		                  session.setAttribute("userinfo", userinfoAuth);
 		                  session.setMaxInactiveInterval(60 * 60); 
 		                  userinfoservice.updateUserLogindate(userinfoAuth.getId());
+		                  
 		                  
 		                  return ResponseEntity.ok("ok");
 		                  
@@ -127,7 +133,8 @@ public class UserinfoRestController {
 		          }
 		          
 			} catch (Exception e) {
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+				logger.error("Exception during loginPOST:", e);
+		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("서버 오류가 발생했습니다.");
 			}
       
    }

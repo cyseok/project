@@ -27,7 +27,6 @@ public class Userinfo {
    private String id;
    
    @NotBlank
-   @JsonIgnore
    private String pw;
    
    @NotEmpty
