@@ -1008,5 +1008,6 @@ document.getElementById('search-address-button').addEventListener('click', funct
     }).open();
 });
 </script>
-   </body>
+
+</body>
 </html>
