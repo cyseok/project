@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <head>
     <!-- Required meta tags -->
-	<meta charset="utf-8">
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<meta name="author" content="Untree.co">
@@ -12,7 +12,6 @@
 	
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.ckeditor.com/ckeditor5/38.0.0/classic/ckeditor.js"></script>
-	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
 	
 	<script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/tiny-slider.js"></script>
