@@ -193,7 +193,13 @@
       align-items: center;
       justify-content: center;
     }
-		
+	#loading {
+      text-align: center;
+    }
+
+    .loader {
+      display: inline-block;
+    }	
 </style>
 <div id="header-wrapper">
 <header>
@@ -201,9 +207,22 @@
 		<div class="container">
 			<div class="site-navigation">
 				<div class="row">
-					<div class="col-6 col-lg-3">
+				    <div class="col-6 col-lg-3">
 						<a href="${pageContext.request.contextPath}/post" class="logo m-0 float-start" style="color: gray;">Waiting Check</a>
 					</div>
+					
+					<sec:authorize access="isAnonymous()">
+					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
+						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
+							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
+							<li><a href="" style="color: gray; font-size: 19px;">About us</a></li>
+							<li><a href="" style="color: gray; font-size: 19px;">Services</a></li>
+							<li class="active"><a onclick="loginMessage()" role="button" style="color: gray; font-size: 19px;">글작성</a></li>
+						</ul>
+					</div>
+					</sec:authorize>
+					
+					<sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')">
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
 							<li><a href="" style="color: gray; font-size: 19px;">Home</a></li>
@@ -212,82 +231,83 @@
 							<li class="active"><a href="${pageContext.request.contextPath}/post/write" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
+					</sec:authorize>
 					
-				<sec:authorize access="hasRole('ROLE_USER')">
-				<div class="col-6 col-lg-3 text-lg-end">
-					<ul class="js-clone-nav d-block text-end site-menu">
-						<li class="has-children">
-							<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
-							<ul class="dropdown">
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				</sec:authorize>
-				
-				<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<div class="col-6 col-lg-3 text-lg-end">
-					<ul class="js-clone-nav d-block text-end site-menu">
-						<li class="has-children">
-							<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
-							<ul class="dropdown">
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				</sec:authorize>
-				
-				<sec:authorize access="hasRole('ROLE_MASTER')">
-				<div class="col-6 col-lg-3 text-lg-end">
-					<ul class="js-clone-nav d-block text-end site-menu">
-						<li class="has-children">
-							<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
-							<ul class="dropdown">
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">xxxxx</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				</sec:authorize>
-				
-				<sec:authorize access="hasRole('ROLE_SOCIAL')">
-				<div class="col-6 col-lg-3 text-lg-end">
-					<ul class="js-clone-nav d-block text-end site-menu">
-						<li class="has-children">
-							<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
-							<ul class="dropdown">
-								<li><a href="" style="font-size: 1.2em; width: 200px;">닉네임 설정하기</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
-								<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-				</sec:authorize>
-				
-				<sec:authorize access="isAnonymous()">
-				  <div class="col-6 col-lg-3 text-lg-end">
-					 <ul class="js-clone-nav d-block text-end site-menu">
-						<li class="cta-button"><a role="button" id="login-button">로그인</a></li>
-					 </ul>
-				  </div>
-				</sec:authorize>
+					<sec:authorize access="hasRole('ROLE_USER')">
+					<div class="col-6 col-lg-3 text-lg-end">
+						<ul class="js-clone-nav d-block text-end site-menu">
+							<li class="has-children">
+								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
+								<ul class="dropdown">
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					</sec:authorize>
+					
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
+					<div class="col-6 col-lg-3 text-lg-end">
+						<ul class="js-clone-nav d-block text-end site-menu">
+							<li class="has-children">
+								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
+								<ul class="dropdown">
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					</sec:authorize>
+					
+					<sec:authorize access="hasRole('ROLE_MASTER')">
+					<div class="col-6 col-lg-3 text-lg-end">
+						<ul class="js-clone-nav d-block text-end site-menu">
+							<li class="has-children">
+								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
+								<ul class="dropdown">
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					</sec:authorize>
+					
+					<sec:authorize access="hasRole('ROLE_SOCIAL')">
+					<div class="col-6 col-lg-3 text-lg-end">
+						<ul class="js-clone-nav d-block text-end site-menu">
+							<li class="has-children">
+								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
+								<ul class="dropdown">
+									<li><a href="" style="font-size: 1.2em; width: 200px;">닉네임 설정하기</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
+									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					</sec:authorize>
+					
+					<sec:authorize access="isAnonymous()">
+					  <div class="col-6 col-lg-3 text-lg-end">
+						 <ul class="js-clone-nav d-block text-end site-menu">
+							<li class="cta-button"><a role="button" id="login-button">로그인</a></li>
+						 </ul>
+					  </div>
+					</sec:authorize>
 					
 				</div>
 			</div>
 		</div>
+    <hr>	
 	</nav>
 	
 	<form id="logoutForm">
@@ -335,10 +355,19 @@
       </div>
     </div>
   </div>
+ 
   
+  <%-- 로딩 표시 이미지
   <div id="loading" style="display: none;">
     <img src="${pageContext.request.contextPath}/assets/images/loading.gif" alt="Loading..." />
   </div>
+   --%>
+  
+	<div id="loading" style="display: none;">
+ 	  <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+	</div>
   
 <script>
     //CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
@@ -356,6 +385,7 @@
 	var idLengthInput = document.getElementById("idInput");
 	var pwLengthInput = document.getElementById("pwInput");
 	var loginButton = document.getElementById("loginButton");
+	
 	function checkPasswordLength() {
 		  
 	  if (pwLengthInput.value.length >= 8 && idLengthInput.value.length >= 5) {
@@ -388,7 +418,7 @@
                  id: $("#idInput").val(),
                  pw: $("#pwInput").val()
              });
-                 
+             console.log("formData:", formData);
 	    $.ajax({
 	    	type: "POST",
 	        url: "<c:url value='/user/login'/>",
@@ -402,8 +432,7 @@
 	            } else {
 	                alert("아이디와 비밀번호를 확인해주세요.");
 	            }
-	        },
-	          error: function(error) {
+	        }, error: function(error) {
 	            $('#loading').hide();
 	            alert(error.responseText);
 	            console.log("Error:", error);
@@ -452,7 +481,9 @@
  		}
    });
    
-
+   function loginMessage() {
+       alert("로그인 후 이용해주세요!!");
+   }
 </script>
      
 	
