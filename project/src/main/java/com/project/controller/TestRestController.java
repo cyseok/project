@@ -37,13 +37,15 @@ public class TestRestController {
 	
 	@GetMapping(value = "/list")
 	public ResponseEntity<List<Post>> getNoticeList(
-			@RequestParam(defaultValue = "") String selectKeyword
+			@RequestParam(defaultValue = "0") int offset
+			, @RequestParam(defaultValue = "9") int limit
+			, @RequestParam(defaultValue = "") String selectKeyword
 			, @RequestParam(defaultValue = "all") String viewType
 			) {
 		
 		try {
 			
-			List<Post> postList = postService.getSelectPostList(selectKeyword);
+			List<Post> postList = postService.getSelectResentlyPostList(offset, limit, selectKeyword);
 			
 			// 데이터마다 self link 추가하기
 			for (Post post : postList) {
