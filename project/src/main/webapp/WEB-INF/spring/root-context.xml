@@ -105,12 +105,6 @@
       </property>
    </bean>
     
-    
-    
-    
-    
-    
-    
     <!-- 파일 업로드 처리 기능을 제공하는 클래스를 Spring Bean으로 등록 -->
 	<!-- ▶ Spring Bean의 식별자(beanName)를 반드시 multipartResolver라는 이름으로 사용해야 함 -->
 	<!--  <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="filterMultipartResolver"> -->
