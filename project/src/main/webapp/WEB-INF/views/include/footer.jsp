@@ -40,7 +40,7 @@
 				<div class="col-lg-3">
 					<div class="widget">
 						<h3>Contact</h3>
-						<address>43 Raymouth Rd. Baltemoer, London 3910</address>
+						<address>하트 이미지 <a href="https://kr.freepik.com/free-vector/set-of-hearts-multiple-styles_49610200.htm#query=%ED%95%98%ED%8A%B8&position=35&from_view=keyword&track=sph&uuid=b81a1d0e-1f5d-434c-82bc-fc1cb0f61d94">작가 juicy_fish</a> 출처 Freepik</address>
 					</div> <!-- /.widget -->
 				</div> <!-- /.col-lg-3 -->
 
