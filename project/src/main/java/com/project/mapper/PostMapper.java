@@ -2,6 +2,8 @@ package com.project.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.project.dto.Post;
 
 public interface PostMapper {
@@ -24,11 +26,11 @@ public interface PostMapper {
     // 전체 게시글 수 조회 
     int selectPostCount(String selectKeyword);
    
-    // 공지사항 목록 조회 (최근순, 추천순, 댓글순)
-    List<Post> selectPostList(String selectKeyword);
-    List<Post> selectResentlyPostList(String selectKeyword);
-    List<Post> selectLikesPostList(String selectKeyword);
-    List<Post> selectPostCommentList(String selectKeyword);
+    // 공지사항 목록 조회 (최근순, 조회수순, 인기순, 댓글순)
+    List<Post> selectResentlyPostList(@Param("offset") int offset, @Param("limit") int limit, @Param("selectKeyword") String selectKeyword);
+    List<Post> selectViewPostList(@Param("offset") int offset, @Param("limit") int limit, @Param("selectKeyword") String selectKeyword);
+    List<Post> selectLikesPostList(@Param("offset") int offset, @Param("limit") int limit, @Param("selectKeyword") String selectKeyword);
+    List<Post> selectCommentPostList(@Param("offset") int offset, @Param("limit") int limit, @Param("selectKeyword") String selectKeyword);
     
     // 상세보기 페이지에서 이전 글 번호와 다음 글 번호 저장
     Post selectPreNumNextNum(int postIdx);

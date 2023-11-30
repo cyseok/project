@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,7 +32,13 @@ public class PostController {
 	
 	// 게시글 상세보기
 	@GetMapping("/{postIdx}")
-	public String postDetail() {
+	public String postDetail(HttpSession session, Authentication authentication) {
+		CustomUserDetails userinfo = null;
+		
+		if (authentication != null) {
+			userinfo = (CustomUserDetails) authentication.getPrincipal();
+			session.setAttribute("userinfoId", userinfo.getId());
+		}
 	   return "/post/detail";
 	}
 	
@@ -41,9 +48,16 @@ public class PostController {
 		return "/post/modify";
 	}
 	
-	// 공지사항 작성 페이지 요청
+	// 게시글 작성 페이지 요청
 	@GetMapping("/write")
-	public String postAdd() {
+	public String postAdd(HttpSession session, Authentication authentication) {
+		
+		CustomUserDetails userinfo = null;
+		
+		if (authentication != null) {
+			userinfo = (CustomUserDetails) authentication.getPrincipal();
+			session.setAttribute("userinfoId", userinfo.getId());
+		}
 		return "/post/write";
 	}
 

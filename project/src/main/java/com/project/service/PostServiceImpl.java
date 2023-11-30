@@ -53,25 +53,24 @@ public class PostServiceImpl implements PostService{
 		postDAO.postViewCount(postIdx);
 	}
 
-
 	@Override
-	public List<Post> getSelectPostList(String selectKeyword) {
-		return postDAO.selectPostList(selectKeyword);
+	public List<Post> getSelectResentlyPostList(int offset, int limit, String selectKeyword) {
+		return postDAO.selectResentlyPostList(offset, limit, selectKeyword);
+	}
+	
+	@Override
+	public List<Post> getSelectViewPostList(int offset, int limit, String selectKeyword) {
+		return postDAO.selectViewPostList(offset, limit, selectKeyword);
 	}
 
 	@Override
-	public List<Post> getSelectResentlyPostList(String selectKeyword) {
-		return postDAO.selectResentlyPostList(selectKeyword);
+	public List<Post> getSelectLikesPostList(int offset, int limit, String selectKeyword) {
+		return postDAO.selectLikesPostList(offset, limit, selectKeyword);
 	}
 
 	@Override
-	public List<Post> getSelectLikesPostList(String selectKeyword) {
-		return postDAO.selectLikesPostList(selectKeyword);
-	}
-
-	@Override
-	public List<Post> getSelectPostCommentList(String selectKeyword) {
-		return postDAO.selectPostCommentList(selectKeyword);
+	public List<Post> getSelectCommentPostList(int offset, int limit, String selectKeyword) {
+		return postDAO.selectCommentPostList(offset, limit, selectKeyword);
 	}
 
 	@Override

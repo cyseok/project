@@ -8,6 +8,7 @@
 	        post_idx
             , userinfo_id 
             , post_loc
+            , post_address
             , post_daytype
             , post_title
             , post_content
@@ -22,6 +23,7 @@
 	        #{postIdx} 
 	        , #{userinfoId}
 	        , #{postLoc}
+	        , #{postAddress}
 	        , #{postDayType}
 	        , #{postTitle}
 	        , #{postContent}
@@ -66,53 +68,39 @@
         </choose>
 	</select>
 	
-	<select id="selectPostList" resultType="com.project.dto.Post">
-		SELECT 
-			post_idx
-			, post_loc
-			, post_daytype
-			, post_title
-			, post_content
-			, date_format(post_regdate, '%y-%m-%d') as post_regdate
-			, CASE
-       			 WHEN TIMESTAMPDIFF(WEEK, post_regdate, NOW()) <![CDATA[<]]> 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, post_regdate, NOW()), '시간 전')
-      			 WHEN TIMESTAMPDIFF(MONTH, post_regdate, NOW()) <![CDATA[<]]> 1 THEN CONCAT(TIMESTAMPDIFF(DAY, post_regdate, NOW()), '일 전')
-      			 WHEN TIMESTAMPDIFF(YEAR, post_regdate, NOW()) <![CDATA[>]]> 1 THEN CONCAT(TIMESTAMPDIFF(YEAR, post_regdate, NOW()), '년 전')
-        	     ELSE CONCAT(TIMESTAMPDIFF(MONTH, post_regdate, NOW()), '개월 전')
-   				 END as time_ago
-			, post_tag
-			, post_viewcnt
-			, post_likes
-			, post_status
-			, post_comment
-		FROM post
-		  <choose>
-	           <when test="selectKeyword != null and selectKeyword != ''">
-	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
-	                AND post_status = 1
-	           </when>
-	           <otherwise>
-	               WHERE post_status=1 
-	           </otherwise>
-	      </choose>
-	    ORDER BY post_regdate DESC
-	</select>
+	<!-- 게시글 조회수 업데이트 -->
+	<update id="postViewCount" parameterType="com.project.dto.Post">
+		UPDATE post SET
+        	post_viewcnt = post_viewcnt + 1
+        WHERE post_idx=#{postIdx}
+	</update>
 	
 	<select id="selectResentlyPostList" resultType="com.project.dto.Post">
 		SELECT 
-			post_idx
-			, post_loc
-			, post_daytype
-			, post_title
-			, post_content
-			, date_format(post_regdate, '%y-%m-%d') as post_regdate
-			, post_tag
-			, post_viewcnt
-			, post_likes
-			, post_status
-			, post_comment
-		FROM post
+			p.post_idx
+			, p.userinfo_id
+			, u.nickname
+			, p.post_title
+			, p.post_loc
+			, p.post_daytype
+			, CASE
+				WHEN TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()), '초 전')
+       	        WHEN TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()), '분 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 0 THEN CONCAT(TIMESTAMPDIFF(HOUR, p.post_regdate, NOW()), '시간 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 1 THEN '어제'
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 7 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate), '일 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 30 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 7, '주 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 365 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 30, '개월 전')
+				ELSE CONCAT(DATEDIFF(NOW(), post_regdate) DIV 365, '년 전')
+			END as post_regdate
+			, p.post_tag
+			, p.post_viewcnt
+			, p.post_likes
+			, p.post_status
+			, p.post_comment
+		FROM post p
+		LEFT JOIN userinfo u 
+		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -123,23 +111,76 @@
 	               WHERE post_status=1 
 	           </otherwise>
 	      </choose>
-	    ORDER BY post_regdate DESC
+	    ORDER BY p.post_regdate DESC
+	    LIMIT #{offset}, #{limit}
+	</select>
+	
+	<select id="selectViewPostList" resultType="com.project.dto.Post">
+		SELECT 
+			p.post_idx
+			, p.userinfo_id
+			, u.nickname
+			, p.post_title
+			, p.post_loc
+			, p.post_daytype
+			, CASE
+				WHEN TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()), '초 전')
+       	        WHEN TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()), '분 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 0 THEN CONCAT(TIMESTAMPDIFF(HOUR, p.post_regdate, NOW()), '시간 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 1 THEN '어제'
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 7 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate), '일 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 30 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 7, '주 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 365 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 30, '개월 전')
+				ELSE CONCAT(DATEDIFF(NOW(), post_regdate) DIV 365, '년 전')
+			END as post_regdate
+			, p.post_tag
+			, p.post_viewcnt
+			, p.post_likes
+			, p.post_status
+			, p.post_comment
+		FROM post p
+		LEFT JOIN userinfo u 
+		ON p.userinfo_id = u.id
+		  <choose>
+	           <when test="selectKeyword != null and selectKeyword != ''">
+	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND post_status = 1
+	           </when>
+	           <otherwise>
+	               WHERE post_status=1 
+	           </otherwise>
+	      </choose>
+	    ORDER BY p.post_viewcnt DESC
+	    LIMIT #{offset}, #{limit}
 	</select>
 	
 	<select id="selectLikesPostList" resultType="com.project.dto.Post">
 		SELECT 
-			post_idx
-			, post_loc
-			, post_daytype
-			, post_title
-			, post_content
-			, date_format(post_regdate, '%y-%m-%d') as post_regdate
-			, post_tag
-			, post_viewcnt
-			, post_likes
-			, post_status
-			, post_comment
-		FROM post
+			p.post_idx
+			, p.userinfo_id
+			, u.nickname
+			, p.post_title
+			, p.post_loc
+			, p.post_daytype
+			, CASE
+				WHEN TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()), '초 전')
+       	        WHEN TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()), '분 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 0 THEN CONCAT(TIMESTAMPDIFF(HOUR, p.post_regdate, NOW()), '시간 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 1 THEN '어제'
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 7 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate), '일 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 30 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 7, '주 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 365 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 30, '개월 전')
+				ELSE CONCAT(DATEDIFF(NOW(), post_regdate) DIV 365, '년 전')
+			END as post_regdate
+			, p.post_tag
+			, p.post_viewcnt
+			, p.post_likes
+			, p.post_status
+			, p.post_comment
+		FROM post p
+		LEFT JOIN userinfo u 
+		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -150,23 +191,37 @@
 	               WHERE post_status=1 
 	           </otherwise>
 	      </choose>
-	    ORDER BY post_likes DESC
+	    ORDER BY p.post_likes DESC
+	    LIMIT #{offset}, #{limit}
 	</select>
 	
-	<select id="selectPostCommentList" resultType="com.project.dto.Post">
+	
+	<select id="selectCommentPostList" resultType="com.project.dto.Post">
 		SELECT 
-			post_idx
-			, post_loc
-			, post_daytype
-			, post_title
-			, post_content
-			, date_format(post_regdate, '%y-%m-%d') as post_regdate
-			, post_tag
-			, post_viewcnt
-			, post_likes
-			, post_status
-			, post_comment
-		FROM post
+			p.post_idx
+			, p.userinfo_id
+			, u.nickname
+			, p.post_title
+			, p.post_loc
+			, p.post_daytype
+			, CASE
+				WHEN TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()), '초 전')
+       	        WHEN TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()), '분 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 0 THEN CONCAT(TIMESTAMPDIFF(HOUR, p.post_regdate, NOW()), '시간 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 1 THEN '어제'
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 7 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate), '일 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 30 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 7, '주 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 365 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 30, '개월 전')
+				ELSE CONCAT(DATEDIFF(NOW(), post_regdate) DIV 365, '년 전')
+			END as post_regdate
+			, p.post_tag
+			, p.post_viewcnt
+			, p.post_likes
+			, p.post_status
+			, p.post_comment
+		FROM post p
+		LEFT JOIN userinfo u 
+		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -177,23 +232,40 @@
 	               WHERE post_status=1 
 	           </otherwise>
 	      </choose>
-	    ORDER BY post_comment DESC
+	    ORDER BY p.post_comment DESC
+	    LIMIT #{offset}, #{limit}
 	</select>
 	
-	<!-- 공지사항 상세보기 -->
+	<!-- 게시글 상세보기 -->
 	<select id="selectPost" resultType="com.project.dto.Post">
 		SELECT
-         	post_idx
-			, post_loc
-			, post_daytype
-			, post_title
-			, post_content
-			, date_format(post_regdate, '%y-%m-%d') as post_regdate
-			, post_tag
-			, post_viewcnt
-			, post_likes
-			, post_status
-		FROM post
+         	p.post_idx
+			, p.userinfo_id
+			, u.nickname
+			, p.post_title
+			, p.post_loc
+			, p.post_address
+			, p.post_daytype
+			, p.post_content
+			, date_format(p.post_regdate, '%y-%m-%d') as post_regdate 
+			, CASE
+				WHEN TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(SECOND, p.post_regdate, NOW()), '초 전')
+       	        WHEN TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()) <![CDATA[<]]> 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, p.post_regdate, NOW()), '분 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 0 THEN CONCAT(TIMESTAMPDIFF(HOUR, p.post_regdate, NOW()), '시간 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[=]]> 1 THEN '어제'
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 7 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate), '일 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 30 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 7, '주 전')
+				WHEN DATEDIFF(NOW(), p.post_regdate) <![CDATA[<]]> 365 THEN CONCAT(DATEDIFF(NOW(), p.post_regdate) DIV 30, '개월 전')
+				ELSE CONCAT(DATEDIFF(NOW(), post_regdate) DIV 365, '년 전')
+			END as day
+			, p.post_tag
+			, p.post_viewcnt
+			, p.post_likes
+			, p.post_status
+			, p.post_comment
+		FROM post p
+		LEFT JOIN userinfo u 
+		ON p.userinfo_id = u.id
         WHERE post_idx=#{postIdx}
 	</select>
 	

@@ -4,36 +4,45 @@
 	    width: 280px; 
 	    height: 300px; 
 	    border-radius: 35px;
-	  }
-	  .bg-white.m-body {
+	}
+	.bg-white.m-body {
 	  position: relative;
 	}
 	/* 날짜 */
 	.bg-white.m-body > span.date {
 	  position: absolute;
-	  top: 10%;
+	  top: 9%;
 	  left: 10%;
-	  font-size: 13px;
+	  font-size: 15px;
 	}
-	/* 지역이름 */
+	/* 평일, 공휴일 */
 	.bg-white.m-body > span.float-right {
 	  position: absolute;
 	  top: 10%;
 	  right: 10%;
-	  font-size: 16px;
+	  font-size: 14px;
 	}
-	/* 평일, 공휴일 */
+	/* 지역이름 */
 	.bg-white.m-body > span.float-left {
 	  position: absolute;
-	  top: 17%;
-	  right: 10%;
-	  font-size: 14px;
+	  top: 65%;
+	  right: 12%;
+	  font-size: 16px;
+	  
+	  white-space: normal;
+      overflow: hidden;
+      line-height: 1.3;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp : 1;
+      -webkit-box-orient: vertical;
+      max-width: 160px;
 	 
 	}
 	/* 제목 */
 	.bg-white.m-body > p.styled-text {
 	  position: absolute;
-	  top: 31%;
+	  top: 28%;
 	  width: 80%;
 	  transform: translateX(5%);
 	  left: 5%;
@@ -80,3 +89,43 @@
 	  right: 13%;
 	  font-size: 13px;
 	}
+	.content-section {
+      padding-top: 100px;
+ 	}
+	#type {
+	  border-color: #6c757d;
+	  background-color: #808080;
+	  color: #fff; 
+	  
+	}
+	.m-body {
+	  padding: 50px; 
+	  margin-bottom: 20px;
+	}
+	.clickable-post a {
+	  color: inherit; 
+	  text-decoration: none; 
+	}
+	.clickable-post a:hover {
+	  color: inherit; 
+	}
+	#searchButton {
+	  width: 100px;
+	  height: 44px; 
+	  box-sizing: border-box;
+	  border-radius: 6px;
+	}	
+    .inp-base {
+      width: 250px; /* Set the width to 200px */
+      box-sizing: border-box;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: flex-start;
+      padding-left: 10%;
+     }
+     .search-buttons {
+       display: flex;
+       justify-content: flex-start;
+       padding-left: 60%;
+     }

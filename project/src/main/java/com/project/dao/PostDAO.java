@@ -25,10 +25,10 @@ public interface PostDAO {
     int selectPostCount(String selectKeyword);
    
     // 공지사항 목록 조회 (최근순, 추천순, 댓글순)
-    List<Post> selectPostList(String selectKeyword);
-    List<Post> selectResentlyPostList(String selectKeyword);
-    List<Post> selectLikesPostList(String selectKeyword);
-    List<Post> selectPostCommentList(String selectKeyword);
+    List<Post> selectResentlyPostList(int offset, int limit, String selectKeyword);
+    List<Post> selectViewPostList(int offset, int limit, String selectKeyword);
+    List<Post> selectLikesPostList(int offset, int limit, String selectKeyword);
+    List<Post> selectCommentPostList(int offset, int limit, String selectKeyword);
     
     // 상세보기 페이지에서 이전 글 번호와 다음 글 번호 저장
     Post selectPreNumNextNum(int postIdx);

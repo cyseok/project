@@ -57,9 +57,20 @@
 
 #searchImg {
   position: absolute;
-  top: 50%;
-  right: 20px; /* Adjust the right distance based on your design */
+  top: 52%;
+  right: 49px; /* Adjust the right distance based on your design */
   transform: translateY(-50%);
+  width: 23px; 
+  height: 23px;
+}
+
+#xImg {
+  position: absolute;
+  top: 50%;
+  right: 14px; /* Adjust the right distance based on your design */
+  transform: translateY(-50%);
+  width: 22px; 
+  height: 22px; 
 }
 
 .post-form .btn-primary {
@@ -89,12 +100,13 @@
   
 	<form id="post-form" enctype="multipart/form-data">
 	
-	<input type="hidden" name="userinfoId" id="userinfoId" value="${sessionScope.userinfoId}"> 
+	<input type="hidden" name="userinfoId" id="userinfoId" value="${sessionScope.userinfoId}">
+	 
 	  <div class="post-form">
 	    <label for="postTitle" class="post-label">제목</label>
 	    <textarea name="postTitle" id="postTitle" class="form-control" rows="2" placeholder="제목을 입력해주세요."></textarea>
 	  </div>
-	  <hr>
+	  <hr style="width: 64%; margin-left: auto; margin-right: auto;">
 	  <div class="post-form">
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postDayType" id="dayType" value="1" style="width: 20%">
@@ -107,7 +119,7 @@
 		  <span>주말, 공휴일</span>				
 	    </label>
 	  </div>
-	  <hr>
+	  <hr style="width: 64%; margin-left: auto; margin-right: auto;">
 	  <div class="post-form">
 	    <label class="radio-inline" style="width: 20%">
 		  <input type="radio" name="postTag" id="postTag" value="1" style="width: 20%">
@@ -134,14 +146,17 @@
 	  <div class="post-form">
 	      <label for="postLoc" class="post-label">지역</label>
 	      <div class="post-search">
+	        <input type="hidden" name="postAddress" id="postAddress">
 	        <input name="postLoc" id="postLoc" class="form-control" placeholder="내용을 입력해주세요.">
-	        <img id="searchImg" role="button" src="${pageContext.request.contextPath}/assets/images/search.png" width="20" height="20">
+	        <img id="searchImg" role="button" src="${pageContext.request.contextPath}/assets/images/search.png">
+	        <img id="xImg" role="button" src="${pageContext.request.contextPath}/assets/images/xmark.png" onclick="clearInput()">
 	      </div>
 	      <div id="resultContainer"></div>
 	  </div>
 	  
 	  <div class="post-form">
-	    <textarea name="postContent" id="editor"></textarea>
+	    <textarea name="postContent" id="editor">
+	    </textarea>
 	  </div>  
 	  
 	    <div class="post-form d-flex justify-content-end">
@@ -171,14 +186,16 @@ $("form").submit(function(e) {
     e.preventDefault(); 
     
     $('#loading').show();
+    var editorContent = window.editor.getData();
 
     var formData = new FormData();
     formData.append("postTitle", $("#postTitle").val());
     formData.append("userinfoId", $("#userinfoId").val());
-    formData.append("postDayType", $("#dayType").val());
-    formData.append("postTag", $("#postTag").val());
+    formData.append("postDayType", $("input[name='postDayType']:checked").val());
+    formData.append("postTag", $("input[name='postTag']:checked").val());
     formData.append("postLoc", $("#postLoc").val());
-    formData.append("postContent", $("#editor").val());
+    formData.append("postAddress", $("#postAddress").val());
+    formData.append("postContent", editorContent);
 
     $.ajax({
         type: "POST",
@@ -188,6 +205,7 @@ $("form").submit(function(e) {
         processData: false,
         dataType: "text",
         success: function (data, textStatus, xhr) {
+        	console.log(data);
         	console.log(xhr.status);
             if (xhr.status == 201) {
             	$('#loading').hide();
@@ -206,9 +224,7 @@ $("form").submit(function(e) {
 
 <script>
 $(document.body).on("click", function(event) {
-    // Check if the clicked element is not inside #resultContainer
     if (!$(event.target).closest("#resultContainer").length) {
-        // Clicked outside #resultContainer, so clear it
         $("#resultContainer").empty();
     }
 });
@@ -235,28 +251,24 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
 	    	  if (result && result.items.length > 0) {
 	              
 	              for (var i = 0; i < 5; i++) {
-	            	  
 	                  var item = result.items[i];
 	                  
-	                  console.log("Title: " + item.title);
-	                  console.log("Link: " + item.link);
 	                  $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
 	              }
 	              
 	              $("#resultContainer p").on("click", function() {
-                      // Set the clicked item's title as the input value
-                      var titleWithoutTags = $(this).text(); // Get title without HTML tags
-    				  var address = $(this).data("address");
-    				  var combinedText = titleWithoutTags + "\n" + address;
-
-    				    // Set the combined text as the input value
-    				    $("#postLoc").val(combinedText);
-    				    $("#resultContainer").empty();
+                      
+                      var title = $(this).data("title");
+                      var address = $(this).data("address");
+                      
+    				  $("#postLoc").val(title.split("<b>").join("").split("</b>").join(""));
+    				  $("#postAddress").val(address);
+    				  $("#resultContainer").empty();
                   });
 	              
 	          } else {
 	        	  $("#resultContainer").empty();
-	              console.log("No results found.");
+	              console.log("결과없음.");
 	          }
 	      }, error: function(error) {
 	    	  $("#resultContainer").empty();
@@ -270,6 +282,13 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
 	}
 });
 
+function clearInput() {
+    var searchInputTitle = document.getElementById('postLoc');
+    var searchInputAdress = document.getElementById('postAddress');
+
+    searchInputTitle.value = '';
+    searchInputAdress.value = '';
+}
 </script>
 
 <script>		
@@ -289,6 +308,7 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
 	})
 	.then(editor => {
 		console.log('Editor was initialized');
+		window.editor = editor;
 	})
 	.catch(error => {
 		console.error(error);

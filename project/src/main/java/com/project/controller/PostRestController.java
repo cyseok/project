@@ -14,14 +14,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.project.dto.Likes;
 import com.project.dto.Post;
+import com.project.service.LikesService;
 import com.project.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,56 +37,140 @@ public class PostRestController {
 	// @Autowired
 	private final PostService postService;
 	
+	private final LikesService likesService;
+	
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
-			@RequestParam(defaultValue = "") String selectKeyword
-			, @RequestParam(defaultValue = "all") String viewType
+			@RequestParam(defaultValue = "0") int offset
+			, @RequestParam(defaultValue = "9") int limit
+			, @RequestParam(defaultValue = "") String selectKeyword
+			, @RequestParam(defaultValue = "recently") String viewType
 			) {
 		
-		try {
+		if ("recently".equals(viewType)) {
 			
-			List<Post> postList = postService.getSelectPostList(selectKeyword);
-			
-			// 데이터마다 self link 추가하기
-			for (Post post : postList) {
-				Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
-						.slash(post.getPostIdx())
-						.withRel("post-detail");  // 링크 이름 설정 
-				post.add(link);
+			try {
+				List<Post> postList = postService.getSelectResentlyPostList(offset, limit, selectKeyword);
 				
+				System.out.println(postList);
+				
+				// 데이터마다 self link 추가하기
+				for (Post post : postList) {
+					Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
+							.slash(post.getPostIdx())
+							.withRel("post-detail");  // 링크 이름 설정 
+					post.add(link);
+					
+				}
+				// 컨트롤러 다른 자원에 접근하는 링크
+				CollectionModel<Post> postResources = CollectionModel.of(postList);
+				
+				Link postListLink = WebMvcLinkBuilder.linkTo(PostRestController.class)
+						.slash("list")
+						.withSelfRel();
+				Link noticeListLink = WebMvcLinkBuilder.linkTo(NoticeRestController.class)
+						.slash("list")
+						.withRel("notice-list");
+				postResources.add(postListLink);
+				postResources.add(noticeListLink);
+				
+				// 헤더에 content type 명시 
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE);
+				
+				return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
+				
+			} catch (Exception e) {
+				System.out.println("에러발생");
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			// 컨트롤러 다른 자원에 접근하는 링크
-			CollectionModel<Post> postResources = CollectionModel.of(postList);
 			
-			Link postListLink = WebMvcLinkBuilder.linkTo(PostRestController.class)
-					.slash("list")
-					.withSelfRel();
-			Link noticeListLink = WebMvcLinkBuilder.linkTo(NoticeRestController.class)
-					.slash("list")
-					.withRel("notice-list");
-			postResources.add(postListLink);
-			postResources.add(noticeListLink);
+		} else if("like".equals(viewType)){
 			
-			// 헤더에 content type 명시 
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE);
+			try {
+				List<Post> postList = postService.getSelectLikesPostList(offset, limit, selectKeyword);
+				
+				// 데이터마다 self link 추가하기
+				for (Post post : postList) {
+					Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
+							.slash(post.getPostIdx())
+							.withRel("post-detail");  // 링크 이름 설정 
+					post.add(link);
+					
+				}
+				// 컨트롤러 다른 자원에 접근하는 링크
+				CollectionModel<Post> postResources = CollectionModel.of(postList);
+				
+				Link postListLink = WebMvcLinkBuilder.linkTo(PostRestController.class)
+						.slash("list")
+						.withSelfRel();
+				Link noticeListLink = WebMvcLinkBuilder.linkTo(NoticeRestController.class)
+						.slash("list")
+						.withRel("notice-list");
+				postResources.add(postListLink);
+				postResources.add(noticeListLink);
+				
+				// 헤더에 content type 명시 
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE);
+				
+				return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
+				
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}			
+		} else {
+			try {
+				List<Post> postList = postService.getSelectViewPostList(offset, limit, selectKeyword);
+				
+				// 데이터마다 self link 추가하기
+				for (Post post : postList) {
+					Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
+							.slash(post.getPostIdx())
+							.withRel("post-detail");  // 링크 이름 설정 
+					post.add(link);
+					
+				}
+				// 컨트롤러 다른 자원에 접근하는 링크
+				CollectionModel<Post> postResources = CollectionModel.of(postList);
+				
+				Link postListLink = WebMvcLinkBuilder.linkTo(PostRestController.class)
+						.slash("list")
+						.withSelfRel();
+				Link noticeListLink = WebMvcLinkBuilder.linkTo(NoticeRestController.class)
+						.slash("list")
+						.withRel("notice-list");
+				postResources.add(postListLink);
+				postResources.add(noticeListLink);
+				
+				// 헤더에 content type 명시 
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE);
+				
+				return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
+				
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}		
 			
-			return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
-			
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+		
 	}
 	
-	@GetMapping("{noticeIdx}")
-	public ResponseEntity<CollectionModel<Map<String, Object>>> getPost(@PathVariable("noticeIdx") int postIdx) {
+	@GetMapping("/detail/{postIdx}")
+	public ResponseEntity<CollectionModel<Map<String, Object>>> getPost(
+			@PathVariable("postIdx") int postIdx
+			, @RequestParam String userinfoId) {
 		
 		try {
 			Post post = postService.getSelectPost(postIdx);
+			postService.getPostViewCount(postIdx);
 			Post preNumNextNum = postService.getSelectPreNumNextNum(postIdx);
 			int prevNum = preNumNextNum.getPrevnum();
 			int nextNum = preNumNextNum.getNextnum();
 			
+			Likes likes = likesService.getPostLikes(postIdx, userinfoId);
+			System.out.println(likes);
 			
 			// 다른 행동 전이 링크 추가하기
 			Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
@@ -134,8 +221,8 @@ public class PostRestController {
 	}
 	
 	// 게시글 등록 
-	@PostMapping("/post/imgUpload")
-	public ResponseEntity<Post> postAdd(@ModelAttribute Post post) {
+	@PostMapping(produces = "application/json")
+	public ResponseEntity<Post> postAdd(Post post) {
 		try {
 			postService.addPost(post);
 			Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
@@ -155,7 +242,7 @@ public class PostRestController {
 	
 	// 게시글 수정
 	@PutMapping("/{postIdx}")
-	public ResponseEntity<Post> postModify(@ModelAttribute Post post) {
+	public ResponseEntity<Post> postModify(@RequestBody Post post) {
 		try {
 			postService.modifyPost(post);
 			Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
