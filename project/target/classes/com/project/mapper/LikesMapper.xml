@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.LikesMapper">
+	<insert id="insertPostLikes" parameterType="com.project.dto.Likes">
+		INSERT INTO likes(
+	        likes_idx
+            , userinfo_id 
+            , post_idx
+	        )
+	    VALUES(
+	        #{likesIdx}
+	        , #{userinfoId}
+	        , #{postIdx} 
+	        )
+	</insert>
+	
+	<delete id="deletePostLikes" parameterType="com.project.dto.Likes">
+		DELETE FROM	likes
+	    WHERE post_idx=#{postIdx} 
+	    	   AND userinfo_id=#{userinfoId}
+	</delete>
+	
+	<select id="selectPostLikes" parameterType="com.project.dto.Likes">
+		SELECT  
+   			likes_idx
+   			, userinfo_id
+   			, post_idx
+    	FROM likes
+    	WHERE 	post_idx=#{postIdx}
+    			AND userinfo_id=#{userinfoId}
+	</select>
+</mapper>
