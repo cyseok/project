@@ -36,11 +36,6 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public Post getSelectPost(int postIdx) throws PostNotFoundException {
 		
-		/*
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("post", postDAO.selectPost(postIdx));
-        resultMap.put("prevNumNextNum", postDAO.selectPreNumNextNum(postIdx));
-        */
 		Post post = postDAO.selectPost(postIdx);
 		if (post == null) {
 	        throw new PostNotFoundException("존재하는 글이 없습니다");
@@ -51,6 +46,16 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public void getPostViewCount(int postIdx) {
 		postDAO.postViewCount(postIdx);
+	}
+	
+	@Override
+	public void getPostLikesCheck(int postIdx) {
+		postDAO.postLikesCheck(postIdx);
+	}
+	
+	@Override
+	public void getPostLikesCancel(int postIdx) {
+		postDAO.postLikesCancel(postIdx);
 	}
 
 	@Override

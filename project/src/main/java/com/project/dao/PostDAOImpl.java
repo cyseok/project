@@ -41,6 +41,16 @@ public class PostDAOImpl implements PostDAO{
 	}
 
 	@Override
+	public int postLikesCheck(int postIdx) {
+		return sqlSession.getMapper(PostMapper.class).postLikesCheck(postIdx);
+	}
+	
+	@Override
+	public int postLikesCancel(int postIdx) {
+		return sqlSession.getMapper(PostMapper.class).postLikesCancel(postIdx);
+	}
+	
+	@Override
 	public int selectPostCount(String selectKeyword) {
 		return sqlSession.getMapper(PostMapper.class).selectPostCount(selectKeyword);
 	}
@@ -69,5 +79,6 @@ public class PostDAOImpl implements PostDAO{
 	public Post selectPreNumNextNum(int postIdx) {
 		return sqlSession.getMapper(PostMapper.class).selectPreNumNextNum(postIdx);
 	}
+
 
 }

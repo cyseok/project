@@ -20,6 +20,12 @@ public interface PostDAO {
    
     // 공지사항 조회수 
     int postViewCount(int postIdx);
+    
+    // 추천 체크 
+    int postLikesCheck(int postIdx);
+    
+    // 추천 취소 
+    int postLikesCancel(int postIdx);
    
     // 전체 게시글 수 조회 
     int selectPostCount(String selectKeyword);

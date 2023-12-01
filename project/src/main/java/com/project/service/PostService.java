@@ -22,6 +22,12 @@ public interface PostService {
     // 공지사항 조회수 
     void getPostViewCount(int postIdx);
     
+    // 추천 체크 
+    void getPostLikesCheck(int postIdx);
+    
+    // 추천 취소 
+    void getPostLikesCancel(int postIdx);
+    
     // 공지사항 목록 조회 (최근순, 추천순, 댓글순)
     List<Post> getSelectResentlyPostList(int offset, int limit, String selectKeyword);
     List<Post> getSelectViewPostList(int offset, int limit, String selectKeyword);

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -34,9 +35,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostRestController {
 	
-	// @Autowired
+	@Autowired
 	private final PostService postService;
 	
+	@Autowired
 	private final LikesService likesService;
 	
 	@GetMapping(value = "/list")
@@ -170,7 +172,6 @@ public class PostRestController {
 			int nextNum = preNumNextNum.getNextnum();
 			
 			Likes likes = likesService.getPostLikes(postIdx, userinfoId);
-			System.out.println(likes);
 			
 			// 다른 행동 전이 링크 추가하기
 			Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
@@ -196,6 +197,7 @@ public class PostRestController {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("post", post);
 			resultMap.put("prevNumNextNum", preNumNextNum);
+			resultMap.put("likes", likes);
 			
 			// 다른 컨트롤러 접근 링크 추가
 			CollectionModel<Map<String, Object>> postResources = CollectionModel.of(Collections.singletonList(resultMap));

@@ -75,6 +75,20 @@
         WHERE post_idx=#{postIdx}
 	</update>
 	
+	<!-- 추천 체크 -->
+	<update id="postLikesCheck" parameterType="com.project.dto.Post">
+		UPDATE post SET
+        	post_likes = post_likes + 1
+        WHERE post_idx=#{postIdx}
+	</update>
+	
+	<!-- 추천 취소 -->
+	<update id="postLikesCancel" parameterType="com.project.dto.Post">
+		UPDATE post SET
+        	post_likes = post_likes - 1
+        WHERE post_idx=#{postIdx}
+	</update>
+	
 	<select id="selectResentlyPostList" resultType="com.project.dto.Post">
 		SELECT 
 			p.post_idx
