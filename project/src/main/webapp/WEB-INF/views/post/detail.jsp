@@ -108,8 +108,8 @@
         
         <div class="post-button">
           <sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')">
-          <button type="button" class="btn btn-primary">수정 하기</button>
-          <button type="button" class="btn btn-primary" onclick="postDelete()">삭제 하기</button>
+          <button type="button" class="btn btn-primary" id="editButton" style="display: none;">수정 하기</button>
+          <button type="button" class="btn btn-primary" id="deleteButton" onclick="postDelete()" style="display: none;">삭제 하기</button>
           </sec:authorize>
           <button type="button" class="btn btn-secondary" id="prevButton">이전글</button>
           <button type="button" class="btn btn-secondary" id="nextButton">다음글</button>
@@ -126,10 +126,10 @@
           <span id="postRegdateDay"></span>
           
           <sec:authorize access="isAnonymous()">
-            <img role="button" src="${pageContext.request.contextPath}/assets/images/heart_before.jpg" id="postLike" class="heart-image" onclick="login()">
+            <img role="button" src="" id="postLike" class="heart-image" onclick="login()">
           </sec:authorize>
           <sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')">
-            <img role="button" src="${pageContext.request.contextPath}/assets/images/heart_before.jpg" id="postLike" class="heart-image">
+            <img role="button" src="" id="postLike" class="heart-image" onclick="likesCheck()">
           </sec:authorize>
           
           <span id="postLikecnt"></span>
@@ -209,6 +209,7 @@ function postDetail() {
         	var post = result.content[0].post;
         	var prevNum = result.content[0].prevNumNextNum.prevnum;
         	var nextNum = result.content[0].prevNumNextNum.nextnum;
+        	var likes = result.content[0].likes;
         	
         	if (post === null) {
         		alert("존재하지 않는 글입니다.");
@@ -222,6 +223,19 @@ function postDetail() {
         		} else {
         			$("#postNickname").text(post.nickname);
         		}
+        		
+        		if(likes === null) {
+        			$("#postLike").attr("src", "${pageContext.request.contextPath}/assets/images/heart_before.jpg");
+        		} else {
+        			$("#postLike").attr("src", "${pageContext.request.contextPath}/assets/images/heart_after.jpg");
+        			$("#postLike").attr("onclick", "likesCancel()");
+        		}
+        		// 게시글 작성자와 로그인한 사용자를 비교해 삭제, 수정버튼 활성화
+        		if (userinfoId === post.userinfoId) {
+        			$("#editButton").show();
+        		    $("#deleteButton").show();
+        		}
+        		
         		$("#postRegdate").text(post.postRegdate);
         		$("#postRegdateDay").text(post.day);
         		$("#postView").html("조회수 : " + post.postViewcnt);
@@ -243,6 +257,7 @@ function postDetail() {
 	            } else {
 	            	$("#nextButton").remove();
 				}
+	            
         	}
         },
         error: function(error) {
@@ -305,6 +320,64 @@ function postDelete() {
 // 비로그인 시 추천 클릭
 function login() {
 	alert("로그인 후 이용가능합니다.");
+}
+
+// 추천 기능
+function likesCheck() {   
+	
+	var postLikecnt = document.querySelector('#postLikecnt').textContent;
+	postLikecnt = parseInt(postLikecnt) + 1;
+	$("#postLikecnt").text(postLikecnt);
+	
+	$("#postLike").attr("src", "${pageContext.request.contextPath}/assets/images/heart_after.jpg");
+	$("#postLike").removeAttr("onclick");
+	setTimeout(function() {
+        $("#postLike").attr("onclick", "likesCancel()");
+    }, 3000);
+	
+       $.ajax({
+           type: "POST",
+           url: "<c:url value='/post/likesCheck'/>/",
+           data: {"postIdx" : postIdx
+        	      , "userinfoId": userinfoId
+        	   },
+           success: function(response) {
+           },
+           error: function(error) {
+           	console.log(error);
+           	postLikecnt = parseInt(postLikecnt) - 1;
+     	    $("#postLikecnt").text(postLikecnt);
+   	       }
+      });
+}
+
+// 추천 취소
+function likesCancel() {  
+	
+	var postLikecnt = document.querySelector('#postLikecnt').textContent;
+	postLikecnt = parseInt(postLikecnt) - 1;
+	$("#postLikecnt").text(postLikecnt);
+	
+	$("#postLike").attr("src", "${pageContext.request.contextPath}/assets/images/heart_before.jpg");
+	$("#postLike").removeAttr("onclick");
+	setTimeout(function() {
+        $("#postLike").attr("onclick", "likesCheck()");
+    }, 3000);
+
+       $.ajax({
+           type: "POST",
+           url: "<c:url value='/post/likesCancel'/>/",
+           data: {'postIdx' : postIdx
+     	        , "userinfoId": userinfoId
+    	      },
+    	   success: function(response) {
+           },
+           error: function(error) {
+           	console.log(error);
+           	postLikecnt = parseInt(postLikecnt) + 1;
+     	    $("#postLikecnt").text(postLikecnt);
+   	       }
+      });
 }
 </script>
 </body>
