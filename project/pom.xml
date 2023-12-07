@@ -42,20 +42,6 @@
 			</exclusions>
 		</dependency>
 		
-		
-		<dependency>
-		  <groupId>org.slf4j</groupId>
-		  <artifactId>slf4j-log4j12</artifactId>
-		  <version>2.0.7</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>mysql</groupId>
-		  <artifactId>mysql-connector-java</artifactId>
-		  <version>8.0.33</version>
-		</dependency>
-		
-		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -117,9 +103,11 @@
 			<!--scope : 라이브러리가 프로젝트에 빌드되는 시점을 설정하는 엘리먼트 -->
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- <artifactId>slf4j-log4j12</artifactId> -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<artifactId>slf4j-reload4j</artifactId>
 			<version>${org.slf4j-version}</version>
 			<scope>runtime</scope>
 		</dependency>
@@ -221,10 +209,16 @@
 
 		
 		<!-- MySQL DBMS 서버 사용 -->
-		<dependency>
+   <!-- <dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>8.0.33</version>
+		</dependency> -->
+		
+		<dependency>
+		  <groupId>com.mysql</groupId>
+		  <artifactId>mysql-connector-j</artifactId>
+		  <version>8.0.33</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
