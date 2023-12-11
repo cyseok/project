@@ -2,21 +2,16 @@ package com.project.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,7 +22,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.dto.Notice;
-import com.project.security.CustomUserDetails;
 import com.project.service.NoticeService;
 
 import lombok.RequiredArgsConstructor;
@@ -129,7 +123,7 @@ public class NoticeRestController {
 	
 	// 공지사항 수정
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PatchMapping("/{noticeIdx}")
+	@PutMapping("/{noticeIdx}")
 	public String noticeModify(@ModelAttribute Notice notice
 			, @PathVariable("noticeIdx") int noticeIdx
 			, @RequestParam(value="noticeFileUpload", required = false) MultipartFile noticeFileUpload
