@@ -54,8 +54,6 @@ public class PostRestController {
 			try {
 				List<Post> postList = postService.getSelectResentlyPostList(offset, limit, selectKeyword);
 				
-				System.out.println(postList);
-				
 				// 데이터마다 self link 추가하기
 				for (Post post : postList) {
 					Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
@@ -83,7 +81,6 @@ public class PostRestController {
 				return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
 				
 			} catch (Exception e) {
-				System.out.println("에러발생");
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 			
@@ -122,6 +119,7 @@ public class PostRestController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}			
 		} else {
+			
 			try {
 				List<Post> postList = postService.getSelectViewPostList(offset, limit, selectKeyword);
 				
@@ -214,7 +212,7 @@ public class PostRestController {
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_TYPE, "application/json"); // 설정할 미디어 타입을 지정
-			headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*"); // CORS 정책을 설정할 수 있음
+			
 			return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
 			
 		} catch (Exception e) {
@@ -236,15 +234,16 @@ public class PostRestController {
             // 201응답인 CREATED에서는 생성된 데이터에 대한 접근 링크를 헤더에 추가해준다.
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(WebMvcLinkBuilder.linkTo(PostRestController.class).slash(post.getPostIdx()).toUri());
-			return new ResponseEntity<>(post, HttpStatus.CREATED);
+            
+			return new ResponseEntity<Post>(post, headers, HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Post>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	// 게시글 수정
 	@PutMapping("/{postIdx}")
-	public ResponseEntity<Post> postModify(@RequestBody Post post) {
+	public ResponseEntity<Post> postModify(Post post) {
 		try {
 			postService.modifyPost(post);
 			Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
@@ -268,6 +267,25 @@ public class PostRestController {
 		}
 	}
 	
+	@GetMapping(value = "/my-postwrite")
+	public ResponseEntity<List<Post>> getMyWriteList(@RequestParam String userinfoId) {
+	    try {
+	        List<Post> post = postService.getSelectWritePost(userinfoId);
+	        return new ResponseEntity<>(post, HttpStatus.OK);
+	    } catch (Exception e) {
+	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+	}
+	
+	@GetMapping(value = "/my-postlikes")
+	public ResponseEntity<List<Post>> getMyLikesList(@RequestParam String userinfoId) {
+		try {
+			List<Post> post = postService.getSelectLikesPost(userinfoId);
+			return new ResponseEntity<>(post, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 }
 

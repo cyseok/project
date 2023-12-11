@@ -54,6 +54,16 @@ public class PostDAOImpl implements PostDAO{
 	public int selectPostCount(String selectKeyword) {
 		return sqlSession.getMapper(PostMapper.class).selectPostCount(selectKeyword);
 	}
+	
+	@Override
+	public List<Post> selectLikesPost(String userinfoId) {
+		return sqlSession.getMapper(PostMapper.class).selectLikesPost(userinfoId);
+	}
+	
+	@Override
+	public List<Post> selectWritePost(String userinfoId) {
+		return sqlSession.getMapper(PostMapper.class).selectWritePost(userinfoId);
+	}
 
 	@Override
 	public List<Post> selectResentlyPostList(int offset, int limit, String selectKeyword) {

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.Userinfo;
@@ -50,7 +49,7 @@ public class UserinfoRestController {
 		  return ResponseEntity.ok("ok");
 		
 	  } catch (Exception e) {
-		return ResponseEntity.badRequest().body("회원가입 실패: " + e.getMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패: " + e.getMessage());
 	  }
 	  
    }
@@ -62,7 +61,7 @@ public class UserinfoRestController {
       int result = userinfoservice.idCheck(id);
 
       if (result != 0) {
-    	  return ResponseEntity.badRequest().body("중복 아이디가 존재합니다."); // 중복 아이디가 존재
+    	  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 아이디가 존재합니다."); // 중복 아이디가 존재
       } else {
     	  return ResponseEntity.ok("ok"); // 중복 아이디 x
       }
@@ -75,7 +74,7 @@ public class UserinfoRestController {
        int emailResult = userinfoservice.emailCheck(email);
 
        if (emailResult != 0) {
-    	   return ResponseEntity.badRequest().body("중복 이메일이 존재합니다."); // 중복된 이메일 존재
+    	   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 이메일이 존재합니다."); // 중복된 이메일 존재
        } else {
     	   return ResponseEntity.ok("ok"); // 중복 없음
        }
@@ -87,7 +86,7 @@ public class UserinfoRestController {
 	    try {
 		  return ResponseEntity.ok(mailSend.joinEmail(email));
 	  } catch (Exception e) {
-		  return ResponseEntity.badRequest().body("중복 이메일이 존재합니다.");
+		  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 이메일이 존재합니다.");
 	  }
    }
    
@@ -124,12 +123,12 @@ public class UserinfoRestController {
 		                  return ResponseEntity.ok("ok");
 		                  
 		              } else {
-		                  return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
+		                  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
 		              }
 		              
 		          // 계정이 존재하지 않을때
 		          } else {
-		             return ResponseEntity.badRequest().body("아이디와 비밀번호를 확인해주세요.");
+		             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("아이디와 비밀번호를 확인해주세요.");
 		          }
 		          
 			} catch (Exception e) {

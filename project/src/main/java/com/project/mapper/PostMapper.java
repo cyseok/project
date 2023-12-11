@@ -31,6 +31,12 @@ public interface PostMapper {
    
     // 전체 게시글 수 조회 
     int selectPostCount(String selectKeyword);
+    
+    // 사용자의 추천 게시글 조회
+    List<Post> selectLikesPost(String userinfoId);
+    
+    // 사용자 작성 글 조회
+    List<Post> selectWritePost(String userinfoId);
    
     // 공지사항 목록 조회 (최근순, 조회수순, 인기순, 댓글순)
     List<Post> selectResentlyPostList(@Param("offset") int offset, @Param("limit") int limit, @Param("selectKeyword") String selectKeyword);

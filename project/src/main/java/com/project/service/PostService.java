@@ -28,6 +28,12 @@ public interface PostService {
     // 추천 취소 
     void getPostLikesCancel(int postIdx);
     
+    // 사용자의 추천 게시글 조회
+    List<Post> getSelectLikesPost(String userinfoId);
+    
+    // 사용자 작성 글 조회
+    List<Post> getSelectWritePost(String userinfoId);
+    
     // 공지사항 목록 조회 (최근순, 추천순, 댓글순)
     List<Post> getSelectResentlyPostList(int offset, int limit, String selectKeyword);
     List<Post> getSelectViewPostList(int offset, int limit, String selectKeyword);

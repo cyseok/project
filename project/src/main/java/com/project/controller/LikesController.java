@@ -46,7 +46,7 @@ public class LikesController {
 	// 추천 취소
 	@PostMapping("/likesCancel")
 	public ResponseEntity<String> likesCancel(@RequestParam int postIdx
-			, @RequestParam String userinfoId) {
+			, @RequestParam("userinfoId") String userinfoId) {
 		try {
 			Likes likes = new Likes();
 			likes.setPostIdx(postIdx);

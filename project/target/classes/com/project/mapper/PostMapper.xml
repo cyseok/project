@@ -41,6 +41,10 @@
 		UPDATE post SET
 			post_title=#{postTitle} 
             , post_content=#{postContent}
+            , post_loc=#{postLoc}
+            , post_address=#{postAddress}
+            , post_tag=#{postTag}
+            , post_daytype=#{postDayType}
             
         WHERE post_idx=#{postIdx}
 	</update>
@@ -114,7 +118,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-		ON p.userinfo_id = u.id
+			ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -154,7 +158,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-		ON p.userinfo_id = u.id
+			ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -194,7 +198,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-		ON p.userinfo_id = u.id
+			ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -235,7 +239,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-		ON p.userinfo_id = u.id
+			ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -279,7 +283,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-		ON p.userinfo_id = u.id
+			ON p.userinfo_id = u.id
         WHERE post_idx=#{postIdx}
 	</select>
 	
@@ -298,5 +302,40 @@
 		FROM post
 		WHERE post_status = 1 AND post_idx = #{postIdx} 
 		ORDER BY post_regdate DESC
+	</select>
+	
+	<select id="selectLikesPost" resultType="com.project.dto.Post">
+		SELECT 
+			p.post_idx
+			, l.userinfo_id
+			, u.nickname
+			, p.post_title
+			, p.post_loc
+			, p.post_daytype
+			, date_format(p.post_regdate, '%y-%m-%d') as post_regdate
+			, p.post_tag
+			, p.post_status
+		FROM post p
+		LEFT JOIN likes l 
+			ON p.post_idx = l.post_idx
+		LEFT JOIN userinfo u 
+			ON p.userinfo_id = u.id
+		
+		WHERE l.userinfo_id = #{userinfoId} 
+			AND p.post_status = 1
+	    ORDER BY p.post_regdate DESC
+	</select>
+	
+	<select id="selectWritePost" resultType="com.project.dto.Post">
+		SELECT 
+			post_idx
+			, post_title
+			, post_loc
+			, date_format(post_regdate, '%y-%m-%d') as post_regdate
+			, post_status
+		FROM post
+		WHERE userinfo_id = #{userinfoId} 
+			AND post_status = 1
+	    ORDER BY post_regdate DESC
 	</select>
 </mapper>

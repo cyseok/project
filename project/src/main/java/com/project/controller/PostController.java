@@ -47,7 +47,7 @@ public class PostController {
 		return "/post/modify";
 	}
 	
-	// 게시글 작성 페이지 요청
+	// 게시글 작성 페이지
 	@GetMapping("/write")
 	public String postAdd(HttpSession session, Authentication authentication) {
 		
@@ -58,6 +58,32 @@ public class PostController {
 			session.setAttribute("userinfoId", userinfo.getId());
 		}
 		return "/post/write";
+	}
+	
+	// 나의 작성글 페이지
+	@GetMapping("/my-write")
+	public String myWritePost(HttpSession session, Authentication authentication) {
+		
+		CustomUserDetails userinfo = null;
+		
+		if (authentication != null) {
+			userinfo = (CustomUserDetails) authentication.getPrincipal();
+			session.setAttribute("userinfoId", userinfo.getId());
+		}
+		return "/post/my-write";
+	}
+	
+	// 나의 추천글 페이지
+	@GetMapping("/my-likes")
+	public String myLikesPost(HttpSession session, Authentication authentication) {
+		
+		CustomUserDetails userinfo = null;
+		
+		if (authentication != null) {
+			userinfo = (CustomUserDetails) authentication.getPrincipal();
+			session.setAttribute("userinfoId", userinfo.getId());
+		}
+		return "/post/my-likes";
 	}
 
 }

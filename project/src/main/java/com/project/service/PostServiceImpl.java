@@ -57,6 +57,16 @@ public class PostServiceImpl implements PostService{
 	public void getPostLikesCancel(int postIdx) {
 		postDAO.postLikesCancel(postIdx);
 	}
+	
+	@Override
+	public List<Post> getSelectLikesPost(String userinfoId) {
+		return postDAO.selectLikesPost(userinfoId);
+	}
+	
+	@Override
+	public List<Post> getSelectWritePost(String userinfoId) {
+		return postDAO.selectWritePost(userinfoId);
+	}
 
 	@Override
 	public List<Post> getSelectResentlyPostList(int offset, int limit, String selectKeyword) {
