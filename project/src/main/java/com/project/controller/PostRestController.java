@@ -13,6 +13,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class PostRestController {
 	@Autowired
 	private final LikesService likesService;
 	
+	@CrossOrigin(origins = "*")
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "0") int offset
