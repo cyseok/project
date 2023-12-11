@@ -15,6 +15,7 @@
 		<org.slf4j-version>2.0.7</org.slf4j-version>
 		<spring.security-version>5.8.1</spring.security-version> 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<finalName>project</finalName>
 	</properties>
 
 	<!-- dependencies : dependency 엘리먼트를 등록하기 위한 엘리먼트 -->
