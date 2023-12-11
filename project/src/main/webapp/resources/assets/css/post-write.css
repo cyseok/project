@@ -1,0 +1,79 @@
+#post-form {
+    margin-top: 80px; 
+}
+#postTitle {
+    font-size: 25px;
+}
+#postTitleModify {
+    font-size: 25px;
+}
+.ck.ck-editor {
+	width: 100%;
+	max-width: 100%;
+	margin: 0 auto;
+}
+.ck-editor__editable {
+	height: 60vh;
+}
+.post-label {
+    font-size: 18px;
+}
+.post-form {
+    max-width: 65%;
+    margin: 0 auto 30px;
+    border-radius: 8px;
+}
+
+#resultContainer {
+    border: 1px solid #ccc; /* Add a border to the container */
+    background-color: #fff; /* Set a background color to make it visually separate from the content below */
+    z-index: 999; /* Set a higher z-index to position it above other elements */
+    width: 100% !important;
+}
+#resultContainer p {
+    box-sizing: border-box; /* Include border and padding in the total width and height */
+    padding: 10px; /* Optional: Add padding for better visual appearance */
+    margin: 0; /* Remove default margin */
+}
+  
+  
+/* 검색이미지 */
+.post-search {
+  position: relative;
+}
+
+.post-search input {
+  padding-right: 30px; /* Adjust the padding based on the image size */
+}
+
+#searchImg {
+  position: absolute;
+  top: 52%;
+  right: 49px; /* Adjust the right distance based on your design */
+  transform: translateY(-50%);
+  width: 23px; 
+  height: 23px;
+}
+
+#xImg {
+  position: absolute;
+  top: 50%;
+  right: 14px; /* Adjust the right distance based on your design */
+  transform: translateY(-50%);
+  width: 22px; 
+  height: 22px; 
+}
+
+.post-form .btn-primary {
+    border: 1px; /* Darker blue border */
+    border-radius: 8px; /* Slightly rounded corners for a more square shape */
+}
+
+.post-form .btn-secondary {
+    background-color: #6c757d; /* Gray background color */
+    color: #fff; /* White text color */
+    border: 1px; /* Darker gray border */
+    border-radius: 8px; /* Slightly rounded corners for a more square shape */
+    padding: 10px 20px; /* Adjust padding as needed */
+    margin-left: 10px; /* Add some space between the buttons */
+}
