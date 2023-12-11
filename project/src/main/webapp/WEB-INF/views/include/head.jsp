@@ -37,5 +37,6 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/glightbox.min.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/post-list.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/post-write.css">
 </head>
   

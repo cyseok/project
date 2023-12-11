@@ -140,6 +140,40 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		console.log(postScroll);
         		var postElement1 = $("<p style='font-size: 25px;'>검색결과가 없습니다.</p>");
         		$("#postList").append(postElement1);
+        		
+        		
+        	} else if(result.content.length < 16) {
+        		for (var i = 0; i < result.content.length; i++) {
+	                var postList = result.content[i];
+	                var postElement2 = 
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                          "<div class='media-entry'>" +
+	                            "<div class='bg-white m-body'>" +
+	                              "<span class='date'>" + postList.postRegdate + "</span>" +
+	                              "<span class='float-right'>" + 
+	                              (function() {
+	                                  if (postList.postDayType === 1) {
+	                                      return "평일";
+	                                  } else {
+	                                      return "공휴일, 주말";
+	                                  }
+	                              })() +
+	                              "</span>" +
+	                              "<span class='float-left' title='"+postList.postLoc+"'>" + postList.postLoc + "</span>" +
+	                              "<p class='styled-text' title='"+postList.postTitle+"'>" + postList.postTitle + "</p>" +
+	                              "<hr class='position-line'>" +
+	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='login-image'>" +
+	                              "<span class='bottom-left'>" + (postList.nickname === null || postList.nickname === "" ? "닉네임없음" : postList.nickname) + "</span>" +
+	                              "<span class='bottom-right'>" + postList.postViewcnt + " views</span>" +
+	                            "</div>" +
+	                          "</div>" +
+	                        "</a>" +
+	                    "</div>");
+	                
+	                $("#postList").append(postElement2);
+	            }
+	                postScroll = false;
             } else {
 				// 공지사항 목록 출력            	
 	            for (var i = 0; i < result.content.length; i++) {

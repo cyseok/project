@@ -5,7 +5,6 @@
 	.logo.m-0.float-start {
 	  font-size: 32px;
 	}
-	
 	#login-image {
 	  width: 70px;
 	  height: 70px;
@@ -192,11 +191,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-	#loading {
       text-align: center;
     }
-
     .loader {
       display: inline-block;
     }	
@@ -208,15 +204,15 @@
 			<div class="site-navigation">
 				<div class="row">
 				    <div class="col-6 col-lg-3">
-						<a href="${pageContext.request.contextPath}/post" class="logo m-0 float-start" style="color: gray;">Waiting Check</a>
+						<a href="${pageContext.request.contextPath}/" class="logo m-0 float-start" style="color: gray;">Waiting Check</a>
 					</div>
 					
 					<sec:authorize access="isAnonymous()">
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
+							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">Home</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
-							<li><a href="" style="color: gray; font-size: 19px;">About us</a></li>
-							<li><a href="" style="color: gray; font-size: 19px;">Services</a></li>
+							<li><a href="" onclick="errorMessage()" style="color: gray; font-size: 19px;">매장 소식</a></li>
 							<li class="active"><a onclick="loginMessage()" role="button" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
@@ -225,9 +221,9 @@
 					<sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')">
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
-							<li><a href="" style="color: gray; font-size: 19px;">Home</a></li>
-							<li><a href="" style="color: gray; font-size: 19px;">About us</a></li>
-							<li><a href="" style="color: gray; font-size: 19px;">Services</a></li>
+							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">Home</a></li>
+							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
+							<li><a href="" onclick="errorMessage()" style="color: gray; font-size: 19px;">매장소식</a></li>
 							<li class="active"><a href="${pageContext.request.contextPath}/post/write" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
@@ -239,9 +235,8 @@
 							<li class="has-children">
 								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
+									<li><a href="${pageContext.request.contextPath}/post/my-write" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
+									<li><a href="${pageContext.request.contextPath}/post/my-likes" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
 								</ul>
 							</li>
@@ -255,9 +250,7 @@
 							<li class="has-children">
 								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
+									<li><a href="" onclick="errorMessage()" style="font-size: 1.2em; width: 200px;">매장 작성글</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
 								</ul>
 							</li>
@@ -271,8 +264,7 @@
 							<li class="has-children">
 								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내정보</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
+									<li><a href="" onclick="errorMessage()" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
 								</ul>
 							</li>
@@ -286,9 +278,8 @@
 							<li class="has-children">
 								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
-									<li><a href="" style="font-size: 1.2em; width: 200px;">닉네임 설정하기</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
-									<li><a href="" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
+									<li><a href="${pageContext.request.contextPath}/post/my-write" style="font-size: 1.2em; width: 200px;">내 작성글</a></li>
+									<li><a href="${pageContext.request.contextPath}/post/my-likes" style="font-size: 1.2em; width: 200px;">내 관심글</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
 								</ul>
 							</li>
@@ -418,7 +409,6 @@
                  id: $("#idInput").val(),
                  pw: $("#pwInput").val()
              });
-             console.log("formData:", formData);
 	    $.ajax({
 	    	type: "POST",
 	        url: "<c:url value='/user/login'/>",
@@ -428,7 +418,7 @@
 	        success: function (response) {
 	            if (response === "ok") {
 	            	$('#loading').hide();
-	            	location.reload();
+	            	window.location.href = "${pageContext.request.contextPath}/"
 	            } else {
 	                alert("아이디와 비밀번호를 확인해주세요.");
 	            }
@@ -448,17 +438,17 @@
  	        event.preventDefault(); 
  	        if (confirm("로그아웃 하시겠습니까?")) {
  	        	
-  	        $.ajax({
-  	            type: 'POST',
-  	            url: "<c:url value='/logout'/>",
-  	            data: $("#logoutForm").serialize(), 
-  	            success: function(data) {
-  	                location.reload();
-  	            },
-  	            error: function(data) {
-  	                alert("로그아웃 실패");
-  	            }
-  	        });
+	  	        $.ajax({
+	  	            type: 'POST',
+	  	            url: "<c:url value='/logout'/>",
+	  	            data: $("#logoutForm").serialize(), 
+	  	            success: function(data) {
+	  	                location.reload();
+	  	            },
+	  	            error: function(data) {
+	  	                alert("로그아웃 실패");
+	  	            }
+	  	        });
  	        }
  	    });
  	});
@@ -483,6 +473,9 @@
    
    function loginMessage() {
        alert("로그인 후 이용해주세요!!");
+   }
+   function errorMessage() {
+       alert("페이지를 만드는 중입니다..");
    }
 </script>
      

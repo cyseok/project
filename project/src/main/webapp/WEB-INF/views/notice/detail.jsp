@@ -46,67 +46,67 @@
   
 <body>
 
-           <div class="">
-              <h3 class="" id="title"></h3>
-              <input type="text" id="content">
-              <p class="" id="noticeRegdate"></p>
-              <p class="" id="viewCount"></p>
-           </div>
+	<div class="">
+	   <h3 class="" id="title"></h3>
+	   <input type="text" id="content">
+	   <p class="" id="noticeRegdate"></p>
+	   <p class="" id="viewCount"></p>
+	</div>
            
-             <img id="noticeImg" src="" >
+    <img id="noticeImg" src="" >
        	   
-               <!-- 파일 다운로드 링크 -->
-               <b id="noticeFileName"></b>
-                 <a id="noticeDownload" href="" download=""></a>
+    <!-- 파일 다운로드 링크 -->
+    <b id="noticeFileName"></b>
+    <a id="noticeDownload" href="" download=""></a>
                
                
-              	<!-- 관리자 권한 주기 -->
-            <%-- <sec:authorize access="hasRole('ROLE_ADMIN')"></sec:authorize> --%>
-           	   <div class="">
-              	  <button type="button" id="noticeModify" class="">수정하기</button>
-                  <button type="button" class="" onclick="noticeDelete();">삭 제</button>
-               </div>
-             
+   	<!-- 관리자 권한 주기 -->
+    <sec:authorize access="hasRole('ROLE_MASTER')">
+ 	<div class="">
+      <button type="button" id="noticeModify" class="">수정하기</button>
+      <button type="button" class="" onclick="noticeDelete();">삭 제</button>
+    </div>
+    </sec:authorize>          
             
-            <!-- 이전글 다음글 -->
-            <div class="">
-              	<button id="noticeListButton" type="button" onclick="location.href='${pageContext.request.contextPath}/notice'"><span>목록으로</span></button>
-            	<button id="prevNum" type="button" onclick=""></button>
-            	<button id="nextNum" type="button" onclick=""></button>
-            </div>
+    <!-- 이전글 다음글 -->
+    <div class="">
+      <button id="noticeListButton" type="button" onclick="location.href='${pageContext.request.contextPath}/notice'"><span>목록으로</span></button>
+      <button id="prevNum" type="button" onclick=""></button>
+      <button id="nextNum" type="button" onclick=""></button>
+    </div>
               
-            <!-- 수정 폼 출력 -->
-            <form enctype="multipart/form-data" id="noticeModifyForm" style="display: none;">
-              <div>
-              <div class="" id="">
-                <label for="noticeTitle">제목</label>
-                <textarea id="noticeTitle" name="noticeTitle" class=""></textarea>
-              </div>
-              
-              <div class="">
-                  <label for="noticeContent">내용</label>
-                  <textarea id="noticeContent" name="noticeContent" class="" rows="15"></textarea>
-              </div>
-              <div>
-                <img id="preview" src="" style="width:30%; height: 30%;">
-              </div>
-              <div>
-                <label for="noticeImgFile">사진 올리기
-	 		      <input type="file" class="" id="noticeImgFile" name="noticeImgUpload" onchange="readURL(this);">
-	 		    </label>
-              </div>
-	 		  <button type="button" onclick="clearPreview()">사진 삭제</button>
-              <div class="">
-                 <label>파일 첨부</label>
-                 <input type="file" id="noticeFile" name="noticeFileUpload">
-              </div>
-              <hr>
-              <input type="hidden" id="noticeIdx" name="noticeIdx">
-              <!-- 수정 버튼 -->
-              <button id="modifyBtn" type="submit">저장</button>
-              <button id="noticeModifyCancel" type="button">취소</button>
-              </div>
-            </form>
+	<!-- 수정 폼 출력 -->
+    <form enctype="multipart/form-data" id="noticeModifyForm" style="display: none;">
+      <div>
+      <div class="" id="">
+        <label for="noticeTitle">제목</label>
+        <textarea id="noticeTitle" name="noticeTitle" class=""></textarea>
+      </div>
+      
+      <div class="">
+          <label for="noticeContent">내용</label>
+          <textarea id="noticeContent" name="noticeContent" class="" rows="15"></textarea>
+      </div>
+      <div>
+        <img id="preview" src="" style="width:30%; height: 30%;">
+        </div>
+        <div>
+          <label for="noticeImgFile">사진 올리기
+   		  <input type="file" class="" id="noticeImgFile" name="noticeImgUpload" onchange="readURL(this);">
+          </label>
+        </div>
+        <button type="button" onclick="clearPreview()">사진 삭제</button>
+      <div class="">
+         <label>파일 첨부</label>
+         <input type="file" id="noticeFile" name="noticeFileUpload">
+      </div>
+      <hr>
+      <input type="hidden" id="noticeIdx" name="noticeIdx">
+      <!-- 수정 버튼 -->
+      <button id="modifyBtn" type="submit">저장</button>
+      <button id="noticeModifyCancel" type="button">취소</button>
+      </div>
+    </form>
                 
               
 <script type="text/javascript">
@@ -209,8 +209,8 @@ function noticeDetail() {
 	            // 수정 폼 출력
 	            $("#noticeTitle").val(notice.noticeTitle);
 	            $("#noticeContent").val(notice.noticeContent);
-	            alert(notice.noticeImg);
-	            if (notice.noticeImg != null || notice.noticeImg != "null" || notice.noticeImg != 0) {
+	            console.log(notice.noticeImg);
+	            if (notice.noticeImg != null) {
 	           	    $("#noticeImg").attr("src", "<c:url value='/resources/upload/' />" + notice.noticeImg);
 	           	 	$("#noticeImg").before("<hr>");
 	           	 	$("#noticeImg").after("<hr>");
@@ -221,7 +221,7 @@ function noticeDetail() {
 	            	$("#preview").remove();
 				}
 	            
-	            if (notice.noticeFile != null || notice.noticeFile != "null" || notice.noticeFile != 0) {
+	            if (notice.noticeFile != null) {
 	            	$("#noticeFileName").html("첨부파일 : ");
 		            $("#noticeDownload")
 		            	.attr("href", "<c:url value='/resources/upload/' />" + notice.noticeFile)

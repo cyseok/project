@@ -99,7 +99,7 @@
     <button id="searchButton" class="" style="float:right; margin-right:150px; height:48px;" onclick="noticeSearch();">검색</button>
     <button id="resetButton" class="" style="float:right; margin-right:150px; height:48px;" onclick="noticeListDisplay();">초기화</button>
     <button id="noticeAddButton" class="" style="float:right; margin-right:150px; height:48px;" onclick="noticeAddButton();">작성하기</button>
-    <input type="text" class="" id="selectKeyword" placeholder="제목, 내용으로 검색해보세요!" style="width:250px; height:15px; float:right; margin-right:10px;" onkeyup="handleKeyPress(event)">
+    <input type="text" class="" id="selectKeyword" placeholder="제목, 내용으로 검색해보세요!" style="width:250px; height:15px; float:right; margin-right:10px;">
 
 
 	<!-- 게시글 목록 출력 -->
@@ -164,7 +164,6 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
    });
  
 });
-
 
 //Enter 키를 눌렀을 때 검색 기능
 $("#selectKeyword").keypress(function(){
@@ -283,15 +282,6 @@ function noticeSearch() {
 function noticeAddButton() {     
 	window.location.href = "${pageContext.request.contextPath}/notice/write";
 }
-
-// 엔터키로 검색
-function handleKeyPress(event) {
-    if (event.keyCode === 13 || event.which === 13 || event.key === 'Enter') {
-        // event.preventDefault(); 
-        document.getElementById('searchButton').click();
-    }
-}
-
 </script>
 </body>
 </html>

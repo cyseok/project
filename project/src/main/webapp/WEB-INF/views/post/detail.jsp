@@ -108,7 +108,7 @@
         
         <div class="post-button">
           <sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')">
-          <button type="button" class="btn btn-primary" id="editButton" style="display: none;">수정 하기</button>
+          <button type="button" class="btn btn-primary" id="editButton" style="display: none;" onclick="postModify()">수정 하기</button>
           <button type="button" class="btn btn-primary" id="deleteButton" onclick="postDelete()" style="display: none;">삭제 하기</button>
           </sec:authorize>
           <button type="button" class="btn btn-secondary" id="prevButton">이전글</button>
@@ -173,6 +173,73 @@
       </div>
     </div>
   </div>
+  
+  <form id="postModifyForm" style="display: none;">
+  
+	  <div class="post-form">
+	    <label for="postTitle" class="post-label">제목</label>
+	    <textarea name="postTitle" id="postTitleModify" class="form-control" rows="2" placeholder="제목을 입력해주세요."></textarea>
+	  </div>
+	  <hr style="width: 64%; margin-left: auto; margin-right: auto;">
+	  <div class="post-form">
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postDayType" id="dayTypeModify" value="1" style="width: 20%">
+		  <br>
+		  <span>평일</span>
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postDayType" id="dayTypeModify" value="2" style="width: 20%">
+		  <br>
+		  <span>주말, 공휴일</span>				
+	    </label>
+	  </div>
+	  <hr style="width: 64%; margin-left: auto; margin-right: auto;">
+	  <div class="post-form">
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTagModify" value="1" style="width: 20%">
+		  <br>
+		  <span>사람없음</span>
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTagModify" value="2" style="width: 20%">
+		  <br>
+		  <span>웨이팅없음</span>				
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTagModify" value="3" style="width: 20%">
+		  <br>
+		  <span>웨이팅 조금</span>
+	    </label>
+	    <label class="radio-inline" style="width: 20%">
+		  <input type="radio" name="postTag" id="postTagModify" value="4" style="width: 20%">
+		  <br>
+		  <span>웨이팅 김</span>				
+	    </label>
+	  </div>
+	  
+	  <div class="post-form">
+	      <label for="postLoc" class="post-label">지역</label>
+	      <div class="post-search">
+	        <input type="hidden" name="postAddress" id="postAddressModify">
+	        <input name="postLoc" id="postLocModify" class="form-control" placeholder="내용을 입력해주세요.">
+	        <img id="searchImg" role="button" src="${pageContext.request.contextPath}/assets/images/search.png">
+	        <img id="xImg" role="button" src="${pageContext.request.contextPath}/assets/images/xmark.png" onclick="clearInput()">
+	      </div>
+	      <div id="resultContainer"></div>
+	  </div>
+	  
+	  <div class="post-form">
+	    <textarea name="postContent" id="editor">
+	    {{ post.postContent }}
+	    </textarea>
+	  </div>  
+	  
+	    <div class="post-form d-flex justify-content-end">
+	      <button type="submit" class="btn btn-primary" >등 록</button>
+	      <button type="button" id="cancelBtn" class="btn btn-secondary ml-2">취 소</button>
+	    </div>
+	  <sec:csrfInput/>
+  </form>
 
 <jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 
@@ -195,7 +262,7 @@ $(document).ready(function() {
 
 function postDetail() { 
 	$('#loading').show();
-	
+		
 	$.ajax({
         method: "GET",
         url: "<c:url value='/post/detail'/>/" + postIdx,
@@ -216,8 +283,6 @@ function postDetail() {
         		window.location.href = "${pageContext.request.contextPath}/post"
         	} else {
         		
-        		$("#postTitle").text(post.postTitle);
-        		
         		if(post.nickname === null) {
         			$("#postNickname").html("닉네임 없음");
         		} else {
@@ -236,6 +301,7 @@ function postDetail() {
         		    $("#deleteButton").show();
         		}
         		
+        		$("#postTitle").text(post.postTitle);
         		$("#postRegdate").text(post.postRegdate);
         		$("#postRegdateDay").text(post.day);
         		$("#postView").html("조회수 : " + post.postViewcnt);
@@ -258,6 +324,25 @@ function postDetail() {
 	            	$("#nextButton").remove();
 				}
 	            
+				// 수정 폼 데이터
+        		$("#postTitleModify").text(post.postTitle);
+        		$("#postLocModify").val(post.postLoc);
+        		$("#postAddressModify").val(post.postAddress);
+        		
+			    var tagCheck = document.querySelector('input[name="postTag"][value="' + post.postTag + '"]');
+			    
+			    if (tagCheck) {
+			    	tagCheck.checked = true;
+			    }
+			    
+				var dayTypeCheck = document.querySelector('input[name="postDayType"][value="' + post.postDayType + '"]');
+			    
+			    if (dayTypeCheck) {
+			    	dayTypeCheck.checked = true;
+			    }
+			    
+			    //$(".ck-editor__editable").html(post.postContent);
+			    // 에디터 데이터 불러오는 방법 체크하기
         	}
         },
         error: function(error) {
@@ -300,6 +385,7 @@ function postDelete() {
             contentType: false,
             success: function(data, textStatus, xhr) {
             	$('#loading').hide();
+            	
                 if (xhr.status == 204) {
 	                alert("게시글이 삭제되었습니다");
 	                window.location.href = "${pageContext.request.contextPath}/post"
@@ -379,6 +465,43 @@ function likesCancel() {
    	       }
       });
 }
+
+$(document).ready(function() {
+	// 수정하기
+	$("#editButton").click(function() {
+	    // 수정 폼을 표시하거나 숨기기
+	    $("#postModifyForm").toggle();
+	    $(".post-detail").hide();
+	});
+	$("#cancelBtn").click(function() {
+	    // 수정 폼을 표시하거나 숨기기
+	    $("#postModifyForm").toggle();
+	    $(".post-detail").show();
+	});
+});
+</script>
+<script>		
+	ClassicEditor
+	.create(document.querySelector('#editor'), {
+		ckfinder: {
+			uploadUrl : "/post/imgUpload"
+			,uploadMethod : "json"
+		},
+		image: {
+	        toolbar: [  'imageTextAlternative',
+                'toggleImageCaption',
+                'imageStyle:inline',
+                'imageStyle:block',
+                'imageStyle:side' ]
+	    }
+	})
+	.then(editor => {
+		console.log('Editor was initialized');
+		window.editor = editor;
+	})
+	.catch(error => {
+		console.error(error);
+	});
 </script>
 </body>
 </html>
