@@ -124,7 +124,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='/post/list'/>",
+        url: "${pageContext.request.contextPath}/post/list",
         data: {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
