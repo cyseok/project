@@ -6,10 +6,9 @@
 
 <!DOCTYPE html>
 <html lang="UTF-8">
-
+<title>웨이팅 확인!!</title>
 <head>
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
-	<title>웨이팅 확인!!</title>
 </head>
 
 <header>
@@ -135,7 +134,6 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         success: function(result) {
         	$('#loading').hide();
         	
-        	// $("#postList").empty();
         	
         	if (result.content.length === 0) { 
         		postScroll = false;
@@ -146,7 +144,6 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 				// 공지사항 목록 출력            	
 	            for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
-	                var dayTypeText;
 	                var postElement2 = 
 	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
 	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
@@ -215,6 +212,8 @@ function recentlySearch() {
 
 //조회순으로 정렬
 function viewSearch() {
+	$("#postList").empty();
+	offset = 0; 
 	recently = false;
     view = true;
     like = false;
@@ -238,6 +237,8 @@ function viewSearch() {
 
 // 인기순으로 정렬
 function likeSearch() {
+	$("#postList").empty();
+	offset = 0; 
 	recently = false;
     view = false;
     like = true;
