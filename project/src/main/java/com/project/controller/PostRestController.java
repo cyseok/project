@@ -45,7 +45,7 @@ public class PostRestController {
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "0") int offset
 			, @RequestParam(defaultValue = "9") int limit
-			, @RequestParam(defaultValue = "") String selectKeyword
+			, @RequestParam(defaultValue = "", required = true) String selectKeyword
 			, @RequestParam(defaultValue = "recently") String viewType
 			) {
 		
