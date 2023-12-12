@@ -139,6 +139,10 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
         	},
+      	crossDomain: true,
+      	  xhrFields: {
+      	    withCredentials: true
+      	  },	
         success: function(result) {
         	$('#loading').hide();
         	

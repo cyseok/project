@@ -883,7 +883,7 @@ $(function() {
             $("#id-check-message").css("color", "red");
         }
       }, error: function(error) {
-    	  console.log(error)
+    	  console.log(error.responseText)
           alert("Error:" + error.responseText);
           idCheck = false;
           $("#id-check-message").css("color", "red");
