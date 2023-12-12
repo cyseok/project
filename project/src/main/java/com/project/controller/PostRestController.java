@@ -42,12 +42,12 @@ public class PostRestController {
 	@Autowired
 	private final LikesService likesService;
 	
-	@CrossOrigin(origins = "*")
+	@CrossOrigin("*")
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "0") int offset
 			, @RequestParam(defaultValue = "9") int limit
-			, @RequestParam(defaultValue = "", required = true) String selectKeyword
+			, @RequestParam(defaultValue = "") String selectKeyword
 			, @RequestParam(defaultValue = "recently") String viewType
 			) {
 		
@@ -218,6 +218,7 @@ public class PostRestController {
 			return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
