@@ -116,7 +116,7 @@ $("#searchKeyword").keypress(function(){
 	if(event.keyCode == 13) {
 		 postSearch();
 	}
-});
+});"src/main/webapp/WEB-INF/views/post/list.jsp"
 
 //게시글 목록 출력
 function postListDisplay(offset, limit, selectKeyword, viewType) {
@@ -124,7 +124,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	
     $.ajax({
         method: "GET",
-        url: "/post/list",
+        url: "https://www.waiting-check.com/post/list",
         data: {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
