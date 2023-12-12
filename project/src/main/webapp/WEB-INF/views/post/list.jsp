@@ -4,11 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%
-String url = request.getRequestURL().toString();
-if(url.startsWith("http://") && url.indexOf("localhost") < 0) {
-    url = url.replaceAll("http://", "https://");
-    response.sendRedirect(url);
-}
     // Set CORS headers
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -104,7 +99,7 @@ $(document).ajaxSend(function(e, xhr){
 });
 
 $(document).ready(function() { // JSP가 렌더링되자마자,
-	document.doamin='https://www.waiting-check.com/';
+	// document.doamin='https://www.waiting-check.com/';
     postListDisplay(offset, limit, selectKeyword, viewType);
     
     if(recently === true) {

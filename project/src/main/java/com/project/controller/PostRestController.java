@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/post")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostRestController {
 	
 	@Autowired
@@ -42,7 +43,6 @@ public class PostRestController {
 	@Autowired
 	private final LikesService likesService;
 	
-	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "0") int offset
