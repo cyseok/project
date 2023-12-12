@@ -42,7 +42,7 @@ public class PostRestController {
 	@Autowired
 	private final LikesService likesService;
 	
-	@CrossOrigin("*")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "0") int offset
