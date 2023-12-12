@@ -83,7 +83,7 @@ var postScroll = true;
 
 var offset = 0; 
 var limit = 16; 
-var selectKeyword = '테스트'; 
+var selectKeyword = ''; 
 var viewType = 'recently';
 
 $(document).ajaxSend(function(e, xhr){
@@ -121,7 +121,7 @@ $("#searchKeyword").keypress(function(){
 //게시글 목록 출력
 function postListDisplay(offset, limit, selectKeyword, viewType) {
 	$('#loading').show();
-	console.log(selectKeyword);
+	
     $.ajax({
         method: "GET",
         url: "/post/list",
