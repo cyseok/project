@@ -83,7 +83,7 @@ var postScroll = true;
 
 var offset = 0; 
 var limit = 16; 
-var selectKeyword = ''; 
+var selectKeyword = '테스트'; 
 var viewType = 'recently';
 
 $(document).ajaxSend(function(e, xhr){
