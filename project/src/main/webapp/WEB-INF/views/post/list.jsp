@@ -4,10 +4,15 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%
+String url = request.getRequestURL().toString();
+if(url.startsWith("http://") && url.indexOf("localhost") < 0) {
+    url = url.replaceAll("http://", "https://");
+    response.sendRedirect(url);
+}
     // Set CORS headers
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    response.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
     response.setHeader("Access-Control-Allow-Credentials", "true");
     response.setHeader("Access-Control-Max-Age", "3600");
 %>
@@ -79,7 +84,7 @@
     <button class="top-button">⬆︎</button>
 		
 <script>
-document.doamin='https://www.waiting-check.com/';
+
 var csrfHeaderName = "${_csrf.headerName}";
 var csrfTokenValue = "${_csrf.token}";
 
@@ -99,6 +104,7 @@ $(document).ajaxSend(function(e, xhr){
 });
 
 $(document).ready(function() { // JSP가 렌더링되자마자,
+	document.doamin='https://www.waiting-check.com/';
     postListDisplay(offset, limit, selectKeyword, viewType);
     
     if(recently === true) {
