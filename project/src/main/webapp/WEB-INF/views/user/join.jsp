@@ -884,6 +884,7 @@ $(function() {
         }
       }, error: function(error) {
     	  console.log(error.responseText)
+    	  console.log(id)
           alert("Error:" + error.responseText);
           idCheck = false;
           $("#id-check-message").css("color", "red");
