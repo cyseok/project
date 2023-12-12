@@ -131,7 +131,6 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
         	},
-        dataType: "json",
         success: function(result) {
         	$('#loading').hide();
         	
