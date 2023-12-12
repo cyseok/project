@@ -121,7 +121,7 @@ $("#searchKeyword").keypress(function(){
 //게시글 목록 출력
 function postListDisplay(offset, limit, selectKeyword, viewType) {
 	$('#loading').show();
-	
+	console.log(selectKeyword);
     $.ajax({
         method: "GET",
         url: "/post/list",
