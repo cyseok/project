@@ -125,11 +125,11 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
     $.ajax({
         method: "GET",
         url: "/post/list",
-        data: JSON.stringify({"offset": offset
+        data: {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
-        	}),
+        	},
         dataType: "json",
         success: function(result) {
         	$('#loading').hide();
