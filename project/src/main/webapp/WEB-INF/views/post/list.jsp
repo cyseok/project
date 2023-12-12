@@ -72,6 +72,7 @@
     <button class="top-button">⬆︎</button>
 		
 <script>
+document.doamin='https://www.waiting-check.com/';
 var csrfHeaderName = "${_csrf.headerName}";
 var csrfTokenValue = "${_csrf.token}";
 
