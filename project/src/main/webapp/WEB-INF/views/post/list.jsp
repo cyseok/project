@@ -133,7 +133,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	
     $.ajax({
         method: "GET",
-        url: "/post/list",
+        url: "https://www.waiting-check.com/post/list",
         data: {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
