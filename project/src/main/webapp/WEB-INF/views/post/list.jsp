@@ -223,6 +223,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         },
         error: function(error) {
         	console.log(error);
+        	console.log(error.responseText);
         }
     });
 }
