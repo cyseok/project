@@ -47,6 +47,16 @@
        <url-pattern>/*</url-pattern> 
    </filter-mapping>
    
+   <filter>
+    <filter-name>CorsFilter</filter-name>
+    <filter-class>com.project.util.CorsFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>CorsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+
     <!-- DelegatingFilterProxy 클래스를 필터로 등록되도록 설정 -->
 	<!-- => 반드시 필터의 이름은 [springSecurityFilterChain]으로 등록되도록 작성 -->
 	<!-- DelegatingFilterProxy : 메인 Filter Chain에 위치되도록 설정하는 클래스 -->
