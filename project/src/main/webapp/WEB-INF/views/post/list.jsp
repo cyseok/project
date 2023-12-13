@@ -135,15 +135,12 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         method: "GET",
         url: "<c:url value='https://www.waiting-check.com/post/list'/>",
         
-        data: {"offset": offset
+        data: JSON.stringify({"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
         	},
-      	crossDomain: true,
-      	  xhrFields: {
-      	    withCredentials: true
-      	  },	
+        contentType; "application/json",
         success: function(result) {
         	$('#loading').hide();
         	
