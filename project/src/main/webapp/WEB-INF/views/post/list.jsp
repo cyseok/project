@@ -139,7 +139,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		, "limit": limit
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
-        	},
+        	}),
         contentType: "application/json",
         success: function(result) {
         	$('#loading').hide();
