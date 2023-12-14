@@ -5,7 +5,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%
     // Set CORS headers
-    response.setHeader("Access-Control-Allow-Origin", "https://waiting-check.com/");
+    response.setHeader("Access-Control-Allow-Origin", "http://www.waiting-check.com/");
     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     response.setHeader("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
     response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -133,7 +133,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='https://www.waiting-check.com/post/list'/>",
+        url: "<c:url value='/post/list'/>",
         
         data: {"offset": offset
         		, "limit": limit

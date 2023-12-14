@@ -18,7 +18,7 @@ public class CorsFilter implements Filter{
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // Allow requests from specific origins
-        httpResponse.setHeader("Access-Control-Allow-Origin", "https://www.waiting-check.com");
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://www.waiting-check.com");
 
         // Allow specific headers and methods
         httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
