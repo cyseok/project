@@ -68,7 +68,7 @@
 	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-   
+	
     <!--  mapper 등록하려면 추가해줘야함!! -->
     <mybatis-spring:scan base-package="com.project.mapper" /> 
    
