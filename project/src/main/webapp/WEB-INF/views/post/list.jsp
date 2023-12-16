@@ -134,6 +134,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		, "viewType": viewType
         	},
         	dataType: "json",
+        	contentType:"application/json; charset=utf-8",
         success: function(result) {
         	$('#loading').hide();
         	
@@ -212,9 +213,12 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	            }
             }
         },
-        error: function(request,status,error) {
-          alert("code:"+error.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-          console.log("code:"+error.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        error: function(request,textStatus,errorThrown) {
+      
+          console.log("===============================================================");
+          console.log("[textStatus] "+ JSON.stringify(textStatus));
+          console.log("[errorThrown] "+ JSON.stringify(errorThrown));
+          console.log("===============================================================");
         }
     });
 }
