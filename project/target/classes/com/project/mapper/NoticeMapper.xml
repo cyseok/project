@@ -147,21 +147,4 @@
 		ORDER BY notice_regDate DESC
 	</select>
 	
-	
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
