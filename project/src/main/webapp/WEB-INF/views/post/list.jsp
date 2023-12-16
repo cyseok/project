@@ -128,7 +128,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         method: "GET",
         url: "<c:url value='/post/list'/>",
         
-        JSON.stringify( {"offset": offset
+       data: JSON.stringify( {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
