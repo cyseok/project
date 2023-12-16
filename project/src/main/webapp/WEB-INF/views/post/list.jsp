@@ -133,6 +133,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
         	},
+        	dataType: "json",
         success: function(result) {
         	$('#loading').hide();
         	
@@ -211,9 +212,9 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	            }
             }
         },
-        error: function(error) {
-        	console.log(error);
-        	console.log(error.responseText);
+        error: function(request,status,error) {
+          alert("code:"+error.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+          console.log("code:"+error.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         }
     });
 }
