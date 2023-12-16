@@ -135,6 +135,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         	},
         	dataType: "json",
         	contentType:"application/json; charset=utf-8",
+        	headers: {"Accept": "application/json"},
         success: function(result) {
         	$('#loading').hide();
         	
