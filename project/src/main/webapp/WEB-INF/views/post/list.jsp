@@ -128,11 +128,11 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         method: "GET",
         url: "<c:url value='/post/list'/>",
         
-       data: JSON.stringify( {"offset": offset
+       data: encodeURIComponent(JSON.stringify( {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
-        	}),
+        	})),
         	dataType: "json",
         	contentType:"application/json; charset=utf-8",
         	headers: {"Accept": "application/json"},
