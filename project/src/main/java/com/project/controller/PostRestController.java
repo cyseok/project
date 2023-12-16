@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/post")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostRestController {
 	
 	@Autowired
@@ -47,7 +47,7 @@ public class PostRestController {
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam(defaultValue = "0") int offset
 			, @RequestParam(defaultValue = "9") int limit
-			, @RequestParam(required = false) String selectKeyword
+			, @RequestParam(defaultValue = "") String selectKeyword
 			, @RequestParam(defaultValue = "recently") String viewType
 			) {
 		
