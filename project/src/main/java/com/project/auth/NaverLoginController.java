@@ -64,7 +64,7 @@ public class NaverLoginController {
 		// => Object 타입으로 값(객체)를 반환하므로 반드시 형변환하여 저장
 		JSONObject responseObject=(JSONObject)jsonObject.get("response");
 		String id=(String)responseObject.get("id");
-		String name=(String)responseObject.get("name");
+		//String name=(String)responseObject.get("name");
 		String email=(String)responseObject.get("email");
 		
 		//반환받은 네이버 사용자 프로필의 값을 사용하여 Java 객체의 필드값으로 저장
@@ -78,13 +78,13 @@ public class NaverLoginController {
 		Userinfo userinfo=new Userinfo();
 		userinfo.setId("naver_"+id);
 		userinfo.setPw(UUID.randomUUID().toString());
-		userinfo.setName(name);
+		//userinfo.setName(name);
 		userinfo.setEmail(email);
 		userinfo.setAddress(null);
 		userinfo.setEnabled("0");
 		userinfo.setSecurityAuthList(authList);
 		
-		// 네이버 로그인 사용자의 정보를 SECURITY_USERS 테이블과 SECURITY_AUTH 테이블에 저장
+		// 네이버 로그인 사용자의 권한을 SECURITY_AUTH 테이블에 저장
 		userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
 		userinfoService.addUserinfoAuth(auth);
 		userinfoService.updateUserLogindate(userinfo.getId());
