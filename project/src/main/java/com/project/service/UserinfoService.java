@@ -21,13 +21,12 @@ public interface UserinfoService {
 	void updateUserLogindate(String id);//마지막 로그인 시간
 
 	/*아이디 찾기*/
-	Userinfo findUserByEmail(String email);
+	Userinfo findUserinfo(String name, String email);
 
 	/*마이페이지*/
-	Userinfo getUserinfoById(String id) throws UserinfoNotFoundException;//아이디로 유저 검색 
+	Userinfo getUserinfoById(String id) throws UserinfoNotFoundException;
 
 	/*관리자*/
-	Userinfo getUserinfo(String id) throws UserinfoNotFoundException;//아이디로 전달값을 제공받아 회원정보 받음
-	Map<String, Object> getUserinfoList(int pageNum, int pageSize);//회원목록 출력
+	Map<String, Object> getUserinfoList(int pageNum, int pageSize);
 
 }

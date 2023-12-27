@@ -11,8 +11,14 @@ public class UserinfoController {
 
    // 회원가입 페이지 이동
    @RequestMapping(value = "/join", method = RequestMethod.GET)
-   public String joinGET() {
+   public String join() {
       return "user/join";
+   }
+   
+   // 아이디찾기 페이지 이동
+   @RequestMapping(value = "/find", method = RequestMethod.GET)
+   public String find() {
+      return "user/find";
    }
 
 }

@@ -108,10 +108,11 @@
      </select>
 
      <!-- 이메일로 사용자 ID 찾기 -->
-	<select id="findUserByEmail" parameterType="string" resultType="com.project.dto.Userinfo">
+	<select id="findUserinfo" parameterType="string" resultType="com.project.dto.Userinfo">
 		SELECT * 
 		FROM userinfo 
-		WHERE email = #{email}
+		WHERE name = #{name}
+		AND email = #{email}
 	</select>   
 
     

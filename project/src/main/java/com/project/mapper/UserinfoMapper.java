@@ -3,6 +3,8 @@ package com.project.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.project.dto.UserinfoAuth;
 import com.project.dto.Userinfo;
 
@@ -19,7 +21,7 @@ public interface UserinfoMapper {
    int updateLogdate(String id); 
 
    /* 아이디 찾기 */
-   Userinfo findUserByEmail(String email);
+   Userinfo findUserinfo(@Param("name") String name,@Param("email") String email);
    
    /* 마이페이지 */
    Userinfo selectUserinfoById(String id);

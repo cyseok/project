@@ -53,8 +53,8 @@ public class UserinfoServiceImpl implements UserinfoService {
 
 	/* 아이디 찾기 */
 	@Override
-	public Userinfo findUserByEmail(String email) {
-		return userinfoDAO.findUserByEmail(email);
+	public Userinfo findUserinfo(String name, String email) {
+		return userinfoDAO.findUserinfo(name, email);
 	}
 
 	// 아이디 중복 검사
@@ -86,16 +86,6 @@ public class UserinfoServiceImpl implements UserinfoService {
 		userinfoDAO.updateLogdate(id);
 	}
 
-	/* 관리자 */
-	@Override
-	public Userinfo getUserinfo(String id) throws UserinfoNotFoundException {
-		Userinfo userinfo = userinfoDAO.selectUserinfo(id);
-		if (userinfo == null) {
-			throw new UserinfoNotFoundException("아이디의 회원 정보가 존재하지 않습니다.");
-		}
-		return userinfo;
-	}
-	
 	//회원 리스트 조회 기능
 	@Override
 	public Map<String, Object> getUserinfoList(int pageNum, int pageSize) {

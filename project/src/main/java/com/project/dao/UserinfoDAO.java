@@ -19,7 +19,7 @@ public interface UserinfoDAO {
    int updateLogdate(String id);  
    
    /* 아이디 찾기 */
-   Userinfo findUserByEmail(String email);
+   Userinfo findUserinfo(String name, String email);
    
    /* 마이페이지 */
    Userinfo selectUserinfoById(String id);
