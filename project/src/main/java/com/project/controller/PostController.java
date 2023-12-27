@@ -2,6 +2,7 @@ package com.project.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,7 @@ public class PostController {
 	}
 	
 	// 게시글 작성 페이지
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')")
 	@GetMapping("/write")
 	public String postAdd(HttpSession session, Authentication authentication) {
 		

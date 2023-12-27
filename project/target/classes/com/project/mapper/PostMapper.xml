@@ -45,7 +45,6 @@
             , post_address=#{postAddress}
             , post_tag=#{postTag}
             , post_daytype=#{postDayType}
-            
         WHERE post_idx=#{postIdx}
 	</update>
 	
