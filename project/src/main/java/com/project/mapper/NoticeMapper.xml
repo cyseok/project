@@ -124,6 +124,7 @@
 	                WHERE notice_status=1 
 	            </otherwise>
 	        </choose>
+	        ORDER BY notice_regdate DESC
           ) RN, (SELECT @ROWNUM := 0) tmp
       ) SUB 
       WHERE SUB.ROWNUM BETWEEN #{startRow} and #{endRow}
