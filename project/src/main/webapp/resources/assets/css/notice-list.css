@@ -1,0 +1,84 @@
+  a{
+     text-align: right;
+     color: black;
+  }
+  #noticeListInfo {
+      text-align: center;
+  }
+  table{
+    border-collapse: collapse;
+    width: 70%;    
+    margin-top: 50px;
+    margin-bottom : 50px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  td, th{
+     border-bottom: 1px solid black;
+     height: 50px;
+     font-size : 17px;
+     text-align: center;
+  }
+  th.idx {
+     width: 10%;
+  }
+  th.title {
+     width: 60%;
+  }
+  th.day {
+     width: 18%;
+  }
+  th.count {
+     width: 12%;
+  }
+  thead{
+     font-weight: 700;
+  }
+  .top_btn{
+    font-size: 20px;
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    font-weight: 600;
+  }
+  h1{
+     text-align: center;
+  }
+ .categories-sidebar-widget {
+    max-width: 150px;
+    margin-top: 150px;
+    margin-left: 50px;
+ }
+ .widget-title {
+    margin-top: 20px;
+ }
+ .noinBtn {
+    width: 150px;
+    margin-bottom: 50px;
+    display: block;
+ }
+ #pageNumDiv {
+    text-align: center;
+   	margin-bottom: 50px;
+   	margin-left: 100px;
+ }
+ .button-and-page-num {
+    display: flex; /* Flexbox를 사용하여 내부 요소를 가로로 나열 */
+    justify-content: center;
+    align-items: center; /* 수직 가운데 정렬 */
+ }
+ #noticeSize {
+    margin-top: 20px;
+    margin-left: 16%;
+ }
+ .page-num {
+    font-size: 18px; 
+}
+ .totalNum {
+    margin-top: 20px;
+    margin-left: 16%;
+}
+#writeNotice {
+    margin-left: 78%;
+ }
