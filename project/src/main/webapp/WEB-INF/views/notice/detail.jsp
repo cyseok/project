@@ -8,106 +8,165 @@
 
 <!DOCTYPE html>
 <html lang="UTF-8">
-  <head>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<style>
-	#noticeImg {
-        width: 30%;
-        height: 30%;
-        max-width: 100%;
-        max-height: 100%;
-        display: block;
-        margin: auto;
-        }
-        
-    #noticeModifyForm {
-	    position: fixed;
-	    top: 0;
-	    left: 0;
-	    width: 100%;
-	    height: 100%;
-	    background-color: rgba(0, 0, 0, 0.7);
-	    z-index: 1000;
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	}
-	
-	#noticeModifyForm > div {
-	    display: block; /* Set the child div elements to be block-level, so they stack vertically */
-	    background-color: #fff;
-	    padding: 20px;
-	    border-radius: 5px;
-	    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-	    margin: 10px; /* Add margin to space them out vertically */
-	}
-	</style>
-  </head> 
-  
-<body>
+<head>
+	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<title>공지사항</title>
+<style>
+  #noticeImg {
+    width: 30%;
+    height: 30%;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: auto;
+}
+       
+  .notice-detail {
+    margin-top: 20px; 
+    margin-bottom: 50px; 
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
+  }	
+   .notice-button {
+    display: flex;
+    justify-content: flex-end;
+  }
 
-	<div class="">
-	   <h3 class="" id="title"></h3>
-	   <input type="text" id="content">
-	   <p class="" id="noticeRegdate"></p>
-	   <p class="" id="viewCount"></p>
-	</div>
-           
-    <img id="noticeImg" src="" >
-       	   
-    <!-- 파일 다운로드 링크 -->
-    <b id="noticeFileName"></b>
-    <a id="noticeDownload" href="" download=""></a>
-               
-               
-   	<!-- 관리자 권한 주기 -->
-    <sec:authorize access="hasRole('ROLE_MASTER')">
- 	<div class="">
-      <button type="button" id="noticeModify" class="">수정하기</button>
-      <button type="button" class="" onclick="noticeDelete();">삭 제</button>
+  .notice-button button {
+    float: right;
+  }
+  #noticeImg {
+    width: 75%;
+    height: 60%;
+    margin-top: 100px;
+  }
+  #noticeFileName {
+    font-size: 18px; 
+  }
+  #noticeDownload {
+    font-size: 18px; 
+  }
+  #title {
+    font-size: 40px; 
+  }
+  #noticeRegdate {
+    font-size: 15px; 
+  }
+  #viewCount {
+    font-size: 15px; 
+  }
+  #content {
+    font-size: 25px; 
+  }
+  .modifyButton {
+    margin-top: 50px;
+  }
+  #noticeListButton {
+    margin-right: 10px;
+}
+
+#prevNum {
+    margin-right: 10px;
+}
+
+#nextNum {
+    margin-right: 10px;
+}
+</style>
+</head> 
+<header>
+  <jsp:include page="/WEB-INF/views/include/header.jsp"/>
+</header> 
+<body>
+  <div class="section">
+    <div class="container">
+      <div class="row">
+      <section class="notice-detail">
+      
+	    <div class="notice-button">
+	      <button id="noticeListButton" class="btn btn-secondary" type="button" onclick="location.href='${pageContext.request.contextPath}/notice'">목록으로</button>
+	      <button id="prevNum" class="btn btn-secondary" type="button" onclick="">이전글</button>
+	      <button id="nextNum" class="btn btn-secondary" type="button" onclick="">다음글</button>
+	    </div>
+	    
+		<div>
+		   <h3 id="title"></h3>
+		   <span id="noticeRegdate"></span>
+		   <br>
+		   <span id="viewCount"></span>
+		</div>
+		<hr>
+		<div id="content">
+        </div>
+        
+	    <img id="noticeImg" src="" >
+	    <hr>   	   
+	    <!-- 파일 다운로드 링크 -->
+	    <b id="noticeFileName"></b>
+	    <a id="noticeDownload" href="" download=""></a>
+	               
+	    <sec:authorize access="hasRole('ROLE_MASTER')">
+	 	<div class="modifyButton">
+	      <button type="button" id="noticeModify" class="btn btn-primary">수정하기</button>
+	      <button type="button" class="btn btn-secondary ml-2" onclick="noticeDelete();">삭 제</button>
+	    </div>
+	    </sec:authorize>          
+	            
+	    
+	  </section>  
+      </div>
     </div>
-    </sec:authorize>          
-            
-    <!-- 이전글 다음글 -->
-    <div class="">
-      <button id="noticeListButton" type="button" onclick="location.href='${pageContext.request.contextPath}/notice'"><span>목록으로</span></button>
-      <button id="prevNum" type="button" onclick=""></button>
-      <button id="nextNum" type="button" onclick=""></button>
-    </div>
-              
-	<!-- 수정 폼 출력 -->
+  </div>              
+	<!-- 수정 폼 -->
     <form enctype="multipart/form-data" id="noticeModifyForm" style="display: none;">
-      <div>
-      <div class="" id="">
-        <label for="noticeTitle">제목</label>
-        <textarea id="noticeTitle" name="noticeTitle" class=""></textarea>
+      <div class="post-form">
+        <label for="noticeTitle" class="post-label">제목</label>
+        <textarea id="noticeTitle" name="noticeTitle" class="form-control"></textarea>
       </div>
       
-      <div class="">
+      <div class="post-form">
           <label for="noticeContent">내용</label>
-          <textarea id="noticeContent" name="noticeContent" class="" rows="15"></textarea>
+          <textarea id="noticeContent" name="noticeContent" class="form-control" rows="15"></textarea>
       </div>
-      <div>
-        <img id="preview" src="" style="width:30%; height: 30%;">
-        </div>
-        <div>
-          <label for="noticeImgFile">사진 올리기
-   		  <input type="file" class="" id="noticeImgFile" name="noticeImgUpload" onchange="readURL(this);">
-          </label>
-        </div>
-        <button type="button" onclick="clearPreview()">사진 삭제</button>
-      <div class="">
+      
+      <div class="post-form">
+        <p id="beforePreview">기존 사진<br>사진을 변경할 경우에만 첨부해주세요.</p>
+        <img id="preview" src="" style="width:75%; height: 60%;">
+      </div>
+      
+      <div class="post-form">
+        <label for="noticeImgFile">사진 올리기
+   		<input type="file" class="" id="noticeImgFile" name="noticeImgUpload" onchange="readURL(this);">
+        </label>
+      </div>
+      
+      <div class="post-form">
+        <button type="button" onclick="clearPreview()" class="btn btn-secondary ml-2">사진 삭제</button>
+      </div>
+      
+      <div class="post-form">
+        <p id="beforeFile">기존 파일<br>파일을 변경할 경우에만 첨부해주세요.</p>
+        <b id="beforenoticeFileName"></b>
+	    <a id="beforenoticeDownload" href="" download=""></a>
+      </div>
+        
+      <div class="post-form">
          <label>파일 첨부</label>
          <input type="file" id="noticeFile" name="noticeFileUpload">
       </div>
-      <hr>
+      
       <input type="hidden" id="noticeIdx" name="noticeIdx">
+      
+      <div class="post-form">
       <!-- 수정 버튼 -->
-      <button id="modifyBtn" type="submit">저장</button>
-      <button id="noticeModifyCancel" type="button">취소</button>
+      <button id="modifyBtn" type="submit" class="btn btn-primary">저장</button>
+      <button id="noticeModifyCancel" type="button" class="btn btn-secondary ml-2">취소</button>
       </div>
+      <sec:csrfInput/>
     </form>
-                
+    
+<jsp:include page="/WEB-INF/views/include/footer.jsp"/>                
               
 <script type="text/javascript">
     
@@ -116,7 +175,7 @@
     
     var currentURL = window.location.href;
     var parts = currentURL.split('/');
-    var noticeidx = parts[parts.length - 1];
+    var noticeIdx = parts[parts.length - 1];
     
 
     //  CSRF 토큰 전달
@@ -129,67 +188,72 @@
    	$(document).ready(function() {
    		noticeDetail();
    		
-	 	$("#noticeModifyCancel").click(function(){
+	 	$("#noticeModify").click(function(){
 	 	    $("#noticeModifyForm").toggle();
-	 	});
- 	   
-	 	$("#noticeModify").click(function() {
-	 	    // 수정 폼을 표시하거나 숨기기
-	 	    $("#noticeModifyForm").toggle();
+	 	    $(".notice-detail").hide();
 	 	});
 	 	
-	 	 // 공지사항 수정
-	   $("form").submit(function(e) {
-	    	e.preventDefault();
-	       /* var imageInput = document.getElementById("noticeImgFile");
-	       var selectedImage = imageInput.files[0];
-	       
-	       var fileInput = document.getElementById("noticeFile");
-	       var selectedFile = fileInput.files[0]; */
-	       //var img = $("#noticeImgFile")[0].files[0];
-	       //var file = $("#noticeFile")[0].files[0];
-	       
-	       var formData = new FormData();
-	       // formData.append("noticeIdx", noticeidx);
-	       formData.append("noticeTitle", $("#noticeTitle").val());
-	       formData.append("noticeContent", $("#noticeContent").val());
-	       formData.append("noticeFileName", $("#noticeFileName").val());
-	       formData.append("noticeImgUpload", $("#noticeImgFile")[0].files[0]);
-	       formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
-	       
-	       $.ajax({
-	          type: "PATCH",
-	          url: "<c:url value='/notice/'/>" + noticeidx,
-	          data: formData,
-	          processData: false, // 중요: FormData 사용 시 false로 설정
-	          contentType: false,
-	          dataType: "text",
-	          success: function(result) {
-	        	  if (result == "success") {
-	                  alert("공지 사항을 수정하였습니다.");
-	                  window.location.href = "${pageContext.request.contextPath}/notice/"+noticeidx;
-	              } else {
-	                  alert("글 수정을 실패하였습니다.");
-	              }
-	          },
-	          error: function(xhr) {
-	             alert("공지 사항 수정 중 오류가 발생하였습니다("+ xhr.status+")");
-	          }
-	       });
-	    });
-
+	 	$("#noticeModifyCancel").click(function() {
+	 	    // 수정 폼을 표시하거나 숨기기
+	 	    $("#noticeModifyForm").toggle();
+	 	    $(".notice-detail").show();
+	 	});
 	});
+	 	
+   // 공지사항 수정
+   $("form").submit(function(e) {
+       e.preventDefault();
+       $('#loading').show();
+       
+       var formData = new FormData();
+       
+       formData.append("noticeTitle", $("#noticeTitle").val());
+       formData.append("noticeContent", $("#noticeContent").val());
+       formData.append("noticeFileName", $("#noticeFileName").val());
+       
+       var noticeImgUpload = $("#noticeImgFile")[0].files[0];
+       if (noticeImgUpload !== undefined) {
+           formData.append("noticeImgUpload", noticeImgUpload);
+       }
+
+       var noticeFileUpload = $("#noticeFile")[0].files[0];
+       if (noticeFileUpload !== undefined) {
+           formData.append("noticeFileUpload", noticeFileUpload);
+       }
+       
+       $.ajax({
+          type: "POST",
+          url: "<c:url value='/notice/'/>" + noticeIdx,
+          data: formData,
+          processData: false, // 중요: FormData 사용 시 false로 설정
+          contentType: false,
+          dataType: "text",
+          success: function(result) {
+        	  $('#loading').hide();
+        	  if (result == "success") {
+                  alert("공지 사항을 수정하였습니다.");
+                  window.location.href = "${pageContext.request.contextPath}/notice/"+noticeIdx;
+              } else {
+                  alert("글 수정을 실패하였습니다.");
+              }
+          },
+          error: function(xhr) {
+             alert("공지 사항 수정 중 오류가 발생하였습니다("+ xhr.status+")");
+          }
+       });
+    });
+
 
 // 공지사항 상세 페이지 출력  
 function noticeDetail() {
 
     $.ajax({
         method: "GET",
-        url: "<c:url value='/notice/detail'/>/" + noticeidx,
-        data: {"noticeidx": noticeidx},
+        url: "<c:url value='/notice/detail'/>/" + noticeIdx,
+        data: {"noticeidx": noticeIdx},
         dataType: "json",
-        success: function(result) {
-        	
+        success: function(result) { 
+        	 
 	        	if (result.notice == null) {
 	        		alert("존재하지 않는 글입니다.");
 	        		window.location.href = "${pageContext.request.contextPath}/notice"
@@ -198,50 +262,55 @@ function noticeDetail() {
 	        	var prevNum = result.prevNumNextNum.prevNum;
 	        	var nextNum = result.prevNumNextNum.nextNum;
 				var notice = result.notice;
-				
+				console.log(notice.noticeImg)
+				console.log(notice.noticeContent)
 				// .html : 마크업, html 태그 포함 / .val : 텍스트필드, 택스트값에 쓰기 / .text : 텍스트 내용 설정
 	            $("#noticeRegdate").html("작성일 : " + notice.noticeRegdate);
 	            $("#title").text(notice.noticeTitle);
-	            $("#content").val(notice.noticeContent);
+	            $("#content").text(notice.noticeContent);
 	            $("#viewCount").html("조회수 : "+notice.noticeViewcnt);
 	            $("#noticeIdx").attr("value",notice.noticeIdx);
 	            
 	            // 수정 폼 출력
 	            $("#noticeTitle").val(notice.noticeTitle);
 	            $("#noticeContent").val(notice.noticeContent);
-	            console.log(notice.noticeImg);
-	            if (notice.noticeImg != null) {
-	           	    $("#noticeImg").attr("src", "<c:url value='/resources/upload/' />" + notice.noticeImg);
-	           	 	$("#noticeImg").before("<hr>");
-	           	 	$("#noticeImg").after("<hr>");
+	           
+	            if (notice.noticeImg !== "null" || notice.noticeImg !== null) {
+	           	    $("#noticeImg").attr("src", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeImg);
 	           	 	
-	           	    $("#preview").attr("src", "<c:url value='/resources/upload/' />" + notice.noticeImg);
+	           	    $("#preview").attr("src", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeImg);
 	            } else {
 	            	$("#noticeImg").remove();
 	            	$("#preview").remove();
+	            	$("#beforePreview").remove();
 				}
 	            
-	            if (notice.noticeFile != null) {
+	            if (notice.noticeFile !== "null" || notice.noticeFile != null) {
 	            	$("#noticeFileName").html("첨부파일 : ");
 		            $("#noticeDownload")
-		            	.attr("href", "<c:url value='/resources/upload/' />" + notice.noticeFile)
+		            	.attr("href", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeFile)
+		            	.attr("download", notice.noticeFile)
+		            	.text(notice.noticeFileName);
+		            
+		            $("#beforenoticeFileName").html("첨부파일 : ");
+		            $("#beforenoticeDownload")
+		            	.attr("href", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeFile)
 		            	.attr("download", notice.noticeFile)
 		            	.text(notice.noticeFileName);
 	            } else {
 	            	$("#noticeFileName").remove();
 	            	$("#noticeDownload").remove();
+	            	$("#beforeFile").remove();
 				}
 	            // 이전글 다음글 버튼 번호 출력 
 	            if(prevNum != 0) {
-	            	$("#prevNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notice/" + prevNum +"'")
-	            	.html("<span>이전글</span>");
+	            	$("#prevNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notice/" + prevNum +"'");
 	            } else {
 	            	$("#prevNum").remove();
 				}
 	            
 	            if(nextNum != 0) {
-	            	$("#nextNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notice/" + nextNum +"'")
-	            	.html("<span>다음글</span>");
+	            	$("#nextNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notice/" + nextNum +"'");
 	            } else {
 	            	$("#nextNum").remove();
 				}
@@ -256,13 +325,13 @@ function noticeDetail() {
 }
 
 // 공지사항 삭제
-function noticeDelete(noticeidx) {   
+function noticeDelete(noticeIdx) {   
 	
     if (confirm("자료를 정말로 삭제 하시겠습니까?")) {
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/notice'/>/" + noticeidx,
-            data: {'noticeIdx' : noticeidx},
+            url: "<c:url value='/notice'/>/" + noticeIdx,
+            data: {'noticeIdx' : noticeIdx},
             contentType: false,
             success: function(result) {
                 if (result == "success") {
