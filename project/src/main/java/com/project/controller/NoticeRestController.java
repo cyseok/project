@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +31,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoticeRestController {
 	
+	@Autowired
 	private final NoticeService noticeService;
+	
 	private final WebApplicationContext context; 
 	
 	// 공지사항 리스트
