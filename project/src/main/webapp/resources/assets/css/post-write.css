@@ -1,5 +1,5 @@
 #post-form {
-    margin-top: 80px; 
+    margin-top: 120px; 
 }
 #postTitle {
     font-size: 25px;
@@ -7,23 +7,18 @@
 #postTitleModify {
     font-size: 25px;
 }
-.ck.ck-editor {
-	width: 100%;
-	max-width: 100%;
-	margin: 0 auto;
-}
-.ck-editor__editable {
-	height: 60vh;
-}
 .post-label {
     font-size: 18px;
 }
 .post-form {
-    max-width: 65%;
+    max-width: 70%;
     margin: 0 auto 30px;
     border-radius: 8px;
 }
-
+.radio-font {
+  font-size: 17px;
+  margin-left: -13%;
+}
 #resultContainer {
     border: 1px solid #ccc; /* Add a border to the container */
     background-color: #fff; /* Set a background color to make it visually separate from the content below */
