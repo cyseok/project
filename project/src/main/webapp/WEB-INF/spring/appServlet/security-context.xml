@@ -9,16 +9,17 @@
    
 
 	<http auto-config="true" use-expressions="true">
-	
+	  <form-login login-page="/error"/>
 		<intercept-url pattern="/user/login" access="permitAll"/>
 		<intercept-url pattern="/user/join" access="permitAll" />
+		<intercept-url pattern="/notice/write" access="hasRole('ROLE_MASTER')" />
 		<!-- <intercept-url pattern="/post/write" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')" /> -->
 		<intercept-url pattern="/**" access="permitAll" /> 
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		
 		<access-denied-handler ref="customAccessDeniedHandler"/>
 		
-		<logout logout-url="/logout" logout-success-url="/post" invalidate-session="true" delete-cookies="JSESSIONID"/>
+		<logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID"/>
 		
 		<remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 		
