@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GoogleLoginBean {
 	private final static String GOOGLE_CLIENT_ID = "120474968905-90shjv7bufr1im7jrkun3v6iaeugmbn7.apps.googleusercontent.com";
     private final static String GOOGLE_CLIENT_SECRET = "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";
-    private final static String GOOGLE_REDIRECT_URI = "http://localhost:8000/google/callback";
+    private final static String GOOGLE_REDIRECT_URI = "https://www.waiting-check.com/google/callback";
     private final static String GOOGLE_SCOPE = "email openid profile";
     private final static String PROFILE_API_URL ="https://www.googleapis.com/oauth2/v2/userinfo";
 	private static final String SESSION_STATE="googleSessionState";
