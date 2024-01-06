@@ -212,7 +212,7 @@
 	    LIMIT #{offset}, #{limit}
 	</select>
 	
-	
+	<!-- 댓글 많은 순으로 정렬 -->
 	<select id="selectCommentPostList" resultType="com.project.dto.Post">
 		SELECT 
 			p.post_idx

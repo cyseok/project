@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class PostServiceImpl implements PostService{
 	
 	private final PostDAO postDAO;
-
+	
 	@Override
 	public void addPost(Post post) {
 		postDAO.insertPost(post);
@@ -92,5 +92,6 @@ public class PostServiceImpl implements PostService{
 	public Post getSelectPreNumNextNum(int postIdx) {
 		return postDAO.selectPreNumNextNum(postIdx);
 	}
+
 
 }
