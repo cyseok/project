@@ -1,0 +1,61 @@
+.write.m-body {
+     border: 2px solid #d3d3d3; 
+     padding: 10px; 
+     width: 90%; 
+     height: 180px; 
+     border-radius: 35px;
+     color: black;
+     position: relative;
+}
+/* 날짜 */
+.write.m-body > span.date {
+  position: absolute;
+  top: 78%;
+  left: 9%;
+  font-size: 20px;
+}
+/* 지역이름 */
+.write.m-body > span.float-left {
+  position: absolute;
+  top: 78%;
+  right: 12%;
+  font-size: 20px;
+  
+  white-space: normal;
+     overflow: hidden;
+     line-height: 1.3;
+     text-overflow: ellipsis;
+     display: -webkit-box;
+     -webkit-line-clamp : 1;
+     -webkit-box-orient: vertical;
+     max-width: 250px;
+ 
+}
+/* 제목 */
+.write.m-body > p.styled-text {
+  position: absolute;
+  top: 25%;
+  width: 80%;
+  transform: translateX(5%);
+  left: 5%;
+  font-size: 25px !important;
+     font-weight: bold;
+  
+  white-space: normal;
+  overflow: hidden;
+  line-height: 1.3;
+  height: 2.6em;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp : 3;
+  -webkit-box-orient: vertical;
+}
+/* 선 */
+.write.m-body > hr.position-line {
+  position: absolute;
+  top: 44%;
+  width: 90%;
+  margin: 5% 5%;
+  border: 1px solid black;
+  left: 0;
+}
