@@ -20,7 +20,7 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 public class KakaoLoginBean {
 	private final static String KAKAO_CLIENT_ID = "26c443889b09658d32a0d67e0a20aee4";
     private final static String KAKAO_CLIENT_SECRET = "jzGg3JOfvogje0gkYqBEozcdbkdV4vMZ";
-    private final static String KAKAO_REDIRECT_URI = "http://localhost:8000/kakao/callback";
+    private final static String KAKAO_REDIRECT_URI = "https://www.waiting-check.com/kakao/callback";
     private final static String SESSION_STATE = "kakao_oauth_state";
     /* 프로필 조회 API URL */
     private final static String PROFILE_API_URL ="https://kapi.kakao.com/v2/user/me";
