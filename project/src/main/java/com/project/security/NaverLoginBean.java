@@ -19,7 +19,7 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 public class NaverLoginBean {
 	private static final String NAVER_CLIENT_ID="ctXwY5nM22xoS7RZX88S";
 	private static final String NAVER_CLIENT_SAECRET="FZKGUkQJzw";
-	private static final String NAVER_REDIRECT_URI="http://localhost:8000/naver/callback";
+	private static final String NAVER_REDIRECT_URI="https://www.waiting-check.com/naver/callback";
 	private static final String SESSION_STATE="naverState";
 	/* 프로필 조회 API URL */
 	private static final String PROFILE_API_URI="https://openapi.naver.com/v1/nid/me";
