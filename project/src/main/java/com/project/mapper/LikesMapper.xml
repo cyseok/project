@@ -17,16 +17,16 @@
 	<delete id="deletePostLikes" parameterType="com.project.dto.Likes">
 		DELETE FROM	likes
 	    WHERE post_idx=#{postIdx} 
-	    	   AND userinfo_id=#{userinfoId}
+	    AND userinfo_id=#{userinfoId}
 	</delete>
 	
-	<select id="selectPostLikes" parameterType="com.project.dto.Likes">
+	<select id="selectPostLikes" resultType="com.project.dto.Likes">
 		SELECT  
    			likes_idx
    			, userinfo_id
    			, post_idx
     	FROM likes
     	WHERE 	post_idx=#{postIdx}
-    			AND userinfo_id=#{userinfoId}
+        AND userinfo_id=#{userinfoId}
 	</select>
 </mapper>
