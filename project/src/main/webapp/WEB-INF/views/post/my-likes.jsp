@@ -9,6 +9,7 @@
 <title>나의 추천글</title>
 <head>
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/my-likes.css">
 </head>
 
 <header>
@@ -57,10 +58,10 @@ function myLikesPost(userinfoId) {
         	console.log(result);
         	
         	if (result.length === 0) { 
-        		var postElement1 = $("<p style='font-size: 25px;'>검색결과가 없습니다.</p>");
+        		var postElement1 = $("<p style='font-size: 25px;'>내 관심글이 없습니다.</p>");
         		$("#myLikesList").append(postElement1);
             } else {
-				// 공지사항 목록 출력            	
+				     	
 	            for (var i = 0; i < result.length; i++) {
 	                var postList = result[i];
 	                var postElement2 = 
