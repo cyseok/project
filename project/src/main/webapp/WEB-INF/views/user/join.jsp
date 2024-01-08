@@ -48,7 +48,7 @@
                       
                       <div class="form-group">
                         <label for="confirmPw" class="sp">비밀번호 확인</label>
-                        <input type="password" id="confirmPw" placeholder="*********" maxlength="16">
+                        <input type="password" id="confirmPw" placeholder="" maxlength="16" disabled>
                         <span id="check-confirmPw" class="">비밀번호가 일치하지 않습니다.</span>
                       </div> 
                       
@@ -114,7 +114,7 @@
 							  <p>일반회원</p>
 						    </label>
 						    <label class="radio-inline" style="width: 25%">
-							  <input type="radio" name="userinfoRole" id="userRole" value="ROLE_ADMIN" style="width: 25%">
+							  <input type="radio" name="userinfoRole" id="adminRole" value="ROLE_ADMIN" style="width: 25%">
 							  <p>매장관리자</p>				
 						    </label>
 						  </div>
@@ -582,7 +582,7 @@ $("#join_form").submit(function(event) {
         var detailaddress = $("#detailAddress").val();
         var formDataAddress = "우편번호 : " + postnum + ", 주소 : " + roadname + " " + detailaddress;
 	    
-        var formDataRole = $('#userRole:checked').val();
+        var formDataRole = $('input[name="userinfoRole"]:checked').val();
         
         /* 아이디 작성 여부 확인 */
 	    if (formDataId === "") {
@@ -602,6 +602,15 @@ $("#join_form").submit(function(event) {
 
 	      return false;
 	    }
+	    /* 비밀번호 유효성 통과 여부 */
+	    if (pwCheck === false) {
+	      alert('비밀번호를 확인해주세요.');
+	      var pwFocus = document.getElementById("pw");
+	      pwFocus.focus();
+	      window.scrollTo(0, pwFocus.offsetTop, { behavior: "instant" });
+	      
+	      return false;
+	    }   
 	    /* 비밀번호 작성 여부 */
 	    if (formDataPw === "") {
 	      alert('비밀번호를 작성해주세요.');
@@ -638,16 +647,6 @@ $("#join_form").submit(function(event) {
 
 	      return false;
 	    }
-	    
-	    /*=============================
-	    	닉네임 작성 여부,닉네임 유효성검사여부
-	         생년월일도...
-	         주소는 작성 여부만 상세주소는 빼고
-	         이메일 작성여부도 추가 하기 ========
-	        	 ====================*/
-	    
-	    
-	    
 	    /* 이메일 중복 검사 여부 */
 	    if (emailCheck === false) {
 	      alert('이메일 중복검사를 실행해주세요.');
@@ -659,9 +658,10 @@ $("#join_form").submit(function(event) {
 		   return false;
 		}
 	    /* 권한 체크 여부 확인 */
-	    var roleCheck = document.getElementById("userRole").checked;
-        if (!roleCheck) {
-            alert("회원구분을 체크해주세요.");
+	    var userRoleChecked = document.getElementById('userRole').checked;
+        var adminRoleChecked = document.getElementById('adminRole').checked;
+        if (!userRoleChecked && !adminRoleChecked) {
+            alert('회원구분을 체크해주세요.');
             return false;
         }
 	    /* 약관동의 체크 여부 확인 */ 
@@ -728,7 +728,9 @@ $("#join_form").submit(function(event) {
    const emailConfirmInput = document.querySelector("#email-confirm-text");
    const emailConfirmSpan = document.querySelector("#check-email");
    
-/* 아이디 유효성 검사 */
+  
+   
+   /* 아이디 유효성 검사 */
    function checkId() {
      var id = idInput.value;
      var regExp = /^[A-Za-z\d]{5,15}$/;
@@ -739,7 +741,7 @@ $("#join_form").submit(function(event) {
     	 checkIdSpan.style.color = "red";
      }
    }                       
-/* 비밀번호 유효성 검사 */
+   /* 비밀번호 유효성 검사 */
    function checkPw() {
      var pw = pwInput.value;
      var regExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
@@ -747,9 +749,11 @@ $("#join_form").submit(function(event) {
      if (regExp.test(pw)) {
        checkPwSpan.style.color = "green";
        pwCheck = true; 
+       document.getElementById("confirmPw").disabled = false;
      } else {
        checkPwSpan.style.color = "red";
        pwCheck = false; 
+       document.getElementById("confirmPw").disabled = true;
      }
    }
 /* 비밀번호 확인 일치 검사 */
@@ -883,10 +887,8 @@ $(function() {
             $("#id-check-message").css("color", "red");
         }
       }, error: function(error) {
-    	  console.log(error.responseText)
-    	  console.log(error)
     	  console.log(id)
-          alert("Error:" + error.responseText);
+          alert(error.responseText);
           idCheck = false;
           $("#id-check-message").css("color", "red");
       }
