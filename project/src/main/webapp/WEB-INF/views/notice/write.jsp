@@ -6,40 +6,74 @@
 
 <!DOCTYPE html>
 <html lang="UTF-8">
-   <head>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  </head>
-  
+<head>
+	<title>공지사항</title>
+	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<style>
+body {
+    padding-top: 50px; /* Adjust the padding value as needed */
+  }
+#preview {
+  width: 100%;
+  height: 100%;
+}
+p {
+ font-size : 20px;
+}
+	</style>
+</head>
+
+<header>
+  <jsp:include page="/WEB-INF/views/include/header.jsp"/>
+</header>
+
 <body>
-	<form enctype="multipart/form-data">
-	  <div class="">
-	    <label for="noticeTitle">제목</label>
-	      <textarea name="noticeTitle" id="noticeTitle" class="" placeholder="제목을 입력해주세요"></textarea>
-	  </div>
-	    <div class="">
-	      <label for="noticeContent">내용</label>
+<div class="section">
+  <div class="container">
+    <div class="row">
+	  <form enctype="multipart/form-data">
+	    <div class="post-form">
+	      <p>공지사항 작성</p>
+	    </div> 
+	    
+	    <div class="post-form">
+	      <label for="noticeTitle" class="post-label">제목</label>
+	        <textarea name="noticeTitle" id="noticeTitle" class="form-control" placeholder="제목을 입력해주세요"></textarea>
+	    </div>
+	    
+	    <div class="post-form">
+	      <label for="noticeContent" class="post-label">내용</label>
 	      <textarea name="noticeContent" id="noticeContent" class="form-control" rows="15" placeholder="내용을 입력해주세요"></textarea>
 	    </div>
- 		<div>
- 			<img id="preview" style="width:30%; height: 30%;">
+	    
+ 		<div class="post-form">
+ 			<img id="preview">
  		</div>
-      <div>
-	    <label for="noticeImg">사진 올리기
- 			<input type="file" class="" id="noticeImg" name="noticeImgUpload" onchange="readURL(this);">
- 		</label>
-	  </div>
+ 		
+        <div class="post-form">
+	      <label for="noticeImg">사진 올리기
+	      <br>
+ 			<input type="file" class="" id="noticeImg" name="noticeImgUpload" onchange="readURL(this);" style="width: 250px;">
+ 		  </label>
+	    </div>
 	  
-	  <div class="">
-	    <label>파일 첨부</label>
-	      <input type="file" id="noticeFile" name="noticeFileUpload" >
-	  </div>
-	  <br>
-	    <button type="button" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
-	    <button type="submit" class="" >등 록</button>
-	    <div class=""></div>
+	    <div class="post-form">
+	      <label for="noticeFile">파일 첨부
+	      <br>
+	        <input type="file" id="noticeFile" name="noticeFileUpload" style="width: 250px;">
+	      </label>
+	    </div>
+	    <br>
+	    <div class="post-form d-flex justify-content-end">
+	    <button type="submit" class="btn btn-primary" >등 록</button>
+	    <button type="button" class="btn btn-secondary ml-2" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
+	    </div>
 	  <sec:csrfInput/>
-	</form>
-
+	  </form>
+	</div>
+  </div>
+</div>
+<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 <script>
 //CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
 var csrfHeaderName = "${_csrf.headerName}";
@@ -53,14 +87,24 @@ $(document).ajaxSend(function(e, xhr){
 
 // 등록
 $("form").submit(function(e) {
-    e.preventDefault(); 
+    e.preventDefault();
+    $('#loading').show();
 
+    var noticeImgUpload = $("#noticeImg")[0].files[0];
+    var noticeFileUpload = $("#noticeFile")[0].files[0];
+    
     var formData = new FormData();
     formData.append("noticeTitle", $("#noticeTitle").val());
     formData.append("noticeContent", $("#noticeContent").val());
     formData.append("noticeFileName", $("#noticeFileName").val());
-    formData.append("noticeImgUpload", $("#noticeImg")[0].files[0]);
-    formData.append("noticeFileUpload", $("#noticeFile")[0].files[0]);
+    
+    if (noticeImgUpload !== undefined) {
+        formData.append("noticeImgUpload", noticeImgUpload);
+    }
+
+    if (noticeFileUpload !== undefined) {
+        formData.append("noticeFileUpload", noticeFileUpload);
+    }
 
     $.ajax({
         type: "POST",
@@ -70,6 +114,7 @@ $("form").submit(function(e) {
         processData: false,
         dataType: "text",
         success: function (result) {
+        	$('#loading').hide();
             if (result == "success") {
                 alert("공지 사항을 등록하였습니다.");
                 window.location.href = "${pageContext.request.contextPath}/notice"
@@ -88,11 +133,11 @@ function readURL(input) {
         var fileExtension = fileName.split('.').pop().toLowerCase();
         var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
         
-       if (allowedExtensions.indexOf(fileExtension) === -1) {
-            alert("선택한 파일은 이미지 파일이 아닙니다. 유효한 이미지 파일을 선택해주세요.");
-            input.value = "";
-            return;
-        }
+	       if (allowedExtensions.indexOf(fileExtension) === -1) {
+	            alert("선택한 파일은 이미지 파일이 아닙니다. 유효한 이미지 파일을 선택해주세요.");
+	            input.value = "";
+	            return;
+	        }
 	    var reader = new FileReader();
        
 	    reader.onload = function(e) {
@@ -101,6 +146,7 @@ function readURL(input) {
 	    reader.readAsDataURL(input.files[0]);
 	  } else {
 	    document.getElementById('preview').src = "";
+	    document.getElementById('preview').style.display = "none";
 	  }
 	}
 </script>
