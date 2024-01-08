@@ -1,83 +1,153 @@
-  .detail-image {
-    width: 70px;
-    height: 70px;
-  }
-  .heart-image {
-    width: 48px;
-    height: 44px;
-    margin-left: 350px;
-  }
-  .post-detail {
-    margin-top: 80px; 
-    width: 75%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 80px;
-  }
-  #postTitle {
-    font-size: 45px;
-    font-weight: bold;
-    margin-left: 20px;
-    margin-top: 50px;
-  }
-  #postNickname {
-    font-size: 18px;
-    font-weight: bold;
-    margin-left: 10px;
-    margin-top: 10px;
-  }
-  #postNickname::after {
-    content: "|";
-    margin: 0 15px;
-    font-weight: normal; 
-  }
-  #postRegdate {
-    font-size: 18px;
-    margin: 0 5px;
-    font-weight: bold; 
-  }
-  #postView {
-    font-size: 18px;
-    margin: 0 10px;
-    font-weight: bold; 
-  }
-  #postLikecnt {
-    font-size: 20px;
-    margin: 0 5px;
-    font-weight: bold; 
-  }
-  #postRegdateDay {
-    font-size: 17px;
-    margin: 0 5px;
-    font-weight: normal; 
-  }
-  .dayType {
-    font-size: 25px;
-    font-weight: normal; 
-  }
-  .dayTypeValue {
-    font-size: 25px;
-    font-weight: bold;
-    margin-left: 25px; 
-  }
-  .post-button {
-    display: flex;
-    justify-content: flex-end;
-  }
+.detail-image {
+  width: 70px;
+  height: 70px;
+}
+.heart-image {
+  width: 48px;
+  height: 44px;
+  margin-left: 350px;
+}
+.comment-content {
+  margin-top: 15px; 
+  margin-left: 65px;
+}
+.comment-nickname {
+  position: absolute;
+  top: 5%;
+  left: 8%;
+  font-size: 17px;
+}
+.comment-date {
+  position: absolute;
+  top: 25%;
+  left: 8.2%;
+  font-size: 14px;
+}
+.comment-image {
+  width: 53px;
+  height: 53px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+#comment-button {
+  position: absolute;
+  top: 8%;
+  right: 3%;
+  font-size: 14px;
+}
+#comment-modify-button {
+  position: absolute;
+  top: 8%;
+  right: 17%;
+  font-size: 14px;
+}
+#comment-delete-button {
+  position: absolute;
+  top: 8%;
+  right: 11%;
+  font-size: 14px;
+}
+.post-detail {
+  margin-top: 80px; 
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 80px;
+}
+#postModifyForm{
+  margin-top: 60px; 
+}
+.radio-font {
+  font-size: 17px;
+  margin-left: -13%;
+}
+#commentContent {
+  font-size: 20px;
+  width: 87%;
+}
+#commentAdd{
+  font-size: 18px;
+  margin-top: -85px;
+  width: 100px;
+  height: 91px;
+}
+.post-form {
+  max-width: 60%;
+  margin: 0 auto 30px;
+  border-radius: 8px;
+}
+.comment-input {
+  margin-top: 50px; 
+}
+#comment-count {
+  font-size: 18px;
+  font-weight: bold;
+}
+#postTitle {
+  font-size: 45px;
+  font-weight: bold;
+  margin-left: 20px;
+  margin-top: 50px;
+}
+#postNickname {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#postNickname::after {
+  content: "|";
+  margin: 0 15px;
+  font-weight: normal; 
+}
+#postRegdate {
+  font-size: 18px;
+  margin: 0 5px;
+  font-weight: bold; 
+}
+#postView {
+  font-size: 18px;
+  margin: 0 10px;
+  font-weight: bold; 
+}
+#postLikecnt {
+  font-size: 20px;
+  margin: 0 5px;
+  font-weight: bold; 
+}
+#postRegdateDay {
+  font-size: 17px;
+  margin: 0 5px;
+  font-weight: normal; 
+}
+.dayType {
+  font-size: 25px;
+  font-weight: normal; 
+}
+.dayTypeValue {
+  font-size: 25px;
+  font-weight: bold;
+  margin-left: 25px; 
+}
+.post-button {
+  display: flex;
+  justify-content: flex-end;
+}
 
-  .post-button button {
-    float: right;
-    margin: 7px 7px;
-  }
-  .post-info {
-    margin-top: 10px;
-  } 
-  #contentTitle {
-    font-size: 20px;
-    font-weight: normal; 
-    margin-left: 13px; 
-  }
-  .postContent {
-    font-size: 25px;
-    margin-left: 13px; 
-  }
+.post-button button {
+  float: right;
+  margin: 7px 7px;
+}
+.post-info {
+  margin-top: 10px;
+} 
+#contentTitle {
+  font-size: 20px;
+  font-weight: normal; 
+  margin-left: 13px; 
+}
+.postContent {
+  font-size: 25px;
+  margin-left: 13px; 
+  margin-top: 50px; 
+}
