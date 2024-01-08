@@ -34,6 +34,7 @@ public class NoticeRestController {
 	@Autowired
 	private final NoticeService noticeService;
 	
+	@Autowired
 	private final WebApplicationContext context; 
 	
 	// 공지사항 리스트
@@ -95,7 +96,7 @@ public class NoticeRestController {
 			}
 		} else {
 			notice.setNoticeFile(null);
-	        notice.setNoticeFileName("null");
+	        notice.setNoticeFileName(null);
 		}
 		//  사진업로드
 		if (noticeImgUpload != null && !noticeImgUpload.isEmpty()) {
@@ -115,7 +116,7 @@ public class NoticeRestController {
 
 			notice.setNoticeImg(uploadNoticeImg);
 		} else {
-			notice.setNoticeImg("null");
+			notice.setNoticeImg(null);
 		}
 		
 		noticeService.addNotice(notice);
