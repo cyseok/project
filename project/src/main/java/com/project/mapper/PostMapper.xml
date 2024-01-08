@@ -117,7 +117,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-			ON p.userinfo_id = u.id
+	   	ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -157,7 +157,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-			ON p.userinfo_id = u.id
+		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -197,7 +197,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-			ON p.userinfo_id = u.id
+		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -238,7 +238,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-			ON p.userinfo_id = u.id
+		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
@@ -282,7 +282,7 @@
 			, p.post_comment
 		FROM post p
 		LEFT JOIN userinfo u 
-			ON p.userinfo_id = u.id
+		ON p.userinfo_id = u.id
         WHERE post_idx=#{postIdx}
 	</select>
 	
@@ -316,9 +316,9 @@
 			, p.post_status
 		FROM post p
 		LEFT JOIN likes l 
-			ON p.post_idx = l.post_idx
+		ON p.post_idx = l.post_idx
 		LEFT JOIN userinfo u 
-			ON p.userinfo_id = u.id
+		ON p.userinfo_id = u.id
 		
 		WHERE l.userinfo_id = #{userinfoId} 
 			AND p.post_status = 1
