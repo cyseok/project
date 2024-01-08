@@ -38,7 +38,7 @@
 	  text-decoration: underline;
 	  text-align: center;
 	  font-size: 14px;
-	  left: 25%;
+	  left: 30%;
 	  
 	}
 	.pw-button {
@@ -51,7 +51,7 @@
 	.join-button {
 	  position: absolute;
 	  text-decoration: underline;
-	  left: 63%;
+	  left: 55%;
 	  text-align: center;
 	  font-size: 14px;
 	}
@@ -212,18 +212,16 @@
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
 							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">Home</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
-							<li><a href="" onclick="errorMessage()" style="color: gray; font-size: 19px;">매장 소식</a></li>
 							<li class="active"><a onclick="loginMessage()" role="button" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
 					</sec:authorize>
 					
-					<sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')">
+					<sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')">
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
-							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">Home</a></li>
+							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">HOME</a></li>
 							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
-							<li><a href="" onclick="errorMessage()" style="color: gray; font-size: 19px;">매장소식</a></li>
 							<li class="active"><a href="${pageContext.request.contextPath}/post/write" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
@@ -250,7 +248,6 @@
 							<li class="has-children">
 								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
-									<li><a href="" onclick="errorMessage()" style="font-size: 1.2em; width: 200px;">매장 작성글</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
 								</ul>
 							</li>
@@ -264,7 +261,6 @@
 							<li class="has-children">
 								<img src="${pageContext.request.contextPath}/assets/images/login.png" id="login-image" role="button">
 								<ul class="dropdown">
-									<li><a href="" onclick="errorMessage()" style="font-size: 1.2em; width: 200px;">관리자 페이지</a></li>
 									<li><a href="" style="font-size: 1.2em; width: 200px;" id="logoutButton">로그아웃 </a></li>
 								</ul>
 							</li>
@@ -330,8 +326,8 @@
             <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
           </form>
           <div style="margin-top: 20px;">
-	        <a href="${pageContext.request.contextPath}/user/findId" class="id-button">아이디찾기</a> 
-	        <a href="${pageContext.request.contextPath}/user/findPw" class="pw-button">비밀번호찾기</a> 
+	        <a href="${pageContext.request.contextPath}/user/find" class="id-button">아이디찾기</a> 
+	        <a href="${pageContext.request.contextPath}/user/find" class="pw-button"></a> 
 	        <a href="${pageContext.request.contextPath}/user/join" class="join-button">회원가입</a>
 	      </div>
         </div>
@@ -348,17 +344,11 @@
   </div>
  
   
-  <%-- 로딩 표시 이미지
   <div id="loading" style="display: none;">
-    <img src="${pageContext.request.contextPath}/assets/images/loading.gif" alt="Loading..." />
+	  <div class="spinner-border text-primary" role="status">
+       <span class="visually-hidden">Loading...</span>
+     </div>
   </div>
-   --%>
-  
-	<div id="loading" style="display: none;">
- 	  <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-	</div>
   
 <script>
     //CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
@@ -370,8 +360,6 @@
 	$(document).ajaxSend(function(e, xhr){
 		xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
 	});
-
-
 
 	var idLengthInput = document.getElementById("idInput");
 	var pwLengthInput = document.getElementById("pwInput");
@@ -418,7 +406,7 @@
 	        success: function (response) {
 	            if (response === "ok") {
 	            	$('#loading').hide();
-	            	window.location.href = "${pageContext.request.contextPath}/"
+	            	window.location.reload();
 	            } else {
 	                alert("아이디와 비밀번호를 확인해주세요.");
 	            }
@@ -443,7 +431,7 @@
 	  	            url: "<c:url value='/logout'/>",
 	  	            data: $("#logoutForm").serialize(), 
 	  	            success: function(data) {
-	  	                location.reload();
+	  	            	window.location.href = "${pageContext.request.contextPath}/";
 	  	            },
 	  	            error: function(data) {
 	  	                alert("로그아웃 실패");
@@ -473,9 +461,11 @@
    
    function loginMessage() {
        alert("로그인 후 이용해주세요!!");
+       event.preventDefault();
    }
    function errorMessage() {
        alert("페이지를 만드는 중입니다..");
+       event.preventDefault();
    }
 </script>
      
