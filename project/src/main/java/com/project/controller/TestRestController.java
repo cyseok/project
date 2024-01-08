@@ -155,7 +155,7 @@ public class TestRestController {
 	@PutMapping("/{postIdx}")
 	public ResponseEntity<Post> postModify(@ModelAttribute Post post) {
 		try {
-			postService.modifyPost(post);
+			//postService.modifyPost(post);
 			Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
             		.slash(post.getPostIdx())
             		.withSelfRel()
