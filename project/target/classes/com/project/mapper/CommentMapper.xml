@@ -67,14 +67,17 @@
 	<!-- 댓글 목록 조회 -->
 	<select id="selectCommentList" resultType="com.project.dto.Comment">
 		SELECT 
-			comment_idx
-			, userinfo_id
-			, comment_content
-			, date_format(comment_regdate, '%y-%m-%d') as comment_regdate
-		FROM comment
+			c.comment_idx
+			, c.userinfo_id
+			, u.nickname
+			, c.comment_content
+			, c.comment_regdate
+		FROM comment c
+		LEFT JOIN userinfo u 
+	   		ON c.userinfo_id = u.id
 		WHERE post_idx = #{postIdx} 
 			AND comment_status = 1
-		    AND parent_idx = null
+		    AND parent_idx IS NULL
 	    ORDER BY comment_regdate 
 	</select>
 	

@@ -28,11 +28,12 @@ public class CommentRestController {
 	private final CommentService commentService;
 	
 	// 댓글 리스트
-	@GetMapping("/comment-list")
+	@GetMapping("/comment-list/{postIdx}")
 	public ResponseEntity<List<Comment>> commentList(@RequestParam("postIdx") int postIdx) {
 		
 		try {
 	        List<Comment> comment = commentService.getCommentList(postIdx);
+	        System.out.println(comment);
 	        return new ResponseEntity<>(comment, HttpStatus.OK);
 	    } catch (Exception e) {
 	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -40,7 +41,7 @@ public class CommentRestController {
 	}
 	
 	// 대댓글 리스트
-	@GetMapping("/reply-list")
+	@GetMapping("/reply-list/{parentIdx}")
 	public ResponseEntity<List<Comment>> replyList(@RequestParam("parentIdx") int parentIdx) {
 		
 		try {
