@@ -11,95 +11,29 @@
 <head>
 
 <title>공지사항 목록</title>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/notice-list.css">
  <style> 
-  a{
-     text-align: right;
-     color: black;
-  }
-  table{
-    border-collapse: collapse;
-    width: 1000px;    
-    margin-top: 100px;
-    margin-bottom : 50px;
-    margin-left : 350px;
-    text-align: center;
-  }
-  td, th{
-     border-bottom: 1px solid black;
-     height: 50px;
-  }
-  th{
-     font-size : 17px;
-     text-align: center;
-  }
-  th.idx {
-     width: 10%;
-  }
-  th.title {
-     width: 60%;
-  }
-  th.day {
-     width: 18%;
-  }
-  th.count {
-     width: 12%;
-  }
-  thead{
-     font-weight: 700;
-  }
- 
-  .top_btn{
-    font-size: 20px;
-    padding: 6px 12px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    font-weight: 600;
-  }
-  h1{
-     text-align: center;
-  }
- .categories-sidebar-widget {
-    max-width: 150px;
-    margin-top: 150px;
-    margin-left: 50px;
- }
- .widget-title {
-    margin-top: 20px;
- }
- .noinBtn {
-    width: 150px;
-    margin-bottom: 50px;
-    display: block;
- }
- #pageNumDiv {
-    text-align: center;
-   	margin-bottom: 50px;
-   	margin-left: 100px;
- }
- .button-and-page-num {
-    display: flex; /* Flexbox를 사용하여 내부 요소를 가로로 나열 */
-    justify-content: center;
-    align-items: center; /* 수직 가운데 정렬 */
- }
- #noticeSize {
-    margin-top: 10px;
- }
+
  </style>
 </head>  
-  
+ 
+<header>
+  <jsp:include page="/WEB-INF/views/include/header.jsp"/>
+</header>
+ 
 <body>
+<div class="section">
 
-	<div>
+	<div class="totalNum">
 		<span>전체 게시글 수 : <b><span id="totalBoard"></span></b>개</span>
 	</div>
 	<!-- n개씩 보기 출력 -->
     <select id="noticeSize"></select>
     
-    <button id="searchButton" class="" style="float:right; margin-right:150px; height:48px;" onclick="noticeSearch();">검색</button>
-    <button id="resetButton" class="" style="float:right; margin-right:150px; height:48px;" onclick="noticeListDisplay();">초기화</button>
-    <button id="noticeAddButton" class="" style="float:right; margin-right:150px; height:48px;" onclick="noticeAddButton();">작성하기</button>
-    <input type="text" class="" id="selectKeyword" placeholder="제목, 내용으로 검색해보세요!" style="width:250px; height:15px; float:right; margin-right:10px;">
+    <button id="resetButton" class="btn btn-secondary" style="float:right; margin-right:200px; height:43px;" onclick="noticeListDisplay();">초기화</button>
+    <button id="searchButton" class="btn btn-secondary" style="float:right; margin-right:10px; height:43px;" onclick="noticeSearch();">검색</button>
+    <input type="text" class="" id="selectKeyword" placeholder="제목, 내용으로 검색해보세요!" style="width:250px; height:43px; float:right; margin-right:10px;">
 
 
 	<!-- 게시글 목록 출력 -->
@@ -125,8 +59,8 @@
 		</table>
 	</div>
     
-    <sec:authorize access="hasRole('ROLE_ADMIN')">
-	    <button type="button" onclick="location.href='${pageContext.request.contextPath}/notice/write'">
+    <sec:authorize access="hasRole('ROLE_MASTER')">
+	    <button type="button" id="writeNotice" class="btn btn-dark" onclick="location.href='${pageContext.request.contextPath}/notice/write'">
 	    	글쓰기
 	    </button>
     </sec:authorize>
@@ -135,7 +69,8 @@
     
     <!-- 페이지 번호 출력 -->
     <div id="pageNumDiv"></div>
-    
+</div>
+<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 <script type="text/javascript">
 //CSRF 토큰 관련 정보 저장
 var csrfHeaderName = "${_csrf.headerName}";
@@ -178,6 +113,7 @@ $("#selectKeyword").keypress(function(){
 function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 	$("#noticeSize").show();
 	$("#pageNumDiv").show();
+	$('#loading').show();
 	
    page=pageNum;
    size=pageSize;
@@ -189,7 +125,7 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
         data: {"pageNum": pageNum, "pageSize": pageSize, "selectKeyword": selectKeyword},
         dataType: "json",
         success: function(result) {
-        	
+        	$('#loading').hide();
         	// 전체 글 개수
         	var totalBoard = result.pager.totalBoard;
         	var pager = result.pager;
@@ -200,7 +136,7 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
             
             // 출력된 공지사항 데이터가 없을 때
             if (result.noticeList.length == 0) { 
-            	("#tbody").append("<tr><td colspan='4'>등록된 공지 사항이 없습니다.</td></tr>");
+            	$("#tbody").append("<tr><td colspan='4'>검색된 공지사항이 없습니다.</td></tr>");
             } else {
 				// 공지사항 목록 출력            	
 	            for (var i = 0; i < result.noticeList.length; i++) {
@@ -231,21 +167,21 @@ function pageNumDisplay(pager) {
     if (pager.startPage > pager.blockSize) {
         html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class='fa fa-long-arrow-left'/></a>";
     } else {
-        html += "<a class='' disabled ><i class='dasasd'><</i></a>";
+        html += "<a class='page-num' disabled ><i class=''><</i></a>";
     }
 
     for (var i = pager.startPage; i <= pager.endPage; i++) {
         if (pager.pageNum != i) {
-            html += "<a class='' href=\"javascript:noticeListDisplay(" + i + ", " + size + ", '" + keyword + "');\">" + i + "</a>";
+            html += "<a class='page-num' href=\"javascript:noticeListDisplay(" + i + ", " + size + ", '" + keyword + "');\">" + i + "</a>";
         } else {
-            html += "<a class='' disabled>" + i + "</a>";
+            html += "<a class='page-num' disabled>" + i + "</a>";
         }
     }
 
     if (pager.endPage != pager.totalPage) {
         html += "<a href=\"javascript:noticeListDisplay(" + pager.prevPage + ", " + size + ", '" + keyword + "');\" class=''><i class='fa fa-long-arrow-left'/></a>";
     } else {
-        html += "<a class='' disabled><i class='asdasd'>></i></a>";
+        html += "<a class='page-num' disabled><i class=''>></i></a>";
     }
 
     $("#pageNumDiv").html(html);
@@ -276,11 +212,6 @@ function noticeSizeDisplay() {
 function noticeSearch() {
     var selectKeyword = $("#selectKeyword").val();
         noticeListDisplay(1, size, selectKeyword);
-}
-
-// 작성 버튼 클릭
-function noticeAddButton() {     
-	window.location.href = "${pageContext.request.contextPath}/notice/write";
 }
 </script>
 </body>
