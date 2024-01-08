@@ -233,9 +233,7 @@
         	  if (result == "success") {
                   alert("공지 사항을 수정하였습니다.");
                   window.location.href = "${pageContext.request.contextPath}/notice/"+noticeIdx;
-              } else {
-                  alert("글 수정을 실패하였습니다.");
-              }
+              } 
           },
           error: function(xhr) {
              alert("공지 사항 수정 중 오류가 발생하였습니다("+ xhr.status+")");
@@ -275,7 +273,7 @@ function noticeDetail() {
 	            $("#noticeTitle").val(notice.noticeTitle);
 	            $("#noticeContent").val(notice.noticeContent);
 	           
-	            if (notice.noticeImg !== "null" || notice.noticeImg !== null) {
+	            if (notice.noticeImg !== null) {
 	           	    $("#noticeImg").attr("src", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeImg);
 	           	 	
 	           	    $("#preview").attr("src", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeImg);
@@ -285,7 +283,7 @@ function noticeDetail() {
 	            	$("#beforePreview").remove();
 				}
 	            
-	            if (notice.noticeFile !== "null" || notice.noticeFile != null) {
+	            if (notice.noticeFile !== null) {
 	            	$("#noticeFileName").html("첨부파일 : ");
 		            $("#noticeDownload")
 		            	.attr("href", "${pageContext.request.contextPath}/assets/images/upload/" + notice.noticeFile)
