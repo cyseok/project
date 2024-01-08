@@ -9,6 +9,7 @@
 <title>웨이팅 확인!!</title>
 <head>
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/post-list.css">
 </head>
 
 <header>
@@ -17,17 +18,34 @@
 
 <body>
   <div class="content-section">
-	<div class="hero overlay">
+	<div class="hero overlay" style="height: 670px;">
 		<div class="img-bg rellax" >
-			<img src="${pageContext.request.contextPath}/assets/images/hero_2.jpg" alt="Image" class="img-fluid" >
+			<img src="${pageContext.request.contextPath}/assets/images/hero_2.jpg" alt="Image" class="img-fluid">
 		</div>
 		
 		<div class="container">
 			<div class="row align-items-center justify-content-start">
 				<div class="col-lg-6 mx-auto text-center">
 
-					<h1 class="heading" data-aos="fade-up">제목~~~</h1>
-					<p class="mb-4" data-aos="fade-up">설명이 들어갈 공간입니다.</p>
+					<h1 class="heading" data-aos="fade-up">웨이팅 체크!!</h1>
+					<p class="mb-4" data-aos="fade-up">현재 있는 곳의 사람이 얼마나 많은지 게시물을 올려주세요!!
+					<br>
+					사람이 많아 가기 망설여지는 사람들에게 도움을 줄 수 있습니다.
+					<br>
+					<br>
+					일반 사용자 계정 
+					<br>
+					ID : user1
+					<br>
+					PW : !User123
+					<br>
+					<br>
+					관리자 계정
+					<br> 
+					ID : test1
+					<br>
+					PW : !Xptmxm1            
+					</p>
 				</div>
 			</div>
 		</div>
@@ -42,7 +60,7 @@
   </div>
   
   <div class="search-buttons">
-    <input class="inp-base" type="text" id="searchKeyword" name="selectKeyword" placeholder="검색어를 입력하세요">
+    <input class="inp-base" type="text" id="searchKeyword" name="selectKeyword" placeholder="제목, 내용으로 검색해보세요.">
     <button type="button" id="searchButton" class="btn btn-secondary" onclick="postSearch()">검색</button>
   </div>
   
@@ -55,7 +73,7 @@
 						<span class="date">날짜 들어감</span>
 						<span class="float-right">공휴일,휴일</span>
 						<span class="float-left">지역이름 들어감fdgㅁㄴㅇㄴㅁㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㄴㅁㅇㄴ</span>
-						<p class="styled-text">제목이 들어갈 공간입니다ㅁㄴㅇㅁㄴㄹㅁㄴㄹㅁ나ㅣ루먼우먼오ㅓㅁ노어모아몽마노어ㅏ모아ㅗㅁㄴ왐노아모오ㅓㅏㅁ나어ㅗㅁ너ㅏ옴너ㅏ오머나오마너온머ㅏ오마ㅗㄴ암놩모나온망마ㅗㄴ암노어ㅏㅁ노어ㅏ몬.</p>
+						<p class="styled-text">제목이 들어감</p>
 						<hr class="position-line">
 						<img src="${pageContext.request.contextPath}/assets/images/login.png" class="login-image">
 						<span class="bottom-left">닉네임</span>
@@ -92,7 +110,6 @@ $(document).ajaxSend(function(e, xhr){
 });
 
 $(document).ready(function() { // JSP가 렌더링되자마자,
-	// document.doamin='https://www.waiting-check.com/';
     postListDisplay(offset, limit, selectKeyword, viewType);
     
     if(recently === true) {
@@ -128,7 +145,14 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         method: "GET",
         url: "<c:url value='/post/list'/>",
         
-       data: encodeURIComponent(JSON.stringify( {"offset": offset
+        data: {"offset": offset
+        		, "limit": limit
+        		, "selectKeyword": selectKeyword
+        		, "viewType": viewType
+        	},
+        dataType: "json",
+        	/*
+        	data: encodeURIComponent(JSON.stringify( {"offset": offset
         		, "limit": limit
         		, "selectKeyword": selectKeyword
         		, "viewType": viewType
@@ -136,6 +160,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         	dataType: "json",
         	contentType:"application/json; charset=utf-8",
         	headers: {"Accept": "application/json"},
+        	*/
         success: function(result) {
         	$('#loading').hide();
         	
@@ -143,10 +168,6 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         	if (result.content.length === 0) { 
         		postScroll = false;
         		console.log(postScroll);
-        		var postElement1 = $("<p style='font-size: 25px;'>검색결과가 없습니다.</p>");
-        		$("#postList").append(postElement1);
-        		
-        		
         	} else if(result.content.length < 16) {
         		for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
@@ -178,7 +199,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	                
 	                $("#postList").append(postElement2);
 	            }
-	                postScroll = false;
+	            postScroll = false;
             } else {
 				// 공지사항 목록 출력            	
 	            for (var i = 0; i < result.content.length; i++) {
@@ -226,8 +247,111 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 
 // 검색
 function postSearch() {
+	$("#postList").empty();
     var selectKeyword = $("#searchKeyword").val();
-    postListDisplay(offset, limit, selectKeyword, viewType);
+    postSearchDisplay(offset, limit, selectKeyword, viewType);
+}
+
+// 검색 Ajax 
+function postSearchDisplay(offset, limit, selectKeyword, viewType) {
+	$('#loading').show();
+	
+    $.ajax({
+        method: "GET",
+        url: "<c:url value='/post/list'/>",
+        
+        data: {"offset": offset
+        		, "limit": limit
+        		, "selectKeyword": selectKeyword
+        		, "viewType": viewType
+        	},
+        dataType: "json",
+        success: function(result) {
+        	$('#loading').hide();
+        	
+        	
+        	if (result.content.length === 0) { 
+        		postScroll = false;
+        		console.log(postScroll);
+        		var postElement1 = $("<p style='font-size: 25px;'>검색결과가 없습니다.</p>");
+        		$("#postList").append(postElement1);
+        		
+        		
+        	} else if(result.content.length < 16) {
+        		for (var i = 0; i < result.content.length; i++) {
+	                var postList = result.content[i];
+	                var postElement2 = 
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                          "<div class='media-entry'>" +
+	                            "<div class='bg-white m-body'>" +
+	                              "<span class='date'>" + postList.postRegdate + "</span>" +
+	                              "<span class='float-right'>" + 
+	                              (function() {
+	                                  if (postList.postDayType === 1) {
+	                                      return "평일";
+	                                  } else {
+	                                      return "공휴일, 주말";
+	                                  }
+	                              })() +
+	                              "</span>" +
+	                              "<span class='float-left' title='"+postList.postLoc+"'>" + postList.postLoc + "</span>" +
+	                              "<p class='styled-text' title='"+postList.postTitle+"'>" + postList.postTitle + "</p>" +
+	                              "<hr class='position-line'>" +
+	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='login-image'>" +
+	                              "<span class='bottom-left'>" + (postList.nickname === null || postList.nickname === "" ? "닉네임없음" : postList.nickname) + "</span>" +
+	                              "<span class='bottom-right'>" + postList.postViewcnt + " views</span>" +
+	                            "</div>" +
+	                          "</div>" +
+	                        "</a>" +
+	                    "</div>");
+	                
+	                $("#postList").append(postElement2);
+	            }
+	            postScroll = false;
+            } else {
+				// 공지사항 목록 출력            	
+	            for (var i = 0; i < result.content.length; i++) {
+	                var postList = result.content[i];
+	                var postElement2 = 
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                          "<div class='media-entry'>" +
+	                            "<div class='bg-white m-body'>" +
+	                              "<span class='date'>" + postList.postRegdate + "</span>" +
+	                              "<span class='float-right'>" + 
+	                              (function() {
+	                                  if (postList.postDayType === 1) {
+	                                      return "평일";
+	                                  } else {
+	                                      return "공휴일, 주말";
+	                                  }
+	                              })() +
+	                              "</span>" +
+	                              "<span class='float-left' title='"+postList.postLoc+"'>" + postList.postLoc + "</span>" +
+	                              "<p class='styled-text' title='"+postList.postTitle+"'>" + postList.postTitle + "</p>" +
+	                              "<hr class='position-line'>" +
+	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='login-image'>" +
+	                              "<span class='bottom-left'>" + (postList.nickname === null || postList.nickname === "" ? "닉네임없음" : postList.nickname) + "</span>" +
+	                              "<span class='bottom-right'>" + postList.postViewcnt + " views</span>" +
+	                            "</div>" +
+	                          "</div>" +
+	                        "</a>" +
+	                    "</div>");
+	                
+	                $("#postList").append(postElement2);
+	                
+	            }
+            }
+        },
+        error: function(request,textStatus,errorThrown) {
+      
+          console.log("===============================================================");
+          console.log("[textStatus] "+ JSON.stringify(textStatus));
+          console.log("[errorThrown] "+ JSON.stringify(errorThrown));
+          console.log("===============================================================");
+        }
+    });
 }
             
 // 최근순으로 정렬
@@ -236,7 +360,7 @@ function recentlySearch() {
     view = false;
     like = false;
     
-    var viewType = 'recently';
+    viewType = 'recently';
     var button1 = document.getElementById('recentButton');
     var button2 = document.getElementById('viewButton');
     var button3 = document.getElementById('likeButton');
@@ -261,7 +385,7 @@ function viewSearch() {
     view = true;
     like = false;
     
-    var viewType = 'view';
+    viewType = 'view';
     var button1 = document.getElementById('recentButton');
     var button2 = document.getElementById('viewButton');
     var button3 = document.getElementById('likeButton');
@@ -286,7 +410,7 @@ function likeSearch() {
     view = false;
     like = true;
     
-    var viewType = 'like';
+    viewType = 'like';
     var button1 = document.getElementById('recentButton');
     var button2 = document.getElementById('viewButton');
     var button3 = document.getElementById('likeButton');
