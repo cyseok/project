@@ -29,7 +29,7 @@
   margin-top: 0px;
   margin-left: 0px;
 }
-#comment-button {
+button[id^="comment-button"] {
   position: absolute;
   top: 8%;
   right: 3%;
