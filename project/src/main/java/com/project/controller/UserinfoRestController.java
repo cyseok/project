@@ -51,7 +51,7 @@ public class UserinfoRestController {
 		  return ResponseEntity.ok("ok");
 		
 	  } catch (Exception e) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패: " + e.getMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입 실패했습니다. 다시 시도해주세요.");
 	  }
 	  
    }
@@ -63,7 +63,7 @@ public class UserinfoRestController {
       int result = userinfoservice.idCheck(id);
 
       if (result != 0) {
-    	  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 아이디가 존재합니다."); 
+    	  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 아이디가 존재하거나 해당 아이디의 소셜 계정이 존재합니다."); 
       } else {
     	  return ResponseEntity.ok("ok"); // 중복 아이디 x
       }
