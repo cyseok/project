@@ -105,12 +105,18 @@
         	
 		 	<div class="comment-input">
 		 		<textarea name="commentContent" id="commentContent" rows="3" placeholder="댓글을 입력해주세요."></textarea>
-		 		<button type="button" id="commentAdd" class="btn btn-primary">댓글 등록</button>
+		 		
+		 		<sec:authorize access="isAnonymous()">
+	              <button type="button" id="commentAdd" class="btn btn-primary" onclick="login()">댓글 등록</button>
+	            </sec:authorize>
+	            <sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')">
+	              <button type="button" id="commentAdd" class="btn btn-primary" onclick="commentAdd()">댓글 등록</button>
+	            </sec:authorize>
 		 	</div>
   
-			<div class="post-comment" style="margin-top: 50px;">
+			<div class="post-comment" id="comment-list" style="margin-top: 50px;">
 			
-				<div class="col-12 mb-4" data-aos="fade-up" data-aos-delay="100">
+				<%-- <div class="col-12 mb-4" data-aos="fade-up" data-aos-delay="100">
 					<div class="media-entry">
 							<input type="hidden" value="">
 							<img src="${pageContext.request.contextPath}/assets/images/login.png" class="comment-image">
@@ -123,7 +129,7 @@
 							<hr class="position-line">
 						
 					</div>
-				</div>
+				</div> --%>
 				
 			</div>	
 	    </div>
@@ -229,7 +235,7 @@ $(document).ajaxSend(function(e, xhr){
 
 $(document).ready(function() {
 	postDetail();
-	// commentList();
+	commentList();
 });
 
 function postDetail() { 
@@ -507,38 +513,107 @@ function commentList() {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='/comment-list'/>",
+        url: "<c:url value='/comment/comment-list'/>/" + postIdx,
         data: {"postIdx": postIdx},
         dataType: "json",
         success: function(result) {
         	console.log(result);
-        	
-        	if (result.content.length === 0) { 
+        	console.log(result.length);
+        	 
+        	if (result.length > 0) { 
         		
-            } else {
 				// 댓글 목록 출력            	
-	            for (var i = 0; i < result.content.length; i++) {
-	                var postList = result.content[i];
-	                var postElement2 = 
-	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
-	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	            for (var i = 0; i < result.length; i++) {
+	                var commentList = result[i];
+	                var commnetElement = 
+	                	$("<div class='col-12 mb-4' id='comment-"+commentList.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
 	                          "<div class='media-entry'>" +
-	                            "<div class='bg-white m-body'>" +
-	                              "<span class='date'>" + postList.postRegdate + "</span>" +
-	                              "<span class='float-left' title='"+postList.postLoc+"'>" + postList.postLoc + "</span>" +
-	                              "<p class='styled-text' title='"+postList.postTitle+"'>" + postList.postTitle + "</p>" +
+	                              "<input type='hidden' value='" + commentList.commentIdx + "'>" +
+	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='comment-image'>" +
+	                              "<span class='comment-nickname'>" + (commentList.nickname === null || commentList.nickname === "" ? "닉네임없음" : commentList.nickname + " (" + commentList.userinfoId.substring(0, 3) + "***)") + "</span>" +
+	                              "<span class='comment-date' title='"+commentList.commentRegdate+"'>" + commentList.commentRegdate + "</span>" +
+	                              "<p class='comment-content' id='comment-content' title='"+commentList.commentContent+"'>" + commentList.commentContent + "</p>" +
+	                              (function() {
+	                                  if (userinfoId === commentList.userinfoId) {
+	                                      return "<button type='button' id='comment-modify-button' class='btn btn-danger'>수정</button>" +
+	              						"<button type='button' id='comment-delete-button' class='btn btn-danger' onclick='commentDelete();' data-comment-idx='"+commentList.commentIdx+"'>삭제</button>";
+	                                      
+	                                      
+	                                  } else {
+	                                	  // else 처리하지 않으면 undefined 출력됨
+	                                      return "";
+	                                  }
+	                              })() +
+	                              "<button type='button' id='comment-button"+commentList.commentIdx+"' class='btn btn-success'></button>" +
+	                              
 	                              "<hr class='position-line'>" +
-	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='login-image'>" +
-	                              "<span class='bottom-left'>" + (postList.nickname === null || postList.nickname === "" ? "닉네임없음" : postList.nickname) + "</span>" +
-	                              "<span class='bottom-right'>" + postList.postViewcnt + " views</span>" +
-	                            "</div>" +
 	                          "</div>" +
-	                        "</a>" +
 	                    "</div>");
 	                
-	                $("#postList").append(postElement2);
+	                $("#comment-list").append(commnetElement);
+	                
+	                var replyNum = commentList.commentIdx;
+	                replyList(replyNum);
+	                // 여기에 ajax 반복 처리하기*********************************************************
+	                function replyList(replyNum) {
+	                	
+		                $.ajax({
+					        method: "GET",
+					        url: "<c:url value='/comment/reply-list'/>/" + replyNum,
+					        data: {"parentIdx": replyNum},
+					        dataType: "json",
+					        success: function(result) {
+					        	console.log(replyNum);
+					        	 
+					        	if (result.length > 0) { 
+		                /* 
+					        		
+									// 댓글 목록 출력            	
+						            for (var i = 0; i < result.length; i++) {
+						                var commentList = result[i];
+						                var commnetElement = 
+						                	$("<div class='col-12 mb-4' id='comment-"+commentList.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
+						                          "<div class='media-entry'>" +
+						                              "<input type='hidden' value='" + commentList.commentIdx + "'>" +
+						                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='comment-image'>" +
+						                              "<span class='comment-nickname'>" + (commentList.nickname === null || commentList.nickname === "" ? "닉네임없음" : commentList.nickname + " (" + commentList.userinfoId.substring(0, 3) + "***)") + "</span>" +
+						                              "<span class='comment-date' title='"+commentList.commentRegdate+"'>" + commentList.commentRegdate + "</span>" +
+						                              "<p class='comment-content' id='comment-content' title='"+commentList.commentContent+"'>" + commentList.commentContent + "</p>" +
+						                              (function() {
+						                                  if (userinfoId === commentList.userinfoId) {
+						                                      return "<button type='button' id='comment-modify-button' class='btn btn-danger'>수정</button>" +
+						              						"<button type='button' id='comment-delete-button' class='btn btn-danger' onclick='commentDelete();'>삭제</button>";
+						                                  } else {
+						                                	  // else 처리하지 않으면 undefined 출력됨
+						                                      return "";
+						                                  }
+						                              })() +
+						                              "<button type='button' id='comment-button' class='btn btn-success'>답글</button>" +
+						                              "<hr class='position-line'>" +
+						                          "</div>" +
+						                    "</div>");
+						                
+						                $("#comment-list").append(commnetElement);
+						                
+						              }
+									
+		                 */
+						            $("#comment-button" + replyNum).text("답글 " + result.length);
+						           
+					            } else {
+					            	$("#comment-button" + replyNum).text("답글 " + result.length);
+					            }
+					        	
+					        }, error: function(error) {
+					            console.log("comment-Error:", error);
+					        }
+					    });
+	                }
+	                
+	                // 여기에 ajax 반복 처리하기*********************************************************
 	            }
-            }
+            } 
+		 
         }, error: function(error) {
             console.log("comment-Error:", error);
         }
@@ -549,7 +624,8 @@ function commentList() {
 
 // 댓글 삭제
 function commentDelete() {   
-
+	var commentIdx = event.currentTarget.getAttribute("data-comment-idx");
+	
     if (confirm("자료를 정말로 삭제 하시겠습니까?")) {
     	
         $.ajax({
@@ -560,7 +636,7 @@ function commentDelete() {
             success: function(data, textStatus, xhr) {
             	
                 if (xhr.status == 204) {
-	                // 댓글 목록 출력 함수
+                	commentList();
                 } else {
                 	alert("댓글 삭제에 실패했습니다.");
                 } 
@@ -574,8 +650,7 @@ function commentDelete() {
 }
 
 // 댓글 등록
-$("#commentAdd").click(function(e) {
-    e.preventDefault();
+function commentAdd() {  
     
     var commentInput = document.getElementById('commentContent');
     commentInput.value = '';
@@ -601,7 +676,7 @@ $("#commentAdd").click(function(e) {
             console.log("comment-Error:", error);
         }
     });
-});
+}
 </script>
 
 <script>		
