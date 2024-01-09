@@ -17,8 +17,10 @@
 	<!-- ▶ Connection 객체를 생성하기 위한 값을 클래스 필드에 저장되도록 값 주입 - Setter Injection -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	  <!-- <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" /> --> <!-- MySQL 8.x 이상을 위한 드라이버 클래스 -->
-	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-	  <property name="url" value="jdbc:log4jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" />
+	  <!-- <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+	  <property name="url" value="jdbc:log4jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" /> -->
+	  <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+	  <property name="url" value="jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" />
 	  <property name="username" value="i6eqgj8l9920k7q7"></property>
 	  <property name="password" value="svtfuithtubdhpoj"></property>
 	</bean>
