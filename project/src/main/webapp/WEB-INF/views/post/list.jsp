@@ -310,7 +310,7 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
 	            }
 	            postScroll = false;
             } else {
-				// 공지사항 목록 출력            	
+				  	
 	            for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
