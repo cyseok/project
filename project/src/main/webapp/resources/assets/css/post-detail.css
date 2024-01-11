@@ -7,46 +7,6 @@
   height: 44px;
   margin-left: 350px;
 }
-.comment-content {
-  margin-top: 15px; 
-  margin-left: 65px;
-}
-.comment-nickname {
-  position: absolute;
-  top: 5%;
-  left: 8%;
-  font-size: 17px;
-}
-.comment-date {
-  position: absolute;
-  top: 25%;
-  left: 8.2%;
-  font-size: 14px;
-}
-.comment-image {
-  width: 53px;
-  height: 53px;
-  margin-top: 0px;
-  margin-left: 0px;
-}
-button[id^="comment-button"] {
-  position: absolute;
-  top: 8%;
-  right: 3%;
-  font-size: 14px;
-}
-#comment-modify-button {
-  position: absolute;
-  top: 8%;
-  right: 17%;
-  font-size: 14px;
-}
-#comment-delete-button {
-  position: absolute;
-  top: 8%;
-  right: 11%;
-  font-size: 14px;
-}
 .post-detail {
   margin-top: 80px; 
   width: 75%;
@@ -61,27 +21,10 @@ button[id^="comment-button"] {
   font-size: 17px;
   margin-left: -13%;
 }
-#commentContent {
-  font-size: 20px;
-  width: 87%;
-}
-#commentAdd{
-  font-size: 18px;
-  margin-top: -85px;
-  width: 100px;
-  height: 91px;
-}
 .post-form {
   max-width: 60%;
   margin: 0 auto 30px;
   border-radius: 8px;
-}
-.comment-input {
-  margin-top: 50px; 
-}
-#comment-count {
-  font-size: 18px;
-  font-weight: bold;
 }
 #postTitle {
   font-size: 45px;
@@ -133,7 +76,6 @@ button[id^="comment-button"] {
   display: flex;
   justify-content: flex-end;
 }
-
 .post-button button {
   float: right;
   margin: 7px 7px;
@@ -150,4 +92,169 @@ button[id^="comment-button"] {
   font-size: 25px;
   margin-left: 13px; 
   margin-top: 50px; 
+}
+.comment-content {
+  margin-top: 30px; 
+  margin-left: 72px;
+  height: 70px;
+  width: 78%;
+}
+.comment-content-modify {
+  margin-top: -1px; 
+  margin-left: 72px;
+  height: 70px;
+  width: 78%;
+}
+.reply-content-modify {
+  margin-top: -1px; 
+  margin-left: 72px;
+  height: 70px;
+  width: 73%;
+}
+.comment-nickname {
+  margin-top: -48px; 
+  margin-left: 72px;
+}
+.comment-date {
+  margin-top: -11px; 
+  margin-left: 72px;
+}
+p[id^="comment-content-"] {
+  font-size: 21px;
+}
+p[id^="comment-nickname-"] {
+  font-size: 18px;
+}
+p[id^="comment-date-"] {
+  font-size: 14px;
+}
+.reply-content {
+  margin-top: 20px; 
+  margin-left: 72px;
+  height: 50px;
+  width: 80%;
+}
+.reply-nickname {
+  margin-top: -48px; 
+  margin-left: 72px;
+}
+.reply-date {
+  margin-top: -11px; 
+  margin-left: 72px;
+}
+p[id^="reply-content-"] {
+  font-size: 18px;
+}
+p[id^="reply-nickname-"] {
+  font-size: 17px;
+}
+p[id^="eply-date-"] {
+  font-size: 14px;
+}
+.comment-image {
+  width: 53px;
+  height: 53px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+.reply-image {
+  width: 48px;
+  height: 48px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+button[id^="comment-button-"] {
+  margin-top: -350px; 
+  margin-left: 83%;
+  font-size: 14px;
+}
+button[id^="comment-button1-"] {
+  margin-top: -50px; 
+  margin-left: 83%;
+  font-size: 14px;
+}
+button[id^="comment-modify-button"] {
+  margin-top: -270px;  
+  margin-left: 68.4%;
+  font-size: 14px;
+}
+button[id^="comment-delete-button"] {
+  margin-top: -310px; 
+  margin-left: 75%;
+  font-size: 14px;
+}
+button[id^="reply-modify-button"] {
+  margin-top: -220px;  
+  margin-left: 67.4%;
+  font-size: 14px;
+}
+button[id^="reply-delete-button"] {
+  margin-top: -260px; 
+  margin-left: 75%;
+  font-size: 14px;
+}
+#commentContent {
+  font-size: 20px;
+  width: 84%;
+}
+textarea[id^="reply-content-"] {
+  font-size: 18px;
+  width: 80%;
+}
+.reply-input {
+  margin-top: 30px; 
+  margin-bottom: 20px; 
+  margin-left: 100px;
+}
+.reply-line {
+  margin-bottom: 20px; 
+}
+.reply-list {
+  margin-top: 30px; 
+  margin-bottom: 20px; 
+  margin-left: 100px;
+}
+textarea[id^="comment-modify-content-"] {
+  font-size: 21px;
+}
+div[id^="reply-list-"] {
+  display: none;
+}
+div[id^="comment-modify-input-"] {
+  display: none;
+}
+.media-entry{
+	margin-bottom: -50px;
+}
+#comment-content{
+  font-size: 17px;
+}
+.position-line{
+  margin-botton: 15px; 
+}
+#commentAdd{
+  font-size: 18px;
+  margin-top: -85px;
+  width: 100px;
+  height: 91px;
+}
+#replyAdd{
+  font-size: 16px;
+  margin-top: -75px;
+  width: 88px;
+  height: 83px;
+}
+.comment-input {
+  margin-top: 50px; 
+}
+.reply-input {
+  margin-top: 50px; 
+}
+#comment-count {
+  font-size: 18px;
+  font-weight: bold;
+}
+#comment-number {
+  font-size: 18px;
+  font-weight: bold;
 }
