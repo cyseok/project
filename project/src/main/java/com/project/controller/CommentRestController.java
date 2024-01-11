@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +29,7 @@ public class CommentRestController {
 	@Autowired
 	private final CommentService commentService;
 	
-	// 댓글 리스트
+	// 댓글 리스트 (/게시물 번호)
 	@GetMapping("/comment-list/{postIdx}")
 	public ResponseEntity<List<Comment>> commentList(@RequestParam("postIdx") int postIdx) {
 		
@@ -40,7 +42,7 @@ public class CommentRestController {
 	    }
 	}
 	
-	// 대댓글 리스트
+	// 대댓글 리스트 (/댓글 번호)
 	@GetMapping("/reply-list/{parentIdx}")
 	public ResponseEntity<List<Comment>> replyList(@RequestParam("parentIdx") int parentIdx) {
 		
@@ -65,8 +67,8 @@ public class CommentRestController {
 	}
 	
 	// 댓글 수정
-	@PostMapping("/modify")
-	public ResponseEntity<String> commentModify(Comment comment) {
+	@PatchMapping("/{commentIdx}")
+	public ResponseEntity<String> commentModify(@PathVariable("commentIdx") int commentIdx, @RequestBody Comment comment) {
 		try {
 			commentService.modifyComment(comment);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -76,6 +78,7 @@ public class CommentRestController {
 		
 	}
 	
+	// 댓글 삭제
 	@DeleteMapping("/{commentIdx}")
 	public ResponseEntity<Post> commentDelete(@PathVariable("commentIdx") int commentIdx) {
 		try {
