@@ -8,12 +8,13 @@
 <html lang="UTF-8">
 <head>
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/post-detail.css">
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	
 	<!-- include summernote css/js -->
 	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 	<title>게시글</title>
 </head>
@@ -100,37 +101,23 @@
         <div class="" style="margin-top: 300px;">
         <hr style="width: 100%; margin-left: auto; margin-right: auto;">
         	<div class="">
-        	  <span class="" id="comment-count">댓글 수 : 0</span>
+        	  <span class="" id="comment-number">댓글 수 : </span>
+        	  <span class="" id="comment-count"></span>
         	</div>	
         	
 		 	<div class="comment-input">
-		 		<textarea name="commentContent" id="commentContent" rows="3" placeholder="댓글을 입력해주세요."></textarea>
 		 		
 		 		<sec:authorize access="isAnonymous()">
+		 		  <textarea name="commentContent" id="commentContent" rows="3" placeholder=" 댓글을 입력해주세요." disabled></textarea>
 	              <button type="button" id="commentAdd" class="btn btn-primary" onclick="login()">댓글 등록</button>
 	            </sec:authorize>
 	            <sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL', 'ROLE_MASTER')">
+	              <textarea name="commentContent" id="commentContent" rows="3" placeholder=" 댓글을 입력해주세요." maxlength="300"></textarea>
 	              <button type="button" id="commentAdd" class="btn btn-primary" onclick="commentAdd()">댓글 등록</button>
 	            </sec:authorize>
 		 	</div>
   
 			<div class="post-comment" id="comment-list" style="margin-top: 50px;">
-			
-				<%-- <div class="col-12 mb-4" data-aos="fade-up" data-aos-delay="100">
-					<div class="media-entry">
-							<input type="hidden" value="">
-							<img src="${pageContext.request.contextPath}/assets/images/login.png" class="comment-image">
-							<span class="comment-nickname">닉네임이 들어감</span>
-							<span class="comment-date">댓글 날짜</span>
-							<p class="comment-content" id="comment-content" style="font-size: 25px;">댓글 내용이 들어감</p>
-								<button type="button" id="comment-modify-button" class="btn btn-danger">수정</button>
-								<button type="button" id="comment-delete-button" class="btn btn-danger" onclick="commentDelete();">삭제</button>
-								<button type="button" id="comment-button" class="btn btn-success">답글</button>
-							<hr class="position-line">
-						
-					</div>
-				</div> --%>
-				
 			</div>	
 	    </div>
 	    <!-- 댓글 -->
@@ -142,7 +129,7 @@
   
   <form id="postModifyForm" style="display: none;">
 	  <div class="post-form">
-	    <label for="postTitle" class="post-label">제목</label>
+	    <label class="post-label">제목</label>
 	    <textarea name="postTitle" id="postTitleModify" class="form-control" rows="2" placeholder="제목을 입력해주세요."></textarea>
 	  </div>
 	  <hr style="width: 60%; margin-left: auto; margin-right: auto;">
@@ -195,7 +182,7 @@
 	  </div>
 	  
 	  <div class="post-form">
-	      <label for="postLoc" class="post-label">지역</label>
+	      <label class="post-label">지역</label>
 	      <div class="post-search">
 	        <input type="hidden" name="postAddress" id="postAddressModify">
 	        <input name="postLoc" id="postLocModify" placeholder="내용을 입력해주세요.">
@@ -465,6 +452,7 @@ $(document).ready(function() {
 	});
 });
 
+// 수정 폼 제출시
 $("form").submit(function(e) {
     e.preventDefault(); 
     
@@ -518,44 +506,60 @@ function commentList() {
         dataType: "json",
         success: function(result) {
         	console.log(result);
-        	console.log(result.length);
-        	 
+        	$("#comment-count").text(result.length);
+        	
         	if (result.length > 0) { 
         		
 				// 댓글 목록 출력            	
 	            for (var i = 0; i < result.length; i++) {
 	                var commentList = result[i];
 	                var commnetElement = 
-	                	$("<div class='col-12 mb-4' id='comment-"+commentList.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
-	                          "<div class='media-entry'>" +
-	                              "<input type='hidden' value='" + commentList.commentIdx + "'>" +
+	                	$("<div class='col-12 mb-4' id='comment-"+commentList.commentIdx+"' data-aos='fade-up' data-aos-delay='10'>" +
+	                          "<div class='media-entry' id=''>" +
 	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='comment-image'>" +
-	                              "<span class='comment-nickname'>" + (commentList.nickname === null || commentList.nickname === "" ? "닉네임없음" : commentList.nickname + " (" + commentList.userinfoId.substring(0, 3) + "***)") + "</span>" +
-	                              "<span class='comment-date' title='"+commentList.commentRegdate+"'>" + commentList.commentRegdate + "</span>" +
-	                              "<p class='comment-content' id='comment-content' title='"+commentList.commentContent+"'>" + commentList.commentContent + "</p>" +
+	                              "<p class='comment-nickname' id='comment-nickname-"+commentList.commentIdx+"'>" + (commentList.nickname === null || commentList.nickname === "" ? "닉네임없음" : commentList.nickname + " (" + commentList.userinfoId.substring(0, 3) + "***)") + "</p>" +
+	                              "<p class='comment-date' id='comment-date-"+commentList.commentIdx+"' title='"+commentList.commentRegdate+"'>" + commentList.commentRegdate + "</p>" +
+	                              "<div id='comment-modify-"+commentList.commentIdx+"'>" +
+	                                "<p class='comment-content' id='comment-content-"+commentList.commentIdx+"' title='"+commentList.commentContent+"'>" + commentList.commentContent + "</p>" +
+	                                (function() {
+	                                    if (userinfoId === commentList.userinfoId) {
+	                                        return "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+commentList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+	              					        	   "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-delete-idx='"+commentList.commentIdx+"' onclick='commentDelete();'>삭제</button>";
+	                                    } else {
+	                                	    // else 처리하지 않으면 undefined 출력됨
+	                                        return "";
+	                                    }
+	                                 })() +
+	                              "</div>" +
+	                              
+	                              "<div id='comment-modify-input-"+commentList.commentIdx+"'>" +
+	                                "<textarea class='comment-content-modify' id='comment-modify-content-"+commentList.commentIdx+"' rows='3' maxlength='300'>"+commentList.commentContent+"</textarea>" +
+	                                "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+commentList.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
+            				        "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-modify-idx='"+commentList.commentIdx+"' onclick='commentModify();'>등록</button>" +
+	                              "</div>" +
 	                              (function() {
 	                                  if (userinfoId === commentList.userinfoId) {
-	                                      return "<button type='button' id='comment-modify-button' class='btn btn-danger'>수정</button>" +
-	              						"<button type='button' id='comment-delete-button' class='btn btn-danger' onclick='commentDelete();' data-comment-idx='"+commentList.commentIdx+"'>삭제</button>";
-	                                      
-	                                      
+	                                      return "<button type='button' id='comment-button-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>";
 	                                  } else {
 	                                	  // else 처리하지 않으면 undefined 출력됨
-	                                      return "";
+	                                      return "<button type='button' id='comment-button1-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>";
 	                                  }
 	                              })() +
-	                              "<button type='button' id='comment-button"+commentList.commentIdx+"' class='btn btn-success'></button>" +
-	                              
-	                              "<hr class='position-line'>" +
-	                          "</div>" +
+	                           "</div>" +
+	                           
+	                           "<div class='' id='reply-list-"+commentList.commentIdx+"'>" +
+	                           "</div>" +
+	                           
+	                        "<hr class='comment-line'>" +
 	                    "</div>");
 	                
 	                $("#comment-list").append(commnetElement);
 	                
 	                var replyNum = commentList.commentIdx;
-	                replyList(replyNum);
-	                // 여기에 ajax 반복 처리하기*********************************************************
-	                function replyList(replyNum) {
+	                replyList();
+	                
+	                // 답글 출력
+	                function replyList() {
 	                	
 		                $.ajax({
 					        method: "GET",
@@ -563,54 +567,89 @@ function commentList() {
 					        data: {"parentIdx": replyNum},
 					        dataType: "json",
 					        success: function(result) {
-					        	console.log(replyNum);
 					        	 
 					        	if (result.length > 0) { 
-		                /* 
-					        		
-									// 댓글 목록 출력            	
+									// 답글 목록 출력            	
 						            for (var i = 0; i < result.length; i++) {
-						                var commentList = result[i];
-						                var commnetElement = 
-						                	$("<div class='col-12 mb-4' id='comment-"+commentList.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
+						                var replytList = result[i];
+						                var replyElement = 
+						                	$("<div class='reply-list' id='replyList-"+replytList.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
 						                          "<div class='media-entry'>" +
-						                              "<input type='hidden' value='" + commentList.commentIdx + "'>" +
-						                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='comment-image'>" +
-						                              "<span class='comment-nickname'>" + (commentList.nickname === null || commentList.nickname === "" ? "닉네임없음" : commentList.nickname + " (" + commentList.userinfoId.substring(0, 3) + "***)") + "</span>" +
-						                              "<span class='comment-date' title='"+commentList.commentRegdate+"'>" + commentList.commentRegdate + "</span>" +
-						                              "<p class='comment-content' id='comment-content' title='"+commentList.commentContent+"'>" + commentList.commentContent + "</p>" +
+						                              "<hr class='reply-line'>" +
+						                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='reply-image'>" +
+						                              "<p class='reply-nickname' id='reply-nickname-"+replytList.commentIdx+"'>" + (replytList.nickname === null || replytList.nickname === "" ? "닉네임없음" : replytList.nickname + " (" + replytList.userinfoId.substring(0, 3) + "***)") + "</p>" +
+						                              "<p class='reply-date' id='reply-date-"+replytList.commentIdx+"' title='"+replytList.commentRegdate+"'>" + replytList.commentRegdate + "</p>" +
+						                              
+						                              // 이건 댓글에서 쓰던거
+						                              "<div id='comment-modify-"+replytList.commentIdx+"'>" +
+						                              "<p class='reply-content' id='comment-content-"+replytList.commentIdx+"' title='"+replytList.commentContent+"'>" + replytList.commentContent + "</p>" +
 						                              (function() {
-						                                  if (userinfoId === commentList.userinfoId) {
-						                                      return "<button type='button' id='comment-modify-button' class='btn btn-danger'>수정</button>" +
-						              						"<button type='button' id='comment-delete-button' class='btn btn-danger' onclick='commentDelete();'>삭제</button>";
+						                                  if (userinfoId === replytList.userinfoId) {
+						                                	  return "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+replytList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+						                                             "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+replytList.commentIdx+"' onclick='replyDelete();'>삭제</button>";
 						                                  } else {
 						                                	  // else 처리하지 않으면 undefined 출력됨
 						                                      return "";
 						                                  }
 						                              })() +
-						                              "<button type='button' id='comment-button' class='btn btn-success'>답글</button>" +
-						                              "<hr class='position-line'>" +
 						                          "</div>" +
+						                              
+						                          "<div id='comment-modify-input-"+replytList.commentIdx+"'>" +
+					                                "<textarea class='reply-content-modify' id='comment-modify-content-"+replytList.commentIdx+"' rows='2' maxlength='300'>"+replytList.commentContent+"</textarea>" +
+					                                "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+replytList.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
+				            				        "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-modify-idx='"+replytList.commentIdx+"' onclick='replyModify();'>등록</button>" +
+					                              "</div>" +
+					                              "</div>" +
 						                    "</div>");
 						                
-						                $("#comment-list").append(commnetElement);
+						                $("#reply-list-" + replytList.parentIdx).append(replyElement);
 						                
 						              }
 									
-		                 */
-						            $("#comment-button" + replyNum).text("답글 " + result.length);
-						           
+						            
+					                var replyButton = 
+					                	$("<div class='reply-input' id='reply-"+replyNum+"' data-aos='fade-up' data-aos-delay='10'>" +
+					                		  "<hr class='reply-line'>" +
+					                		  "<sec:authorize access='isAnonymous()'>" +
+					                		  "<textarea name='commentContent' id='reply-content-' rows='3' placeholder=' 답글을 입력해주세요.' disabled></textarea>" +
+					                		  "<button type='button' id='replyAdd' class='btn btn-primary' onclick='login()'>답글 등록</button>" +
+					                		  "</sec:authorize>" +
+					                		  "<sec:authorize access='hasAnyRole(\"ROLE_USER\", \"ROLE_ADMIN\", \"ROLE_SOCIAL\", \"ROLE_MASTER\")'>" +
+					                		  "<textarea name='commentContent' id='reply-content-"+replytList.parentIdx+"' rows='3' placeholder=' 답글을 입력해주세요.' maxlength='300'></textarea>" +
+					                		  "<button type='button' id='replyAdd' class='btn btn-primary' onclick='replyAdd()' data-comment-replyAdd-idx='"+replytList.parentIdx+"'>답글 등록</button>" +
+					                		  "</sec:authorize>" +
+					                    "</div>");
+					                
+					                $("#reply-list-" + replytList.parentIdx).append(replyButton);
+		 		 	
+						            $("#reply-count-" + replytList.parentIdx).text(result.length);
+						            
 					            } else {
-					            	$("#comment-button" + replyNum).text("답글 " + result.length);
+					            	
+					            	var replyButton1 = 
+					                	$("<div class='reply-input' id='reply-"+replyNum+"' data-aos='fade-up' data-aos-delay='10'>" +
+					                		  "<hr class='reply-line'>" +
+					                		  "<sec:authorize access='isAnonymous()'>" +
+					                		  "<textarea name='commentContent' id='reply-content-' rows='3' placeholder=' 댓글을 입력해주세요.' disabled></textarea>" +
+					                		  "<button type='button' id='replyAdd' class='btn btn-primary' onclick='login()'>답글 등록</button>" +
+					                		  "</sec:authorize>" +
+					                		  "<sec:authorize access='hasAnyRole(\"ROLE_USER\", \"ROLE_ADMIN\", \"ROLE_SOCIAL\", \"ROLE_MASTER\")'>" +
+					                		  "<textarea name='commentContent' id='reply-content-"+replyNum+"' rows='3' placeholder=' 댓글을 입력해주세요.' maxlength='300'></textarea>" +
+					                		  "<button type='button' id='replyAdd' class='btn btn-primary' onclick='replyAdd()' data-comment-replyAdd-idx='"+replyNum+"'>답글 등록</button>" +
+					                		  "</sec:authorize>" +
+					                    "</div>");
+					                
+					                $("#reply-list-" + replyNum).append(replyButton1);
+					                
+					            	$("#reply-count-" + replyNum).text(result.length);
 					            }
-					        	
+					        	 
 					        }, error: function(error) {
 					            console.log("comment-Error:", error);
 					        }
 					    });
 	                }
 	                
-	                // 여기에 ajax 반복 처리하기*********************************************************
 	            }
             } 
 		 
@@ -620,41 +659,19 @@ function commentList() {
     });
 }
 
-// 댓글 수정
-
-// 댓글 삭제
-function commentDelete() {   
-	var commentIdx = event.currentTarget.getAttribute("data-comment-idx");
-	
-    if (confirm("자료를 정말로 삭제 하시겠습니까?")) {
-    	
-        $.ajax({
-            type: "DELETE",
-            url: "<c:url value='/comment'/>/" + commentIdx,
-            data: {'commentIdx' : commentIdx},
-            contentType: false,
-            success: function(data, textStatus, xhr) {
-            	
-                if (xhr.status == 204) {
-                	commentList();
-                } else {
-                	alert("댓글 삭제에 실패했습니다.");
-                } 
-            },
-            error: function(error) {
-            	console.log(error);
-                alert("오류가 발생했습니다.");
-    	    }
-       });
-    } 
-}
-
-// 댓글 등록
+//댓글 등록
 function commentAdd() {  
-    
-    var commentInput = document.getElementById('commentContent');
-    commentInput.value = '';
-    
+	
+	var commentContent = $("#commentContent").val();
+	
+	if (commentContent === "") {
+      alert('댓글 내용을 작성해주세요.');
+      var commentFocus = document.getElementById("commentContent");
+      commentFocus.focus();
+
+      return false;
+    }
+	
     var formData = new FormData();
     formData.append("postIdx", postIdx);
     formData.append("userinfoId", $("#userinfoId").val());
@@ -670,6 +687,19 @@ function commentAdd() {
         dataType: "text",
         success: function (data, textStatus, xhr) {
             if (xhr.status == 200) {
+            	
+            	// 입력 값 지워주기
+			    var replyInput = document.getElementById('commentContent');
+			    replyInput.value = '';
+			    
+			    // 댓글 개수 +1
+				var commentCount = document.getElementById("comment-count").textContent;
+				commentCount++;
+				document.getElementById("comment-count").textContent = commentCount;
+				
+				// $("#comment-list").append(commnetElement);
+				
+				$("#comment-list").empty();
             	commentList();
             }
         }, error: function(error) {
@@ -677,10 +707,237 @@ function commentAdd() {
         }
     });
 }
+
+// 답글 등록
+function replyAdd() {  
+	
+	var replyIdx = event.currentTarget.getAttribute("data-comment-replyAdd-idx");
+	
+	var replycontent = $("#reply-content-"+replyIdx).val();
+	
+	if (replycontent === "") {
+      alert('답글 내용을 작성해주세요.');
+      var replyFocus = document.getElementById("reply-content-"+replyIdx);
+      replyFocus.focus();
+
+      return false;
+    }
+	
+    
+    var formData = new FormData();
+    formData.append("postIdx", postIdx);
+    formData.append("userinfoId", $("#userinfoId").val());
+    formData.append("parentIdx", replyIdx);
+    formData.append("commentContent", replycontent);
+    
+    
+    $.ajax({
+        type: "POST",
+        url: "<c:url value='/comment'/>",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: "text",
+        success: function (data, textStatus, xhr) {
+            if (xhr.status == 200) {
+            	
+            	// 입력 값 지워주기
+			    var replyInput = document.getElementById('reply-content-'+replyIdx);
+    			replyInput.value = '';
+			    
+			    // 댓글 개수 +1
+				var replyCount = document.getElementById("reply-count-"+replyIdx).textContent;
+				replyCount++;
+				document.getElementById("reply-count-"+replyIdx).textContent = replyCount;
+				
+            	$("#comment-list").empty();
+            	commentList();
+            	
+            	 // $("#reply-list-"+replyIdx).append(commnetElement);
+            }
+        }, error: function(error) {
+            console.log("comment-Error:", error);
+        }
+    });
+}
+
+// 댓글 수정
+function commentModify() {  
+	
+	var commentIdx = event.currentTarget.getAttribute("data-comment-modify-idx");
+	var commentModifyContent = $("#comment-modify-content-"+commentIdx).val();
+	
+    $.ajax({
+        type: "PATCH",
+        url: "<c:url value='/comment/'/>" + commentIdx,
+        data: JSON.stringify({'commentIdx': commentIdx,'commentContent' : commentModifyContent}),
+        contentType: 'application/json',
+        dataType: "text",
+        success: function (data, textStatus, xhr) {
+            if (xhr.status == 200) {
+            	// 기존 수정 내용 변경
+			    var commentInput = document.getElementById('comment-modify-content-'+commentIdx);
+			    commentInput.value = commentModifyContent;
+			    // 기존 댓글 내용 변경
+			    var pTags = $("p[id='comment-content-" + commentIdx + "']");
+			    pTags.text(commentModifyContent);
+			    
+				var commentInput = document.getElementById("comment-modify-input-"+commentIdx);
+				var comment = document.getElementById("comment-modify-"+commentIdx);
+				
+				commentInput.style.display = "none";
+				comment.style.display = "block";
+			    
+            }
+        }, error: function(error) {
+            console.log("comment-Error:", error);
+        }
+    });
+}
+
+// 답글 수정
+function replyModify() {  
+	
+	var replyIdx = event.currentTarget.getAttribute("data-reply-modify-idx");
+	var replyModifyContent = $("#comment-modify-content-"+replyIdx).val();
+    
+    var formData = new FormData();
+    formData.append("commentIdx", replyIdx);
+    formData.append("commentContent", replyModifyContent);
+    
+    $.ajax({
+        type: "POST",
+        url: "<c:url value='/comment/modify'/>",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: "text",
+        success: function (data, textStatus, xhr) {
+            if (xhr.status == 200) {
+            	// 기존 수정 내용 변경
+			    var replyInput = document.getElementById('comment-modify-content-'+replyIdx);
+			    replyInput.value = replyModifyContent;
+			    // 기존 댓글 내용 변경
+			    var pTags = $("p[id='comment-content-" + replyIdx + "']");
+			    pTags.text(replyModifyContent);
+			    
+				var commentInput = document.getElementById("comment-modify-input-"+replyIdx);
+				var comment = document.getElementById("comment-modify-"+replyIdx);
+				
+				commentInput.style.display = "none";
+				comment.style.display = "block";
+				
+            	// $("#reply-list-"+replyIdx).append(commnetElement);
+            }
+        }, error: function(error) {
+            console.log("comment-Error:", error);
+        }
+    });
+}
+
+// 댓글 삭제
+function commentDelete() {  
+	
+	var deleteCommentIdx = event.currentTarget.getAttribute("data-comment-delete-idx");
+	
+    if (confirm("댓글을 삭제 하시겠습니까?")) {
+    	
+        $.ajax({
+            type: "DELETE",
+            url: "<c:url value='/comment'/>/" + deleteCommentIdx,
+            data: {'commentIdx' : deleteCommentIdx},
+            contentType: false,
+            success: function(data, textStatus, xhr) {
+            	
+                if (xhr.status == 204) {
+                	$("#comment-" + deleteCommentIdx).remove();
+                	// 댓글 개수 -1
+					var commentCount = document.getElementById("comment-count").textContent;
+					commentCount--;
+					document.getElementById("comment-count").textContent = commentCount;
+                } else {
+                	alert("댓글 삭제에 실패했습니다.");
+                } 
+            },
+            error: function(error) {
+            	console.log(error);
+                alert("오류가 발생했습니다.");
+    	    }
+       });
+    } 
+}
+
+// 답글 삭제
+function replyDelete() {  
+	
+	var deleteReplyIdx = event.currentTarget.getAttribute("data-reply-delete-idx");
+	
+    if (confirm("댓글을 삭제 하시겠습니까?")) {
+    	
+        $.ajax({
+            type: "DELETE",
+            url: "<c:url value='/comment'/>/" + deleteReplyIdx,
+            data: {'commentIdx' : deleteReplyIdx},
+            contentType: false,
+            success: function(data, textStatus, xhr) {
+            	
+                if (xhr.status == 204) {
+                	$("#replyList-" + deleteReplyIdx).remove();
+                } else {
+                	alert("댓글 삭제에 실패했습니다.");
+                } 
+            },
+            error: function(error) {
+            	console.log(error);
+                alert("오류가 발생했습니다.");
+    	    }
+       });
+    } 
+}
+
+// (숨겨진 답글 + 답글 작성 칸) 출력하는 버튼
+function replyShowButton() {  
+	
+	var replyShow = event.currentTarget.getAttribute("data-comment-replyShow-idx");
+	
+	var replyInput = document.getElementById("reply-list-"+replyShow);
+	replyInput.style.display = replyInput.style.display === "block" ? "none" : "block";
+	
+}
+
+// 수정을 위한 textarea + 등록 버튼 출력
+function commentModifyButton() {  
+	
+	var commentModify = event.currentTarget.getAttribute("data-comment-modifyButton-idx");
+	
+	var commentInput = document.getElementById("comment-modify-input-"+commentModify);
+	var comment = document.getElementById("comment-modify-"+commentModify);
+	
+	commentInput.style.display = "block";
+	comment.style.display = "none";
+	
+}
+
+// 수정 취소 버튼
+function commentModifyCancel() { 
+	
+	var commentModify = event.currentTarget.getAttribute("data-comment-modifyCancel-idx");
+	
+	// 취소했을때 원래의 데이터로 돌려놓기
+	var textarea = document.getElementById("comment-modify-content-" + commentModify);
+	textarea.value = $("#comment-content-"+commentModify).text();
+	
+	var commentInput = document.getElementById("comment-modify-input-"+commentModify);
+	var comment = document.getElementById("comment-modify-"+commentModify);
+	
+	commentInput.style.display = "none";
+	comment.style.display = "block";
+	
+}
 </script>
 
 <script>		
-// 글 내용 수정할 때 이미지 업로드 기능
+// 게시글 내용 수정시 summernote 이미지 업로드 기능
 $('#summernote').summernote({
       
 	  // 에디터 크기 설정
