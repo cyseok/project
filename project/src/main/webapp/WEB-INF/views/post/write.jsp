@@ -122,12 +122,31 @@
 // 등록
 $("form").submit(function(e) {
     e.preventDefault(); 
+   
+    if ($("#postTitle").val() === "") {
+        alert("제목을 작성해주세요 :) "); 
+        return false;
+      }
+    
+    if (!$("input[name='postDayType']:checked").val()) {
+        alert("요일 구분을 선택해주세요."); 
+        return false; 
+      }
+    
+    if (!$("input[name='postTag']:checked").val()) {
+        alert("사람이 얼마나 많았는지 선택해주세요!!"); 
+        return false; 
+      }
+    
+    if ($("#postLoc").val() === "") {
+        alert("지역을 검색해주세요 :) "); 
+        return false;
+      }
     
     $('#loading').show();
+    
     var editorContent = $('#summernote').summernote('code');
     
-   console.log(editorContent);
-
     var formData = new FormData();
     formData.append("postTitle", $("#postTitle").val());
     formData.append("userinfoId", $("#userinfoId").val());
@@ -169,6 +188,7 @@ $(document.body).on("click", function(event) {
 });
 
 $("#postLoc, #searchImg").on("input keypress click", function(event) {
+	
 	if(event.keyCode == 13) {
 		event.preventDefault();
 	}
@@ -187,7 +207,7 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
 	    	  
 	    	  if (result && result.items.length > 0) {
 	              
-	              for (var i = 0; i < 5; i++) {
+	              for (var i = 0; i < result.items.length; i++) {
 	                  var item = result.items[i];
 	                  $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
 	              }
@@ -200,6 +220,7 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
     				  $("#postAddress").val(address);
     				  $("#resultContainer").empty();
                   });
+	              
 	          } else {
 	        	  $("#resultContainer").empty();
 	              console.log("결과없음.");
