@@ -164,12 +164,12 @@ p[id^="eply-date-"] {
   margin-left: 0px;
 }
 button[id^="comment-button-"] {
-  margin-top: -350px; 
+  margin-top: -310px; 
   margin-left: 83%;
   font-size: 14px;
 }
 button[id^="comment-button1-"] {
-  margin-top: -50px; 
+  margin-top: -310px; 
   margin-left: 83%;
   font-size: 14px;
 }
@@ -187,11 +187,13 @@ button[id^="reply-modify-button"] {
   margin-top: -220px;  
   margin-left: 67.4%;
   font-size: 14px;
+  margin-bottom: 5px;
 }
 button[id^="reply-delete-button"] {
   margin-top: -260px; 
   margin-left: 75%;
   font-size: 14px;
+  margin-bottom: 5px;
 }
 #commentContent {
   font-size: 20px;
@@ -200,6 +202,9 @@ button[id^="reply-delete-button"] {
 textarea[id^="reply-content-"] {
   font-size: 18px;
   width: 80%;
+}
+.commentArea {
+  height: 120px;
 }
 .reply-input {
   margin-top: 30px; 
@@ -217,11 +222,14 @@ textarea[id^="reply-content-"] {
 textarea[id^="comment-modify-content-"] {
   font-size: 21px;
 }
-div[id^="reply-list-"] {
+div[id^="reply-button-"] {
   display: none;
 }
-div[id^="comment-modify-input-"] {
+div[id^="comment-textarea-"] {
   display: none;
+}
+div[id^="comment-modify-"] {
+  height: 100px;
 }
 .media-entry{
 	margin-bottom: -50px;
@@ -245,9 +253,6 @@ div[id^="comment-modify-input-"] {
   height: 83px;
 }
 .comment-input {
-  margin-top: 50px; 
-}
-.reply-input {
   margin-top: 50px; 
 }
 #comment-count {
