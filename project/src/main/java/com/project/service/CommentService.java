@@ -13,17 +13,14 @@ public interface CommentService {
     void modifyComment(Comment comment);
    
     // 댓글 삭제
-    void removeComment(int commentIdx);
+    void removeComment(String commentIdx);
  
-    // 전체 댓글 수 조회 
-    void getCommentCount(int postIdx);
+    // 등록한 댓글, 답글 정보 출력
+    Comment getComment(String commentIdx);
     
-    // 대댓글 수 조회 
-    void getReplyCount(int parentIdx);
-    
-    // 공지사항 댓글 목록 조회
+    // 해당 게시물의 전체 댓글 목록 조회
     List<Comment> getCommentList(int postIdx);
     
-    // 공지사항 대댓글 목록 조회
-    List<Comment> getReplyList(int parentIdx);
+    // 부모 댓글의 답글 목록 조회
+    List<Comment> getReplyList(String parentIdx);
 }

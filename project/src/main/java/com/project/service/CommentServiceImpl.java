@@ -27,30 +27,23 @@ public class CommentServiceImpl implements CommentService{
 	}
 
 	@Override
-	public void removeComment(int commentIdx) {
+	public void removeComment(String commentIdx) {
 		commentDAO.deleteComment(commentIdx);
 	}
 
 	@Override
-	public void getCommentCount(int postIdx) {
-		commentDAO.selectCommentCount(postIdx);
+	public Comment getComment(String commentIdx) {
+		return commentDAO.selectComment(commentIdx);
 	}
-
-	@Override
-	public void getReplyCount(int parentIdx) {
-		commentDAO.selectReplyCount(parentIdx);
-	}
-
+	
 	@Override
 	public List<Comment> getCommentList(int postIdx) {
 		return commentDAO.selectCommentList(postIdx);
 	}
 
 	@Override
-	public List<Comment> getReplyList(int parentIdx) {
+	public List<Comment> getReplyList(String parentIdx) {
 		return commentDAO.selectReplyList(parentIdx);
 	}
-	
-	
 
 }
