@@ -26,30 +26,23 @@ public class CommentDAOImpl implements CommentDAO{
 	}
 
 	@Override
-	public int deleteComment(int commentIdx) {
+	public int deleteComment(String commentIdx) {
 		return sqlSession.getMapper(CommentMapper.class).deleteComment(commentIdx);
 	}
 
 	@Override
-	public int selectCommentCount(int postIdx) {
-		return sqlSession.getMapper(CommentMapper.class).selectCommentCount(postIdx);
+	public Comment selectComment(String commentIdx) {
+		return sqlSession.getMapper(CommentMapper.class).selectComment(commentIdx);
 	}
-
-	@Override
-	public int selectReplyCount(int parentIdx) {
-		return sqlSession.getMapper(CommentMapper.class).selectReplyCount(parentIdx);
-	}
-
+	
 	@Override
 	public List<Comment> selectCommentList(int postIdx) {
 		return sqlSession.getMapper(CommentMapper.class).selectCommentList(postIdx);
 	}
 
 	@Override
-	public List<Comment> selectReplyList(int parentIdx) {
+	public List<Comment> selectReplyList(String parentIdx) {
 		return sqlSession.getMapper(CommentMapper.class).selectReplyList(parentIdx);
 	}
 	
-	
-
 }

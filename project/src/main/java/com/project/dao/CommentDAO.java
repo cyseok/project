@@ -13,18 +13,15 @@ public interface CommentDAO {
     int updateComment(Comment comment);
    
     // 댓글 삭제
-    int deleteComment(int commentIdx);
+    int deleteComment(String commentIdx);
  
-    // 전체 댓글 수 조회 
-    int selectCommentCount(int postIdx);
+    // 등록한 댓글, 답글 정보 출력
+    Comment selectComment(String commentIdx);
     
-    // 대댓글 수 조회 
-    int selectReplyCount(int parentIdx);
-    
-    // 공지사항 댓글 목록 조회
+    // 해당 게시물의 전체 댓글 목록 조회
     List<Comment> selectCommentList(int postIdx);
     
-    // 공지사항 대댓글 목록 조회
-    List<Comment> selectReplyList(int parentIdx);
+    // 부모 댓글의 답글 목록 조회
+    List<Comment> selectReplyList(String parentIdx);
 
 }
