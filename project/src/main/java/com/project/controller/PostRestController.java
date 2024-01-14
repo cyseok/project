@@ -63,10 +63,10 @@ public class PostRestController {
 	
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
-			@RequestParam(defaultValue = "0") int offset
-			, @RequestParam(defaultValue = "9") int limit
-			, @RequestParam(defaultValue = "") String selectKeyword
-			, @RequestParam(defaultValue = "recently") String viewType
+			@RequestParam("offset") int offset
+			, @RequestParam("limit") int limit
+			, @RequestParam("selectKeyword") String selectKeyword
+			, @RequestParam("viewType") String viewType
 			) {
 		
 		if ("recently".equals(viewType)) {

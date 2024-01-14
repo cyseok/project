@@ -92,6 +92,7 @@
         WHERE post_idx=#{postIdx}
 	</update>
 	
+	<!-- 최신순 정렬 -->
 	<select id="selectResentlyPostList" resultType="com.project.dto.Post">
 		SELECT 
 			p.post_idx
@@ -120,18 +121,19 @@
 	   	ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
-	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
-	                AND post_status = 1
+	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
-	               WHERE post_status=1 
+	               WHERE p.post_status=1 
 	           </otherwise>
 	      </choose>
 	    ORDER BY p.post_regdate DESC
 	    LIMIT #{offset}, #{limit}
 	</select>
 	
+	<!-- 조회순 정렬 -->
 	<select id="selectViewPostList" resultType="com.project.dto.Post">
 		SELECT 
 			p.post_idx
@@ -160,18 +162,19 @@
 		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
-	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
-	                AND post_status = 1
+	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
-	               WHERE post_status=1 
+	               WHERE p.post_status=1 
 	           </otherwise>
 	      </choose>
 	    ORDER BY p.post_viewcnt DESC
 	    LIMIT #{offset}, #{limit}
 	</select>
 	
+	<!-- 인기순 정렬 -->
 	<select id="selectLikesPostList" resultType="com.project.dto.Post">
 		SELECT 
 			p.post_idx
@@ -200,12 +203,12 @@
 		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
-	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
-	                AND post_status = 1
+	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
-	               WHERE post_status=1 
+	               WHERE p.post_status=1 
 	           </otherwise>
 	      </choose>
 	    ORDER BY p.post_likes DESC
@@ -241,12 +244,12 @@
 		ON p.userinfo_id = u.id
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
-	                WHERE (post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
-	                AND post_status = 1
+	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
-	               WHERE post_status=1 
+	               WHERE p.post_status=1 
 	           </otherwise>
 	      </choose>
 	    ORDER BY p.post_comment DESC
@@ -283,7 +286,7 @@
 		FROM post p
 		LEFT JOIN userinfo u 
 		ON p.userinfo_id = u.id
-        WHERE post_idx=#{postIdx}
+        WHERE p.post_idx=#{postIdx}
 	</select>
 	
 	<select id="selectPreNumNextNum" resultType="com.project.dto.Post">
