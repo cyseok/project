@@ -201,7 +201,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	            }
 	            postScroll = false;
             } else {
-				// 공지사항 목록 출력            	
+				         	
 	            for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
@@ -249,10 +249,11 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 function postSearch() {
 	$("#postList").empty();
     var selectKeyword = $("#searchKeyword").val();
+    console.log(selectKeyword);
     postSearchDisplay(offset, limit, selectKeyword, viewType);
 }
 
-// 검색 Ajax 
+// 검색
 function postSearchDisplay(offset, limit, selectKeyword, viewType) {
 	$('#loading').show();
 	
@@ -267,6 +268,7 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
         	},
         dataType: "json",
         success: function(result) {
+        	console.log(result.content.length);
         	$('#loading').hide();
         	
         	
