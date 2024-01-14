@@ -29,22 +29,21 @@ public class CommentRestController {
 	@Autowired
 	private final CommentService commentService;
 	
-	// 댓글 리스트 (/게시물 번호)
+	// 댓글 리스트 출력 (/게시물 번호)
 	@GetMapping("/comment-list/{postIdx}")
 	public ResponseEntity<List<Comment>> commentList(@RequestParam("postIdx") int postIdx) {
 		
 		try {
 	        List<Comment> comment = commentService.getCommentList(postIdx);
-	        System.out.println(comment);
 	        return new ResponseEntity<>(comment, HttpStatus.OK);
 	    } catch (Exception e) {
 	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	    }
 	}
 	
-	// 대댓글 리스트 (/댓글 번호)
+	// 답글 리스트 출력 (/부모 댓글 번호)
 	@GetMapping("/reply-list/{parentIdx}")
-	public ResponseEntity<List<Comment>> replyList(@RequestParam("parentIdx") int parentIdx) {
+	public ResponseEntity<List<Comment>> replyList(@RequestParam("parentIdx") String parentIdx) {
 		
 		try {
 	        List<Comment> reply = commentService.getReplyList(parentIdx);
@@ -54,38 +53,38 @@ public class CommentRestController {
 	    }
 	}
 	
-	// 댓글 등록	
+	// 댓글,답글 등록	
 	@PostMapping
-	public ResponseEntity<String> commentAdd(Comment comment) {
+	public ResponseEntity<Comment> commentAdd(Comment comment) {
 		try {
 			commentService.addComment(comment);
-			return new ResponseEntity<>(HttpStatus.OK);
+			Comment commentSelect = commentService.getComment(comment.getCommentIdx());
+			return new ResponseEntity<Comment>(commentSelect, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
 	}
 	
-	// 댓글 수정
+	// 댓글, 답글 수정
 	@PatchMapping("/{commentIdx}")
-	public ResponseEntity<String> commentModify(@PathVariable("commentIdx") int commentIdx, @RequestBody Comment comment) {
+	public ResponseEntity<Comment> commentModify(@PathVariable("commentIdx") String commentIdx, @RequestBody Comment comment) {
 		try {
 			commentService.modifyComment(comment);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<Comment>(comment, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
 	}
 	
-	// 댓글 삭제
+	// 댓글, 답글 삭제
 	@DeleteMapping("/{commentIdx}")
-	public ResponseEntity<Post> commentDelete(@PathVariable("commentIdx") int commentIdx) {
+	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx) {
 		try {
 			commentService.removeComment(commentIdx);
-			return new ResponseEntity<Post>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
-			return new ResponseEntity<Post>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 }
