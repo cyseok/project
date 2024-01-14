@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.CommentMapper">
 
-	<!-- 댓글 등록 -->
+	<!-- 댓글, 답글 등록 -->
 	<insert id="insertComment" parameterType="com.project.dto.Comment">
-		INSERT INTO comment(
+		INSERT IGNORE INTO comment(
 	        comment_idx
             , post_idx 
             , userinfo_id 
@@ -17,51 +17,41 @@
 	        #{commentIdx} 
 	        , #{postIdx}
 	        , #{userinfoId}
-	        
-	        <!-- 댓글인 경우 -->
-	        <if test="parentIdx == 0">
-	        , null
-	        </if>
-	        
-	        <!-- 대댓글인 경우 -->
-	        <if test="parentIdx != 0">
-	        , #{parentIdx}
-	        </if>
-	        
+	        , IF(#{parentIdx} = 0, null, #{parentIdx})
 	        , #{commentContent}
 	        , NOW()
 	        , 1
 	        )
 	</insert>
 	
-	<!-- 댓글 수정 -->
+	<!-- 댓글, 답글 수정 -->
 	<update id="updateComment" parameterType="com.project.dto.Comment">
 		UPDATE comment SET
 			comment_content=#{commentContent} 
         WHERE comment_idx=#{commentIdx}
 	</update>
 	
-	<!-- 댓글 삭제 -->
+	<!-- 댓글, 답글 삭제 -->
 	<update id="deleteComment" parameterType="com.project.dto.Comment">
 		UPDATE comment SET
 			comment_status=0
 		WHERE comment_idx=#{commentIdx}
 	</update>
 	
-	<!-- 댓글 개수 -->
-	<select id="selectCommentCount" resultType="int">
-		SELECT COUNT(*) 
-		FROM comment
-        WHERE post_idx=#{postIdx}
-        AND post_status=1
-	</select>
-	
-	<!-- 대댓글 개수 -->
-	<select id="selectReplyCount" resultType="int">
-		SELECT COUNT(*) 
-		FROM comment
-        WHERE parent_idx=#{parentIdx}
-        AND post_status=1
+	<!-- 등록 댓글,답글 조회 -->
+	<select id="selectComment" resultType="com.project.dto.Comment">
+		SELECT 
+			c.comment_idx
+			, c.userinfo_id
+			, u.nickname
+			, c.parent_idx
+			, c.comment_content
+			, c.comment_regdate
+		FROM comment c
+		LEFT JOIN userinfo u 
+	   		ON c.userinfo_id = u.id
+		WHERE c.comment_idx = #{commentIdx} 
+			AND c.comment_status = 1
 	</select>
 	
 	<!-- 댓글 목록 조회 -->
