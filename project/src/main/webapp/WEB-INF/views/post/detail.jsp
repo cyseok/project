@@ -505,9 +505,9 @@ function commentList() {
         data: {"postIdx": postIdx},
         dataType: "json",
         success: function(result) {
-        	console.log(result);
         	$("#comment-count").text(result.length);
         	
+        	// 댓글이 1개 이상일때
         	if (result.length > 0) { 
         		
 				// 댓글 목록 출력            	
@@ -532,7 +532,7 @@ function commentList() {
 	                                 })() +
 	                              "</div>" +
 	                              
-	                              "<div id='comment-modify-input-"+commentList.commentIdx+"'>" +
+	                              "<div class='commentArea' id='comment-textarea-"+commentList.commentIdx+"'>" +
 	                                "<textarea class='comment-content-modify' id='comment-modify-content-"+commentList.commentIdx+"' rows='3' maxlength='300'>"+commentList.commentContent+"</textarea>" +
 	                                "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+commentList.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
             				        "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-modify-idx='"+commentList.commentIdx+"' onclick='commentModify();'>등록</button>" +
@@ -547,7 +547,9 @@ function commentList() {
 	                              })() +
 	                           "</div>" +
 	                           
-	                           "<div class='' id='reply-list-"+commentList.commentIdx+"'>" +
+	                           "<div class='' id='reply-button-"+commentList.commentIdx+"'>" +
+	                              "<div class='' id='reply-list-"+commentList.commentIdx+"'>" +
+	                              "</div>" +
 	                           "</div>" +
 	                           
 	                        "<hr class='comment-line'>" +
@@ -556,10 +558,11 @@ function commentList() {
 	                $("#comment-list").append(commnetElement);
 	                
 	                var replyNum = commentList.commentIdx;
-	                replyList();
+	                
+	                replyList(replyNum);
 	                
 	                // 답글 출력
-	                function replyList() {
+	                function replyList(replyNum) {
 	                	
 		                $.ajax({
 					        method: "GET",
@@ -573,7 +576,7 @@ function commentList() {
 						            for (var i = 0; i < result.length; i++) {
 						                var replytList = result[i];
 						                var replyElement = 
-						                	$("<div class='reply-list' id='replyList-"+replytList.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
+						                	$("<div class='reply-list' id='replyList-"+replytList.commentIdx+"' data-aos='fade-up' data-aos-delay='10'>" +
 						                          "<div class='media-entry'>" +
 						                              "<hr class='reply-line'>" +
 						                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='reply-image'>" +
@@ -586,7 +589,7 @@ function commentList() {
 						                              (function() {
 						                                  if (userinfoId === replytList.userinfoId) {
 						                                	  return "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+replytList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
-						                                             "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+replytList.commentIdx+"' onclick='replyDelete();'>삭제</button>";
+						                                             "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+replytList.commentIdx+"' data-reply-parent-idx='"+replytList.parentIdx+"' onclick='replyDelete();'>삭제</button>";
 						                                  } else {
 						                                	  // else 처리하지 않으면 undefined 출력됨
 						                                      return "";
@@ -594,7 +597,7 @@ function commentList() {
 						                              })() +
 						                          "</div>" +
 						                              
-						                          "<div id='comment-modify-input-"+replytList.commentIdx+"'>" +
+						                          "<div id='comment-textarea-"+replytList.commentIdx+"'>" +
 					                                "<textarea class='reply-content-modify' id='comment-modify-content-"+replytList.commentIdx+"' rows='2' maxlength='300'>"+replytList.commentContent+"</textarea>" +
 					                                "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+replytList.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
 				            				        "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-modify-idx='"+replytList.commentIdx+"' onclick='replyModify();'>등록</button>" +
@@ -620,7 +623,7 @@ function commentList() {
 					                		  "</sec:authorize>" +
 					                    "</div>");
 					                
-					                $("#reply-list-" + replytList.parentIdx).append(replyButton);
+					                $("#reply-button-" + replytList.parentIdx).append(replyButton);
 		 		 	
 						            $("#reply-count-" + replytList.parentIdx).text(result.length);
 						            
@@ -639,7 +642,7 @@ function commentList() {
 					                		  "</sec:authorize>" +
 					                    "</div>");
 					                
-					                $("#reply-list-" + replyNum).append(replyButton1);
+					                $("#reply-button-" + replyNum).append(replyButton1);
 					                
 					            	$("#reply-count-" + replyNum).text(result.length);
 					            }
@@ -659,6 +662,28 @@ function commentList() {
     });
 }
 
+/* 댓글, 답글 중복 제출 방지 */
+var commentButton = document.getElementById("commentAdd");
+
+function commentDisableButton() {
+
+   commentButton.disabled = true;
+	
+   setTimeout(function () {
+     commentButton.disabled = false;
+   }, 1000);
+} 
+
+function replyDisableButton() {
+
+	var replyButton = document.getElementById("replyAdd");
+	replyButton.disabled = true;
+		
+	   setTimeout(function () {
+		   replyButton.disabled = false;
+	   }, 1000);
+	}
+ 
 //댓글 등록
 function commentAdd() {  
 	
@@ -672,11 +697,17 @@ function commentAdd() {
       return false;
     }
 	
+	var random32 = Math.random().toString(32).substr(2, 8);
+	var randomNum = postIdx + "-" + random32;
+	
+	commentDisableButton();
+	
     var formData = new FormData();
+    formData.append("commentIdx", randomNum);
     formData.append("postIdx", postIdx);
     formData.append("userinfoId", $("#userinfoId").val());
     formData.append("parentIdx", 0);
-    formData.append("commentContent", $("#commentContent").val());
+    formData.append("commentContent", commentContent);
     
     $.ajax({
         type: "POST",
@@ -686,8 +717,9 @@ function commentAdd() {
         processData: false,
         dataType: "text",
         success: function (data, textStatus, xhr) {
+        	var parsedData = JSON.parse(data);
+            console.log(parsedData);
             if (xhr.status == 200) {
-            	
             	// 입력 값 지워주기
 			    var replyInput = document.getElementById('commentContent');
 			    replyInput.value = '';
@@ -697,10 +729,53 @@ function commentAdd() {
 				commentCount++;
 				document.getElementById("comment-count").textContent = commentCount;
 				
-				// $("#comment-list").append(commnetElement);
-				
-				$("#comment-list").empty();
-            	commentList();
+				// 등록한 댓글 출력
+				var commnetElement = 
+	                	$("<div class='col-12 mb-4' id='comment-"+parsedData.commentIdx+"' data-aos='fade-up' data-aos-delay='10'>" +
+	                          "<div class='media-entry' id=''>" +
+	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='comment-image'>" +
+	                              "<p class='comment-nickname' id='comment-nickname-"+parsedData.commentIdx+"'>" + (parsedData.nickname === null || parsedData.nickname === "" ? "닉네임없음" : parsedData.nickname + " (" + parsedData.userinfoId.substring(0, 3) + "***)") + "</p>" +
+	                              "<p class='comment-date' id='comment-date-"+parsedData.commentIdx+"' title='"+parsedData.commentRegdate+"'>" + parsedData.commentRegdate + "</p>" +
+	                              "<div id='comment-modify-"+parsedData.commentIdx+"'>" +
+	                                "<p class='comment-content' id='comment-content-"+parsedData.commentIdx+"' title='"+parsedData.commentContent+"'>" + parsedData.commentContent + "</p>" +
+	                                "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+parsedData.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+	              					"<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-delete-idx='"+parsedData.commentIdx+"' onclick='commentDelete();'>삭제</button>" +
+	                              "</div>" +
+	                              
+	                              "<div class='commentArea' id='comment-textarea-"+parsedData.commentIdx+"'>" +
+	                                "<textarea class='comment-content-modify' id='comment-modify-content-"+parsedData.commentIdx+"' rows='3' maxlength='300'>"+parsedData.commentContent+"</textarea>" +
+	                                "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+parsedData.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
+            				        "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-modify-idx='"+parsedData.commentIdx+"' onclick='commentModify();'>등록</button>" +
+	                              "</div>" +
+	                              
+	                              "<button type='button' id='comment-button-"+parsedData.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+parsedData.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+parsedData.commentIdx+"'>0</span></button>" +
+	                           "</div>" +
+	                           
+	                           "<div class='' id='reply-button-"+parsedData.commentIdx+"'>" +
+	                              "<div class='' id='reply-list-"+parsedData.commentIdx+"'>" +
+	                              "</div>" +
+	                           "</div>" +
+	                           
+	                        "<hr class='comment-line'>" +
+	                    "</div>");
+	                
+	                $("#comment-list").append(commnetElement);
+	            
+	            // 답글 등록 버튼
+                var replyButton = 
+                	$("<div class='reply-input' id='reply-"+parsedData.commentIdx+"' data-aos='fade-up' data-aos-delay='10'>" +
+                		  "<hr class='reply-line'>" +
+                		  "<sec:authorize access='isAnonymous()'>" +
+                		  "<textarea name='commentContent' id='reply-content-' rows='3' placeholder=' 답글을 입력해주세요.' disabled></textarea>" +
+                		  "<button type='button' id='replyAdd' class='btn btn-primary' onclick='login()'>답글 등록</button>" +
+                		  "</sec:authorize>" +
+                		  "<sec:authorize access='hasAnyRole(\"ROLE_USER\", \"ROLE_ADMIN\", \"ROLE_SOCIAL\", \"ROLE_MASTER\")'>" +
+                		  "<textarea name='commentContent' id='reply-content-"+parsedData.commentIdx+"' rows='3' placeholder=' 답글을 입력해주세요.' maxlength='300'></textarea>" +
+                		  "<button type='button' id='replyAdd' class='btn btn-primary' onclick='replyAdd()' data-comment-replyAdd-idx='"+parsedData.commentIdx+"'>답글 등록</button>" +
+                		  "</sec:authorize>" +
+                    "</div>");
+	                
+	                $("#reply-button-" + parsedData.commentIdx).append(replyButton);
             }
         }, error: function(error) {
             console.log("comment-Error:", error);
@@ -712,7 +787,7 @@ function commentAdd() {
 function replyAdd() {  
 	
 	var replyIdx = event.currentTarget.getAttribute("data-comment-replyAdd-idx");
-	
+	console.log(replyIdx);
 	var replycontent = $("#reply-content-"+replyIdx).val();
 	
 	if (replycontent === "") {
@@ -723,14 +798,19 @@ function replyAdd() {
       return false;
     }
 	
-    
+	replyDisableButton();
+	
+	var random32 = Math.random().toString(32).substr(2, 8);
+	var randomNum = postIdx + "-" + random32;
+	var gsdfgsd = 123123123;
+	
     var formData = new FormData();
+    formData.append("commentIdx", randomNum);
     formData.append("postIdx", postIdx);
     formData.append("userinfoId", $("#userinfoId").val());
     formData.append("parentIdx", replyIdx);
     formData.append("commentContent", replycontent);
-    
-    
+    // parentIdx 가 정수면 삽입이 잘 되는거같은데 뭐가 문제일까........
     $.ajax({
         type: "POST",
         url: "<c:url value='/comment'/>",
@@ -739,24 +819,48 @@ function replyAdd() {
         processData: false,
         dataType: "text",
         success: function (data, textStatus, xhr) {
+        	var parsedData = JSON.parse(data);
+            console.log("parsedData:", parsedData);
+            
             if (xhr.status == 200) {
             	
             	// 입력 값 지워주기
 			    var replyInput = document.getElementById('reply-content-'+replyIdx);
     			replyInput.value = '';
 			    
-			    // 댓글 개수 +1
+			    // 답글 개수 +1
 				var replyCount = document.getElementById("reply-count-"+replyIdx).textContent;
 				replyCount++;
 				document.getElementById("reply-count-"+replyIdx).textContent = replyCount;
 				
-            	$("#comment-list").empty();
-            	commentList();
-            	
-            	 // $("#reply-list-"+replyIdx).append(commnetElement);
+				// 등록한 답글 출력
+            	var replyElement = 
+	                	$("<div class='reply-list' id='replyList-"+parsedData.commentIdx+"' data-aos='fade-up' data-aos-delay='100'>" +
+	                          "<div class='media-entry'>" +
+	                              "<hr class='reply-line'>" +
+	                              "<img src='${pageContext.request.contextPath}/assets/images/login.png' class='reply-image'>" +
+	                              "<p class='reply-nickname' id='reply-nickname-"+parsedData.commentIdx+"'>" + (parsedData.nickname === null || parsedData.nickname === "" ? "닉네임없음" : parsedData.nickname + " (" + parsedData.userinfoId.substring(0, 3) + "***)") + "</p>" +
+	                              "<p class='reply-date' id='reply-date-"+parsedData.commentIdx+"' title='"+parsedData.commentRegdate+"'>" + parsedData.commentRegdate + "</p>" +
+	                              
+	                              "<div id='comment-modify-"+parsedData.commentIdx+"'>" +
+	                                 "<p class='reply-content' id='comment-content-"+parsedData.commentIdx+"' title='"+parsedData.commentContent+"'>" + parsedData.commentContent + "</p>" +
+	                                 "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+parsedData.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+	                                 "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+parsedData.commentIdx+"' data-reply-parent-idx='"+parsedData.parentIdx+"' onclick='replyDelete();'>삭제</button>"+
+	                              "</div>" +
+	                              
+	                              "<div id='comment-textarea-"+parsedData.commentIdx+"'>" +
+	                                "<textarea class='reply-content-modify' id='comment-modify-content-"+parsedData.commentIdx+"' rows='2' maxlength='300'>"+parsedData.commentContent+"</textarea>" +
+	                                "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+parsedData.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
+	          				        "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-modify-idx='"+parsedData.commentIdx+"' onclick='replyModify();'>등록</button>" +
+	                             "</div>" +
+	                          "</div>" +
+	                     "</div>");
+	                
+	                $("#reply-list-" + replyIdx).append(replyElement);
             }
+            
         }, error: function(error) {
-            console.log("comment-Error:", error);
+            console.log("reply-Error:", error);
         }
     });
 }
@@ -782,7 +886,7 @@ function commentModify() {
 			    var pTags = $("p[id='comment-content-" + commentIdx + "']");
 			    pTags.text(commentModifyContent);
 			    
-				var commentInput = document.getElementById("comment-modify-input-"+commentIdx);
+				var commentInput = document.getElementById("comment-textarea-"+commentIdx);
 				var comment = document.getElementById("comment-modify-"+commentIdx);
 				
 				commentInput.style.display = "none";
@@ -801,16 +905,11 @@ function replyModify() {
 	var replyIdx = event.currentTarget.getAttribute("data-reply-modify-idx");
 	var replyModifyContent = $("#comment-modify-content-"+replyIdx).val();
     
-    var formData = new FormData();
-    formData.append("commentIdx", replyIdx);
-    formData.append("commentContent", replyModifyContent);
-    
     $.ajax({
-        type: "POST",
-        url: "<c:url value='/comment/modify'/>",
-        data: formData,
-        contentType: false,
-        processData: false,
+        type: "PATCH",
+        url: "<c:url value='/comment/'/>" + replyIdx,
+        data: JSON.stringify({'commentIdx': replyIdx,'commentContent' : replyModifyContent}),
+        contentType: 'application/json',
         dataType: "text",
         success: function (data, textStatus, xhr) {
             if (xhr.status == 200) {
@@ -821,7 +920,7 @@ function replyModify() {
 			    var pTags = $("p[id='comment-content-" + replyIdx + "']");
 			    pTags.text(replyModifyContent);
 			    
-				var commentInput = document.getElementById("comment-modify-input-"+replyIdx);
+				var commentInput = document.getElementById("comment-textarea-"+replyIdx);
 				var comment = document.getElementById("comment-modify-"+replyIdx);
 				
 				commentInput.style.display = "none";
@@ -871,6 +970,7 @@ function commentDelete() {
 function replyDelete() {  
 	
 	var deleteReplyIdx = event.currentTarget.getAttribute("data-reply-delete-idx");
+	var deleteParentIdx = event.currentTarget.getAttribute("data-reply-parent-idx");
 	
     if (confirm("댓글을 삭제 하시겠습니까?")) {
     	
@@ -883,6 +983,10 @@ function replyDelete() {
             	
                 if (xhr.status == 204) {
                 	$("#replyList-" + deleteReplyIdx).remove();
+                	
+                	var replyCount = document.getElementById("reply-count-"+deleteParentIdx).textContent;
+                	replyCount--;
+					document.getElementById("reply-count-"+deleteParentIdx).textContent = replyCount;
                 } else {
                 	alert("댓글 삭제에 실패했습니다.");
                 } 
@@ -900,7 +1004,7 @@ function replyShowButton() {
 	
 	var replyShow = event.currentTarget.getAttribute("data-comment-replyShow-idx");
 	
-	var replyInput = document.getElementById("reply-list-"+replyShow);
+	var replyInput = document.getElementById("reply-button-"+replyShow);
 	replyInput.style.display = replyInput.style.display === "block" ? "none" : "block";
 	
 }
@@ -910,7 +1014,7 @@ function commentModifyButton() {
 	
 	var commentModify = event.currentTarget.getAttribute("data-comment-modifyButton-idx");
 	
-	var commentInput = document.getElementById("comment-modify-input-"+commentModify);
+	var commentInput = document.getElementById("comment-textarea-"+commentModify);
 	var comment = document.getElementById("comment-modify-"+commentModify);
 	
 	commentInput.style.display = "block";
@@ -927,7 +1031,7 @@ function commentModifyCancel() {
 	var textarea = document.getElementById("comment-modify-content-" + commentModify);
 	textarea.value = $("#comment-content-"+commentModify).text();
 	
-	var commentInput = document.getElementById("comment-modify-input-"+commentModify);
+	var commentInput = document.getElementById("comment-textarea-"+commentModify);
 	var comment = document.getElementById("comment-modify-"+commentModify);
 	
 	commentInput.style.display = "none";
