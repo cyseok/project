@@ -99,14 +99,14 @@
         
         <!-- 댓글 -->
         <div class="" style="margin-top: 300px;">
-        <hr style="width: 100%; margin-left: auto; margin-right: auto;">
-        	<div class="">
-        	  <span class="" id="comment-number">댓글 수 : </span>
+           <hr style="width: 100%; margin-left: auto; margin-right: auto;">
+           
+           <div class="">
+              <span class="" id="comment-number">댓글 수 : </span>
         	  <span class="" id="comment-count"></span>
-        	</div>	
+           </div>	
         	
 		 	<div class="comment-input">
-		 		
 		 		<sec:authorize access="isAnonymous()">
 		 		  <textarea name="commentContent" id="commentContent" rows="3" placeholder=" 댓글을 입력해주세요." disabled></textarea>
 	              <button type="button" id="commentAdd" class="btn btn-primary" onclick="login()">댓글 등록</button>
@@ -501,7 +501,7 @@ function commentList() {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='/comment/comment-list'/>/" + postIdx,
+        url: "<c:url value='/comments/comment-list'/>/" + postIdx,
         data: {"postIdx": postIdx},
         dataType: "json",
         success: function(result) {
@@ -566,7 +566,7 @@ function commentList() {
 	                	
 		                $.ajax({
 					        method: "GET",
-					        url: "<c:url value='/comment/reply-list'/>/" + replyNum,
+					        url: "<c:url value='/comments/reply-list'/>/" + replyNum,
 					        data: {"parentIdx": replyNum},
 					        dataType: "json",
 					        success: function(result) {
@@ -711,7 +711,7 @@ function commentAdd() {
     
     $.ajax({
         type: "POST",
-        url: "<c:url value='/comment'/>",
+        url: "<c:url value='/comments'/>",
         data: formData,
         contentType: false,
         processData: false,
@@ -802,7 +802,6 @@ function replyAdd() {
 	
 	var random32 = Math.random().toString(32).substr(2, 8);
 	var randomNum = postIdx + "-" + random32;
-	var gsdfgsd = 123123123;
 	
     var formData = new FormData();
     formData.append("commentIdx", randomNum);
@@ -813,7 +812,7 @@ function replyAdd() {
     // parentIdx 가 정수면 삽입이 잘 되는거같은데 뭐가 문제일까........
     $.ajax({
         type: "POST",
-        url: "<c:url value='/comment'/>",
+        url: "<c:url value='/comments'/>",
         data: formData,
         contentType: false,
         processData: false,
@@ -873,7 +872,7 @@ function commentModify() {
 	
     $.ajax({
         type: "PATCH",
-        url: "<c:url value='/comment/'/>" + commentIdx,
+        url: "<c:url value='/comments/'/>" + commentIdx,
         data: JSON.stringify({'commentIdx': commentIdx,'commentContent' : commentModifyContent}),
         contentType: 'application/json',
         dataType: "text",
@@ -907,7 +906,7 @@ function replyModify() {
     
     $.ajax({
         type: "PATCH",
-        url: "<c:url value='/comment/'/>" + replyIdx,
+        url: "<c:url value='/comments/'/>" + replyIdx,
         data: JSON.stringify({'commentIdx': replyIdx,'commentContent' : replyModifyContent}),
         contentType: 'application/json',
         dataType: "text",
@@ -940,11 +939,12 @@ function commentDelete() {
 	var deleteCommentIdx = event.currentTarget.getAttribute("data-comment-delete-idx");
 	
     if (confirm("댓글을 삭제 하시겠습니까?")) {
-    	
+    	console.log(postIdx);
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/comment'/>/" + deleteCommentIdx,
-            data: {'commentIdx' : deleteCommentIdx},
+            url: "<c:url value='/comments'/>/" + deleteCommentIdx + "/" + postIdx,
+            data: {'commentIdx' : deleteCommentIdx
+            	,'postIdx' : postIdx},
             contentType: false,
             success: function(data, textStatus, xhr) {
             	
@@ -972,23 +972,26 @@ function replyDelete() {
 	var deleteReplyIdx = event.currentTarget.getAttribute("data-reply-delete-idx");
 	var deleteParentIdx = event.currentTarget.getAttribute("data-reply-parent-idx");
 	
-    if (confirm("댓글을 삭제 하시겠습니까?")) {
+    if (confirm("답글을 삭제 하시겠습니까?")) {
     	
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/comment'/>/" + deleteReplyIdx,
-            data: {'commentIdx' : deleteReplyIdx},
+            url: "<c:url value='/comments'/>/" + deleteReplyIdx + "/" + 0,
+            data: {'commentIdx' : deleteReplyIdx
+            	,'postIdx' : 0},
             contentType: false,
             success: function(data, textStatus, xhr) {
             	
                 if (xhr.status == 204) {
+                	// 해당 idx를 가지고 있는 태그 지워주기
                 	$("#replyList-" + deleteReplyIdx).remove();
                 	
+                	// 답글 개수 -1
                 	var replyCount = document.getElementById("reply-count-"+deleteParentIdx).textContent;
                 	replyCount--;
 					document.getElementById("reply-count-"+deleteParentIdx).textContent = replyCount;
                 } else {
-                	alert("댓글 삭제에 실패했습니다.");
+                	alert("답글 삭제에 실패했습니다.");
                 } 
             },
             error: function(error) {
