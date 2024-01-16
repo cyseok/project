@@ -44,18 +44,28 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public void getPostViewCount(int postIdx) {
+	public void addPostViewCount(int postIdx) {
 		postDAO.postViewCount(postIdx);
 	}
 	
 	@Override
-	public void getPostLikesCheck(int postIdx) {
+	public void addPostLikes(int postIdx) {
 		postDAO.postLikesCheck(postIdx);
 	}
 	
 	@Override
-	public void getPostLikesCancel(int postIdx) {
+	public void removePostLikes(int postIdx) {
 		postDAO.postLikesCancel(postIdx);
+	}
+	
+	@Override
+	public void addComment(int postIdx) {
+		postDAO.insertComment(postIdx);
+	}
+	
+	@Override
+	public void removeComment(int postIdx) {
+		postDAO.deleteComment(postIdx);
 	}
 	
 	@Override

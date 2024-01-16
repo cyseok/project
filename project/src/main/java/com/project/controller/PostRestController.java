@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -16,28 +15,18 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.project.dto.Likes;
 import com.project.dto.Post;
@@ -49,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/post")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostRestController {
 	
 	@Autowired
@@ -61,6 +49,7 @@ public class PostRestController {
 	@Autowired
 	private final WebApplicationContext context; 
 	
+	// 게시글 목록 출력
 	@GetMapping(value = "/list")
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam("offset") int offset
@@ -69,6 +58,7 @@ public class PostRestController {
 			, @RequestParam("viewType") String viewType
 			) {
 		
+		// 최신순 
 		if ("recently".equals(viewType)) {
 			
 			try {
@@ -104,6 +94,7 @@ public class PostRestController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 			
+		// 인기순
 		} else if("like".equals(viewType)){
 			
 			try {
@@ -137,8 +128,10 @@ public class PostRestController {
 				
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}			
-		} else {
+			}	
+			
+		// 조회순
+		} else if("view".equals(viewType)){
 			
 			try {
 				List<Post> postList = postService.getSelectViewPostList(offset, limit, selectKeyword);
@@ -173,6 +166,41 @@ public class PostRestController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}		
 			
+		// 댓글순
+		} else {
+			
+			try {
+				List<Post> postList = postService.getSelectCommentPostList(offset, limit, selectKeyword);
+				
+				// 데이터마다 self link 추가하기
+				for (Post post : postList) {
+					Link link = WebMvcLinkBuilder.linkTo(PostRestController.class)
+							.slash(post.getPostIdx())
+							.withRel("post-detail");  // 링크 이름 설정 
+					post.add(link);
+					
+				}
+				// 컨트롤러 다른 자원에 접근하는 링크
+				CollectionModel<Post> postResources = CollectionModel.of(postList);
+				
+				Link postListLink = WebMvcLinkBuilder.linkTo(PostRestController.class)
+						.slash("list")
+						.withSelfRel();
+				Link noticeListLink = WebMvcLinkBuilder.linkTo(NoticeRestController.class)
+						.slash("list")
+						.withRel("notice-list");
+				postResources.add(postListLink);
+				postResources.add(noticeListLink);
+				
+				// 헤더에 content type 명시 
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE);
+				
+				return new ResponseEntity<>(postResources, headers, HttpStatus.OK);
+				
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 		}
 		
 	}
@@ -184,7 +212,7 @@ public class PostRestController {
 		
 		try {
 			Post post = postService.getSelectPost(postIdx);
-			postService.getPostViewCount(postIdx);
+			postService.addPostViewCount(postIdx);
 			Post preNumNextNum = postService.getSelectPreNumNextNum(postIdx);
 			int prevNum = preNumNextNum.getPrevnum();
 			int nextNum = preNumNextNum.getNextnum();
@@ -229,7 +257,6 @@ public class PostRestController {
 			postResources.add(noticeListLink);
 			postResources.add(postListLink);
 			
-			
 			HttpHeaders headers = new HttpHeaders();
 			headers.add(HttpHeaders.CONTENT_TYPE, "application/json"); // 설정할 미디어 타입을 지정
 			
@@ -240,8 +267,6 @@ public class PostRestController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
 	
 	@PostMapping(value = "/image-upload")
 	public ResponseEntity<?> imageUpload(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {

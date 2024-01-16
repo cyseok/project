@@ -92,6 +92,20 @@
         WHERE post_idx=#{postIdx}
 	</update>
 	
+	<!-- 댓글 등록시 +1 -->
+	<update id="insertComment" parameterType="com.project.dto.Post">
+		UPDATE post SET
+        	post_comment = post_comment + 1
+        WHERE post_idx=#{postIdx}
+	</update>
+	
+	<!-- 댓글 삭제시 -1 -->
+	<update id="deleteComment" parameterType="com.project.dto.Post">
+		UPDATE post SET
+        	post_comment = post_comment - 1
+        WHERE post_idx=#{postIdx}
+	</update>
+	
 	<!-- 최신순 정렬 -->
 	<select id="selectResentlyPostList" resultType="com.project.dto.Post">
 		SELECT 
@@ -252,7 +266,7 @@
 	               WHERE p.post_status=1 
 	           </otherwise>
 	      </choose>
-	    ORDER BY p.post_comment DESC
+	    ORDER BY p.post_comment DESC, p.post_regdate DESC
 	    LIMIT #{offset}, #{limit}
 	</select>
 	

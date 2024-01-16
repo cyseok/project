@@ -51,6 +51,16 @@ public class PostDAOImpl implements PostDAO{
 	}
 	
 	@Override
+	public int insertComment(int postIdx) {
+		return sqlSession.getMapper(PostMapper.class).insertComment(postIdx);
+	}
+	
+	@Override
+	public int deleteComment(int postIdx) {
+		return sqlSession.getMapper(PostMapper.class).deleteComment(postIdx);
+	}
+	
+	@Override
 	public int selectPostCount(String selectKeyword) {
 		return sqlSession.getMapper(PostMapper.class).selectPostCount(selectKeyword);
 	}

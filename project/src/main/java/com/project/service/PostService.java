@@ -20,14 +20,20 @@ public interface PostService {
     // 공지사항 상세 보기
     Post getSelectPost(int postIdx) throws PostNotFoundException;
    
-    // 공지사항 조회수 
-    void getPostViewCount(int postIdx);
+    // 공지사항 조회수 증가
+    void addPostViewCount(int postIdx);
     
     // 추천 체크 
-    void getPostLikesCheck(int postIdx);
+    void addPostLikes(int postIdx);
     
     // 추천 취소 
-    void getPostLikesCancel(int postIdx);
+    void removePostLikes(int postIdx);
+    
+    // 댓글 +1  
+    void addComment(int postIdx);
+    
+    // 댓글 -1 
+    void removeComment(int postIdx);
     
     // 사용자의 추천 게시글 조회
     List<Post> getSelectLikesPost(String userinfoId);
