@@ -16,18 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.Comment;
-import com.project.dto.Post;
 import com.project.service.CommentService;
+import com.project.service.PostService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentRestController {
 	
 	@Autowired
 	private final CommentService commentService;
+	
+	@Autowired
+	private final PostService postService;
 	
 	// 댓글 리스트 출력 (/게시물 번호)
 	@GetMapping("/comment-list/{postIdx}")
@@ -59,6 +62,10 @@ public class CommentRestController {
 		try {
 			commentService.addComment(comment);
 			Comment commentSelect = commentService.getComment(comment.getCommentIdx());
+			// 댓글일때만 댓글 수 +1 (답글일때는 x)
+			if(commentSelect.getParentIdx() == null) {
+				postService.addComment(comment.getPostIdx());
+			}
 			return new ResponseEntity<Comment>(commentSelect, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -78,10 +85,15 @@ public class CommentRestController {
 	}
 	
 	// 댓글, 답글 삭제
-	@DeleteMapping("/{commentIdx}")
-	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx) {
+	@DeleteMapping("/{commentIdx}/{postIdx}")
+	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx
+			, @PathVariable("postIdx") int postIdx) {
 		try {
 			commentService.removeComment(commentIdx);
+			// 댓글일 때만 댓글 수 -1
+			if(postIdx != 0) {
+				postService.removeComment(postIdx);
+			}
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
