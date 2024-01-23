@@ -53,10 +53,12 @@ public class GoogleLoginController {
 		Object object = parser.parse(apiResult);
 		JSONObject responseObject = (JSONObject) object;
 
+		// 사용자 json 데이터를 각각 id, email 등 각각 나눠서 저장
 		String id = (String) responseObject.get("id");
 		String email = (String) responseObject.get("email");
 		String name = (String) responseObject.get("name");
 
+		// (spring-security) 소셜 로그인 계정에 "ROLE_SOCIAL" 권한 부여
 		UserinfoAuth auth = new UserinfoAuth();
 		auth.setId("google_" + id);
 		auth.setAuth("ROLE_SOCIAL");
@@ -67,7 +69,8 @@ public class GoogleLoginController {
 		Userinfo userinfo = new Userinfo();
 		userinfo.setId("google_" + id);
 		userinfo.setPw(UUID.randomUUID().toString());
-		userinfo.setName(name);
+		userinfo.setName(null);
+		userinfo.setNickname(name);
 		userinfo.setEmail(email);
 		userinfo.setAddress(null);
 		userinfo.setEnabled("0");
@@ -78,17 +81,17 @@ public class GoogleLoginController {
 		userinfoService.addUserinfoAuth(auth);
 		userinfoService.updateUserLogindate(userinfo.getId());
 		
-		//네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
+		// (spring-security) 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
 		CustomUserDetails customUserDetails=new CustomUserDetails(userinfo);
 		
-		//UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록 처리
-		//UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
+		// UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록
+		// UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
 		Authentication authentication=new UsernamePasswordAuthenticationToken
 				(customUserDetails, null, customUserDetails.getAuthorities());
 		
-		//SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
+		// SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 			
-		return "redirect:/post";
+		return "redirect:/";
 	}
 }
