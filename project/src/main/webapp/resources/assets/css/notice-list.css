@@ -1,84 +1,118 @@
-  a{
-     text-align: right;
-     color: black;
-  }
-  #noticeListInfo {
-      text-align: center;
-  }
-  table{
-    border-collapse: collapse;
-    width: 70%;    
-    margin-top: 50px;
-    margin-bottom : 50px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
-  td, th{
-     border-bottom: 1px solid black;
-     height: 50px;
-     font-size : 17px;
-     text-align: center;
-  }
-  th.idx {
-     width: 10%;
-  }
-  th.title {
-     width: 60%;
-  }
-  th.day {
-     width: 18%;
-  }
-  th.count {
-     width: 12%;
-  }
-  thead{
-     font-weight: 700;
-  }
-  .top_btn{
-    font-size: 20px;
-    padding: 6px 12px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    font-weight: 600;
-  }
-  h1{
-     text-align: center;
-  }
- .categories-sidebar-widget {
-    max-width: 150px;
-    margin-top: 150px;
-    margin-left: 50px;
- }
- .widget-title {
-    margin-top: 20px;
- }
- .noinBtn {
-    width: 150px;
-    margin-bottom: 50px;
-    display: block;
- }
- #pageNumDiv {
-    text-align: center;
-   	margin-bottom: 50px;
-   	margin-left: 100px;
- }
- .button-and-page-num {
-    display: flex; /* Flexbox를 사용하여 내부 요소를 가로로 나열 */
-    justify-content: center;
-    align-items: center; /* 수직 가운데 정렬 */
- }
- #noticeSize {
-    margin-top: 20px;
-    margin-left: 16%;
- }
- .page-num {
-    font-size: 18px; 
+a{
+  color: black;
 }
- .totalNum {
-    margin-top: 20px;
-    margin-left: 16%;
+#noticeListInfo {
+  text-align: center;
+}
+table{
+  border-collapse: collapse;
+  width: 70%;    
+  margin-top: 50px;
+  margin-bottom : 50px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+td, th{
+  border-bottom: 1px solid black;
+  height: 50px;
+  font-size : 17px;
+  text-align: center;
+}
+th.idx {
+  width: 10%;
+}
+th.title {
+  width: 60%;
+}
+th.day {
+  width: 18%;
+}
+th.count {
+  width: 12%;
+}
+thead{
+  font-weight: 700;
+}
+.top_btn{
+  font-size: 20px;
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+h1{
+  text-align: center;
+}
+.categories-sidebar-widget {
+  max-width: 150px;
+  margin-top: 150px;
+  margin-left: 50px;
+}
+.widget-title {
+  margin-top: 20px;
+}
+.noinBtn {
+  width: 150px;
+  margin-bottom: 50px;
+  display: block;
+}
+#pageNumDiv {
+  text-align: center;
+  margin-bottom: 50px;
+  margin-left: 100px;
+}
+.button-and-page-num {
+  display: flex; 
+  justify-content: center;
+  align-items: center; 
+}
+#noticeSize {
+  margin-top: 20px;
+  margin-left: 16%;
+}
+.page-num {
+  font-size: 22px;
+  margin-right: 6px;
+  margin-left: 6px;
+  font-weight: bold;
+}
+#page-num-1 {
+  color: #9999;
+}
+#page-num-2 {
+  
+}
+#page-button {
+  padding: 0.3rem 1.2rem;
+  font-size: 0.875rem;
+  margin-top: -7px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.totalNum {
+  margin-top: 20px;
+  margin-left: 16%;
 }
 #writeNotice {
-    margin-left: 78%;
- }
+  margin-left: 78%;
+}
+#resetButton {
+  border-radius: 8px;
+  float:right;
+  margin-right:200px;
+  height:43px;
+} 
+#searchButton {
+  border-radius: 8px;
+  float:right;
+  margin-right:3px;
+  height:43px;
+  width:100px;
+}
+#selectKeyword {
+  float:right;
+  width:250px;
+  height:43px;
+  margin-right:7px;
+} 
