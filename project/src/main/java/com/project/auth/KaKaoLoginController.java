@@ -103,7 +103,7 @@ public class KaKaoLoginController {
 		//SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		return "redirect:/post";
+		return "redirect:/";
 	}
 	
 }
