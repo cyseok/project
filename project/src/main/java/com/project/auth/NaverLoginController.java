@@ -44,30 +44,30 @@ public class NaverLoginController {
 	}
 	
 	@RequestMapping("/callback")
-	public String login(@RequestParam String code
+	public String login(@RequestParam(required = false) String code
+			, @RequestParam(required = false) String error
 			, @RequestParam String state
 			, HttpSession session) throws IOException, ParseException, ExistsUserinfoException, UserinfoNotFoundException {
 
+		if (error != null && "access_denied".equals(error)) {
+	        // 사용자가 동의 창에서 취소한 경우
+	        return "redirect:/";
+	    }
+		
 		OAuth2AccessToken accessToken=naverLoginBean.getAccessToken(session, code, state);
 		
 		String apiResult=naverLoginBean.getUserProfile(accessToken);
 		
-		//JSONParser 객체 : JSON 형식의 문자열을 JSON 객체로 변환
 		JSONParser parser=new JSONParser();
-		//JSONParser.parse(String json) : JSON 형식의 문자열을 Object 객체로 변환
 		Object object=parser.parse(apiResult);
-		//Object 객체로 JSONObject 객체로 변환하여 저장
 		JSONObject jsonObject=(JSONObject)object;
 		
-		//JSON 객체에 저장된 값을 제공받아 저장 - 파싱(Parsing)
-		//JSONObject.get(String name) : JSONObject 객체에 저장된 값(객체)을 반환하는 메소드
-		// => Object 타입으로 값(객체)를 반환하므로 반드시 형변환하여 저장
 		JSONObject responseObject=(JSONObject)jsonObject.get("response");
 		String id=(String)responseObject.get("id");
-		//String name=(String)responseObject.get("name");
+		String nickname=(String)responseObject.get("nickname");
 		String email=(String)responseObject.get("email");
-		
-		//반환받은 네이버 사용자 프로필의 값을 사용하여 Java 객체의 필드값으로 저장
+	    
+		//반환받은 네이버 사용자 프로필의 값 사용
 		UserinfoAuth auth=new UserinfoAuth();
 		auth.setId("naver_"+id);
 		auth.setAuth("ROLE_SOCIAL");
@@ -78,7 +78,7 @@ public class NaverLoginController {
 		Userinfo userinfo=new Userinfo();
 		userinfo.setId("naver_"+id);
 		userinfo.setPw(UUID.randomUUID().toString());
-		//userinfo.setName(name);
+		userinfo.setNickname(nickname);
 		userinfo.setEmail(email);
 		userinfo.setAddress(null);
 		userinfo.setEnabled("0");
@@ -92,14 +92,12 @@ public class NaverLoginController {
 		//네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
 		CustomUserDetails customUserDetails=new CustomUserDetails(userinfo);
 		
-		//UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록 처리
-		//UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
 		Authentication authentication=new UsernamePasswordAuthenticationToken
 				(customUserDetails, null, customUserDetails.getAuthorities());
 		
 		//SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		return "redirect:/post";
+		return "redirect:/";
 	}
 }
