@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,12 +40,17 @@ public class NoticeRestController {
 	
 	// 공지사항 리스트
 	@GetMapping("/list")
-	public Map<String, Object> noticeList(
+	public ResponseEntity<Map<String, Object>> noticeList(
 			@RequestParam(defaultValue = "1") int pageNum
 			, @RequestParam(defaultValue = "10") int pageSize
 			, @RequestParam(defaultValue = "") String selectKeyword) {
 		
-		return noticeService.getSelectNoticeList(pageNum, pageSize, selectKeyword);
+		try {
+	        return new ResponseEntity<>(noticeService.getSelectNoticeList(pageNum, pageSize, selectKeyword), HttpStatus.OK);
+	    } catch (Exception e) {
+	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+		
 	}
 	
 	// 공지사항 상세보기
@@ -139,8 +145,6 @@ public class NoticeRestController {
 		
 		if (noticeFileUpload != null && !noticeFileUpload.isEmpty()) {
 			try {
-				// 인코딩
-				// String fileNameEncoding = new String((noticeFileUpload.getOriginalFilename()).getBytes("8859_1"),"utf-8");
 				String uniqueFilename = UUID.randomUUID().toString();
 				//String filePath = uploadDirectory + File.separator + uniqueFilename;
 				//파일 저장
@@ -159,8 +163,6 @@ public class NoticeRestController {
 		}
 		//  사진업로드
 		if (noticeImgUpload != null && !noticeImgUpload.isEmpty()) {
-			// 인코딩
-			// String imgNameEncoding = new String(noticeImgUpload.getOriginalFilename().getBytes("UTF-8"), "UTF-8");
 			// 사진 저장
 			String originalFileName = noticeImgUpload.getOriginalFilename();
 			
@@ -171,14 +173,13 @@ public class NoticeRestController {
 			        fileExtension = originalFileName.substring(lastDotIndex);
 			    }
 			}
-
 			String uploadNoticeImg = UUID.randomUUID().toString() + fileExtension;
 
 			noticeImgUpload.transferTo(new File(uploadDirectory, uploadNoticeImg));
 
 			notice.setNoticeImg(uploadNoticeImg);
 		} else {
-			notice.setNoticeImg(existingNotice.getNoticeImg());
+			notice.setNoticeImg(null);
 		}
 		
 	    // 공지사항 수정 

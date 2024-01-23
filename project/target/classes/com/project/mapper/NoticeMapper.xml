@@ -91,11 +91,11 @@
         </choose>
 	</select>
 	
+	<!-- 공지사항 목록 출력 -->
 	<select id="selectNoticeList" resultType="com.project.dto.Notice">
 		SELECT 
 			notice_idx
             , notice_title
-            , notice_content 
             , date_format(notice_regdate, '%y-%m-%d') as notice_regdate
             , notice_viewcnt
             , notice_status 
@@ -109,7 +109,6 @@
           	SELECT
                   notice_idx
                   , notice_title
-                  , notice_content
                   , notice_regdate
                   , notice_viewcnt
                   , notice_status
