@@ -18,7 +18,13 @@ body {
   height: 100%;
 }
 p {
- font-size : 20px;
+  font-size : 22px;
+}
+#noticeTitle {
+  font-size: 24px; /* You can adjust the size as needed */
+}
+#noticeContent {
+  font-size: 22px; /* You can adjust the size as needed */
 }
 	</style>
 </head>
@@ -43,7 +49,7 @@ p {
 	    
 	    <div class="post-form">
 	      <label for="noticeContent" class="post-label">내용</label>
-	      <textarea name="noticeContent" id="noticeContent" class="form-control" rows="15" placeholder="내용을 입력해주세요"></textarea>
+	      <textarea name="noticeContent" id="noticeContent" class="form-control" rows="13" placeholder="내용을 입력해주세요"></textarea>
 	    </div>
 	    
  		<div class="post-form">
@@ -133,17 +139,20 @@ function readURL(input) {
         var fileExtension = fileName.split('.').pop().toLowerCase();
         var allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
         
-	       if (allowedExtensions.indexOf(fileExtension) === -1) {
-	            alert("선택한 파일은 이미지 파일이 아닙니다. 유효한 이미지 파일을 선택해주세요.");
-	            input.value = "";
-	            return;
-	        }
+       if (allowedExtensions.indexOf(fileExtension) === -1) {
+            alert("선택한 파일은 이미지 파일이 아닙니다. 유효한 이미지 파일을 선택해주세요.");
+            input.value = "";
+            return;
+        }
 	    var reader = new FileReader();
        
 	    reader.onload = function(e) {
-	      document.getElementById('preview').src = e.target.result;
+	    	document.getElementById('preview').style.display = "block";
+	    	document.getElementById('preview').src = e.target.result;
 	    };
 	    reader.readAsDataURL(input.files[0]);
+	    
+	    
 	  } else {
 	    document.getElementById('preview').src = "";
 	    document.getElementById('preview').style.display = "none";

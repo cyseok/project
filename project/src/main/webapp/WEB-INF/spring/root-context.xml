@@ -17,12 +17,39 @@
 	<!-- ▶ Connection 객체를 생성하기 위한 값을 클래스 필드에 저장되도록 값 주입 - Setter Injection -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	  <!-- <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" /> --> <!-- MySQL 8.x 이상을 위한 드라이버 클래스 -->
-	  <!-- <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-	  <property name="url" value="jdbc:log4jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" /> -->
+	  
+	  <!-- AWS RDS 서버 -->
+	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+	  <property name="url" value="jdbc:log4jdbc:mysql://database-1.c4036o3cjyhj.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC" />
+	  <property name="username" value="admin"></property>
+	  <property name="password" value="dbstjr8879"></property>
+	  
+	  
+	  <!-- project 공유 DB -->
+	  <!-- 
+	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+	  <property name="url" value="jdbc:log4jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" />
 	  <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
 	  <property name="url" value="jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC" />
 	  <property name="username" value="i6eqgj8l9920k7q7"></property>
 	  <property name="password" value="svtfuithtubdhpoj"></property>
+	   -->
+	  
+	  <!-- local 서버 -->
+	  <!-- 
+	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+	  <property name="url" value="jdbc:log4jdbc:mysql://192.168.219.102:3306/sys?serverTimezone=UTC" />
+	  <property name="username" value="root"></property>
+	  <property name="password" value="dbstjr8879"></property>
+	   -->
+	   
+	   <!-- AWS EC2 서버 -->
+	   <!--  
+	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
+	  <property name="url" value="jdbc:log4jdbc:mysql://3.39.12.166:3306/sys?serverTimezone=UTC" />
+	  <property name="username" value="yunseok"></property>
+	  <property name="password" value="dbstjr8879"></property>
+	  -->
 	</bean>
 		
 	<!-- SqlSessionFactory 관련 클래스를 Spring Bean으로 등록 -->
@@ -71,7 +98,7 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
-    <!--  mapper 등록하려면 추가해줘야함!! -->
+    <!--  mapper 등록-->
     <mybatis-spring:scan base-package="com.project.mapper" /> 
    
     <!-- annotation-driven: @Transactional 어노테이션을 사용하여 TransactionManager 객체로 트랜잭션 처리 기능을 제공하기 위한 엘리먼트 -->
@@ -91,8 +118,8 @@
    <bean id="mailSender"
       class="org.springframework.mail.javamail.JavaMailSenderImpl">
       <property name="host" value="smtp.naver.com" /> <!-- 메이서버 호스트 -->
-      <property name="port" value="465" /> <!-- 메이서버 포트번호 -->
-      <property name="username" value="cysuk123" /> <!-- 자신의 이메일 아이디 -->
+      <property name="port" value="465" />            <!-- 메이서버 포트번호 -->
+      <property name="username" value="cysuk123" />   <!-- 자신의 이메일 아이디 -->
       <property name="password" value="dbstjr3120" /> <!-- 자신의 비밀번호 -->
       <!-- 보안연결 SSL과 관련된 설정 -->
       <property name="javaMailProperties">

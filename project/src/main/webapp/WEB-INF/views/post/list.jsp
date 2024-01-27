@@ -31,7 +31,7 @@
 					<p class="mb-4" data-aos="fade-up">현재 있는 곳의 사람이 얼마나 많은지 게시물을 올려주세요!!
 					<br>
 					사람이 많아 가기 망설여지는 사람들에게 도움을 줄 수 있습니다.
-					<br>
+					<br><!-- 
 					<br>
 					일반 사용자 계정 
 					<br>
@@ -44,7 +44,7 @@
 					<br> 
 					ID : test1
 					<br>
-					PW : !Xptmxm1            
+					PW : !Xptmxm1   -->          
 					</p>
 				</div>
 			</div>
@@ -57,6 +57,7 @@
     <span role="button" id="recentButton" onclick="recentlySearch()" style="margin-right: 17px; font-size: 35px; color: #444444;">최신순</span>
     <span role="button" id="viewButton" onclick="viewSearch()" style="margin-right: 17px; font-size: 35px; color: #999999;"> 조회순</span>
     <span role="button" id="likeButton" onclick="likeSearch()" style="margin-right: 17px; font-size: 35px; color: #999999;"> 인기순</span>
+    <span role="button" id="commentButton" onclick="commentSearch()" style="margin-right: 17px; font-size: 35px; color: #999999;"> 댓글순</span>
   </div>
   
   <div class="search-buttons">
@@ -66,22 +67,6 @@
   
 	<div class="container" style="margin-top: 100px;">
 		<div class="row align-items-stretch" id="postList">
-		
-			<%-- <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100">
-				<div class="media-entry">
-					<div class="bg-white m-body">
-						<span class="date">날짜 들어감</span>
-						<span class="float-right">공휴일,휴일</span>
-						<span class="float-left">지역이름 들어감fdgㅁㄴㅇㄴㅁㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㄴㅁㅇㄴ</span>
-						<p class="styled-text">제목이 들어감</p>
-						<hr class="position-line">
-						<img src="${pageContext.request.contextPath}/assets/images/login.png" class="login-image">
-						<span class="bottom-left">닉네임</span>
-						<span class="bottom-right">조회수 00회</span>
-					</div>
-				</div>
-			</div> --%>
-			
 		</div>	
 	</div>		
   </div>
@@ -97,6 +82,7 @@ var csrfTokenValue = "${_csrf.token}";
 var recently = true;
 var view = false;
 var like = false;
+var comment = false;
 
 var postScroll = true;
 
@@ -109,9 +95,10 @@ $(document).ajaxSend(function(e, xhr){
 	xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
 });
 
-$(document).ready(function() { // JSP가 렌더링되자마자,
+$(document).ready(function() {
+	offset = 0; 
+	limit = 16; 
     postListDisplay(offset, limit, selectKeyword, viewType);
-    
     if(recently === true) {
     	var button = document.getElementById('recentButton');
         button.style.fontWeight = 'bold';
@@ -124,7 +111,7 @@ $(document).ready(function() { // JSP가 렌더링되자마자,
 
 // 무한 스크롤 기능
 function scrollHandler() {
-    if (postScroll === true && $(window).scrollTop() + $(window).height() >= $(document).height() - 30) {
+    if (postScroll === true && $(window).scrollTop() + $(window).height() >= $(document).height() - 1) {
         $('#loading').show();
         offset += limit;
         postListDisplay(offset, limit, selectKeyword, viewType);
@@ -139,6 +126,7 @@ $("#searchKeyword").keypress(function(){
 
 //게시글 목록 출력
 function postListDisplay(offset, limit, selectKeyword, viewType) {
+	postScroll = true;
 	$('#loading').show();
 	
     $.ajax({
@@ -151,19 +139,8 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		, "viewType": viewType
         	},
         dataType: "json",
-        	/*
-        	data: encodeURIComponent(JSON.stringify( {"offset": offset
-        		, "limit": limit
-        		, "selectKeyword": selectKeyword
-        		, "viewType": viewType
-        	})),
-        	dataType: "json",
-        	contentType:"application/json; charset=utf-8",
-        	headers: {"Accept": "application/json"},
-        	*/
         success: function(result) {
         	$('#loading').hide();
-        	
         	
         	if (result.content.length === 0) { 
         		postScroll = false;
@@ -172,7 +149,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
         		for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
-	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
 	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
@@ -205,7 +182,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	            for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
-	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
 	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
@@ -235,11 +212,10 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	            }
             }
         },
-        error: function(request,textStatus,errorThrown) {
+        error: function(error) {
       
           console.log("===============================================================");
-          console.log("[textStatus] "+ JSON.stringify(textStatus));
-          console.log("[errorThrown] "+ JSON.stringify(errorThrown));
+          console.log(error);
           console.log("===============================================================");
         }
     });
@@ -248,8 +224,9 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 // 검색
 function postSearch() {
 	$("#postList").empty();
-    var selectKeyword = $("#searchKeyword").val();
-    console.log(selectKeyword);
+    selectKeyword = $("#searchKeyword").val();
+    offset = 0;
+    postScroll = true;
     postSearchDisplay(offset, limit, selectKeyword, viewType);
 }
 
@@ -271,7 +248,6 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
         	console.log(result.content.length);
         	$('#loading').hide();
         	
-        	
         	if (result.content.length === 0) { 
         		postScroll = false;
         		console.log(postScroll);
@@ -279,11 +255,11 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
         		$("#postList").append(postElement1);
         		
         		
-        	} else if(result.content.length < 16) {
+        	} else if(result.content.length <= 16) {
         		for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
-	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
 	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
@@ -316,7 +292,7 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
 	            for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
-	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100'>" +
+	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
 	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
@@ -358,14 +334,22 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
             
 // 최근순으로 정렬
 function recentlySearch() {
+	$("#postList").empty();
+	offset = 0;
+	limit = 16; 
+    viewType = 'recently';
+    
+	postScroll = true;
+	
     recently = true;
     view = false;
     like = false;
+    comment = false;
     
-    viewType = 'recently';
     var button1 = document.getElementById('recentButton');
     var button2 = document.getElementById('viewButton');
     var button3 = document.getElementById('likeButton');
+    var button4 = document.getElementById('commentButton');
     
     postListDisplay(offset, limit, selectKeyword, viewType);
     
@@ -376,6 +360,8 @@ function recentlySearch() {
     	button2.style.color = '#999999';
     	button3.style.fontWeight = 'normal';
     	button3.style.color = '#999999';
+    	button4.style.fontWeight = 'normal';
+    	button4.style.color = '#999999';
     }
 }
 
@@ -383,14 +369,17 @@ function recentlySearch() {
 function viewSearch() {
 	$("#postList").empty();
 	offset = 0; 
+	postScroll = true;
 	recently = false;
     view = true;
     like = false;
+    comment = false;
     
     viewType = 'view';
     var button1 = document.getElementById('recentButton');
     var button2 = document.getElementById('viewButton');
     var button3 = document.getElementById('likeButton');
+    var button4 = document.getElementById('commentButton');
     
     postListDisplay(offset, limit, selectKeyword, viewType);
     
@@ -401,6 +390,8 @@ function viewSearch() {
     	button2.style.color = '#444444';
     	button3.style.fontWeight = 'normal';
     	button3.style.color = '#999999';
+    	button4.style.fontWeight = 'normal';
+    	button4.style.color = '#999999';
     }
 }
 
@@ -408,14 +399,17 @@ function viewSearch() {
 function likeSearch() {
 	$("#postList").empty();
 	offset = 0; 
+	postScroll = true;
 	recently = false;
     view = false;
     like = true;
+    comment = false;
     
     viewType = 'like';
     var button1 = document.getElementById('recentButton');
     var button2 = document.getElementById('viewButton');
     var button3 = document.getElementById('likeButton');
+    var button4 = document.getElementById('commentButton');
     
     postListDisplay(offset, limit, selectKeyword, viewType);
     
@@ -426,6 +420,38 @@ function likeSearch() {
     	button2.style.color = '#999999';
     	button3.style.fontWeight = 'bold';
     	button3.style.color = '#444444';
+    	button4.style.fontWeight = 'normal';
+    	button4.style.color = '#999999';
+    }
+}
+
+// 댓글순으로 정렬
+function commentSearch() {
+	$("#postList").empty();
+	offset = 0; 
+	postScroll = true;
+	recently = false;
+    view = false;
+    like = false;
+    comment = true;
+    
+    viewType = 'comment';
+    var button1 = document.getElementById('recentButton');
+    var button2 = document.getElementById('viewButton');
+    var button3 = document.getElementById('likeButton');
+    var button4 = document.getElementById('commentButton');
+    
+    postListDisplay(offset, limit, selectKeyword, viewType);
+    
+    if(comment === true) {
+    	button1.style.fontWeight = 'normal';
+    	button1.style.color = '#999999';
+    	button2.style.fontWeight = 'normal';
+    	button2.style.color = '#999999';
+    	button3.style.fontWeight = 'normal';
+    	button3.style.color = '#999999';
+    	button4.style.fontWeight = 'bold';
+    	button4.style.color = '#444444';
     }
 }
 </script>

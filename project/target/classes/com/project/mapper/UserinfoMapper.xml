@@ -3,7 +3,7 @@
 <mapper namespace="com.project.mapper.UserinfoMapper">
 
 	<!--회원가입 -->
-	<insert id="insertUserinfo">
+	<insert id="insertUserinfo" parameterType="com.project.dto.Userinfo">
 		INSERT IGNORE INTO userinfo (
 			id
 			, pw
@@ -30,7 +30,7 @@
 		)
 	</insert>
    
-	<insert id="insertSecurityAuth">
+	<insert id="insertSecurityAuth" parameterType="com.project.dto.UserinfoAuth">
 		INSERT IGNORE INTO userinfo_auth (
 			id,
 	        auth
@@ -54,7 +54,7 @@
 		<collection property="securityAuthList" select="selectUserinfoAuthById" column="id"/>
 	</resultMap> 
    
-	<select id="selectUserinfoAuthById" resultType="UserinfoAuth">
+	<select id="selectUserinfoAuthById" resultType="com.project.dto.UserinfoAuth">
 		SELECT 
 			id
 			, auth 
@@ -78,113 +78,50 @@
     	LEFT JOIN userinfo_auth auth
     	ON user.id=auth.id
     	WHERE user.id=#{id}
+    	AND user.status=1
 	</select>
 
 
      <!-- 아이디 중복검사 -->
      <select id="idCheck" resultType="int">
         SELECT count(*) FROM userinfo 
-        WHERE id = #{id}
+        WHERE id=#{id}
      </select>
      
-          <!-- 이메일 중복검사 -->
+     <!-- 이메일 중복검사 -->
      <select id="emailCheck" resultType="int">
         SELECT count(*) FROM userinfo 
-        WHERE email = #{email}
+        WHERE email=#{email}
      </select>
    
   	 <!-- 로그인 시간 변경 -->
-  	 <update id="updateLogdate"> 
+  	 <update id="updateLogdate" parameterType="com.project.dto.Userinfo"> 
         UPDATE userinfo
         SET logdate= Now()
-        WHERE id= #{id}
+        WHERE id=#{id}
      </update>
    
-     <!-- 비밀번호 인코딩 후 -->
-     <select id="selectUserinfoById" resultType="Userinfo">
-        SELECT *
+     <!-- 마이 페이지 -->
+     <select id="selectUserinfoById" resultType="com.project.dto.Userinfo">
+        SELECT 
+        	nickname
+        	, email
         FROM userinfo
         WHERE id=#{id}
      </select>
 
      <!-- 이메일로 사용자 ID 찾기 -->
-	<select id="findUserinfo" parameterType="string" resultType="com.project.dto.Userinfo">
+	 <select id="findUserinfo" parameterType="string" resultType="com.project.dto.Userinfo">
 		SELECT * 
 		FROM userinfo 
 		WHERE name = #{name}
-		AND email = #{email}
-	</select>   
-
-    
-	<!-- 관리자 -->
-	<select id="selectUserinfoCount">
-		SELECT COUNT(*) 
-		FROM userinfo
-    </select>
-   
-    <!-- 전체 유저 정보 검색 -->
-	<select id="selectUserinfoOrderById" resultType="Userinfo">
-		SELECT 
-			id
-			, pw
-			, name
-			, nickname
-			, address
-			, email
-			, regdate
-			, logdate
-			, status
-			, enabled 
-		FROM userinfo 
-		ORDER BY id
-	</select>
-   
-	<select id="selectUserinfoList" resultType="Userinfo">
-		SELECT 
-			id
-			, pw
-			, name
-			, nickname
-			, address
-			, email
-			, regdate
-			, logdate
-			, status
-			, enabled
-		FROM userinfo
-		ORDER BY id DESC
-		LIMIT #{startRow}, #{endRow}
-	</select>
-   
-   
-   <!-- 조건에 따른 유저 정보 검색 -->
-   <sql id="search">
-      <if test="condition != null and keyword != null">
-            <if test="condition == 'name'">
-               <!-- 검색조건이 name이라면 -->
-               AND name LIKE '%'||#{keyword}||'%'
-            </if>
-            <if test="condition == 'id'">
-               <!-- 검색조건이 id라면 -->
-               AND id LIKE '%'||#{keyword}||'%'
-            </if>
-            <if test="condition == 'email'">
-               <!-- 검색조건이 email라면 -->
-               AND email LIKE '%'||#{keyword}||'%'
-            </if>
-            <if test="condition == 'regdate'">
-               <!-- 검색조건이 regdate라면 -->
-               AND regdate LIKE '%'||#{keyword}||'%' 
-            </if>
-            <if test="condition == 'status'">
-               <!-- 검색조건이 status라면 -->
-               AND status LIKE '%'||#{keyword}||'%' 
-            </if>
-         </if>
-      </sql>
-      
-      
-
-   
-   
+		AND email=#{email}
+	 </select>   
+	
+	 <!-- 닉네임 수정 -->
+	 <update id="updateNickname" parameterType="com.project.dto.Userinfo">
+		UPDATE userinfo SET
+			nickname=#{nickname} 
+        WHERE id=#{id}
+	 </update>   
 </mapper>

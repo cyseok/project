@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="UTF-8">
 <head>
-	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<jsp:include page="/WEB-INF/views/include/head-1.jsp"/>
 	
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/post-detail.css">
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
@@ -32,12 +32,12 @@
         
         <div class="post-button">
           <sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')">
-          <button type="button" class="btn btn-primary" id="editButton" style="display: none;">수정 하기</button>
-          <button type="button" class="btn btn-primary" id="deleteButton" onclick="postDelete()" style="display: none;">삭제 하기</button>
+            <button type="button" class="btn btn-primary" id="editButton" style="display: none;">수정 하기</button>
+            <button type="button" class="btn btn-primary" id="deleteButton" onclick="postDelete()" style="display: none;">삭제 하기</button>
           </sec:authorize>
           <sec:authorize access="hasAnyRole('ROLE_MASTER')">
-          <button type="button" class="btn btn-primary" id="editButton">수정 하기</button>
-          <button type="button" class="btn btn-primary" id="deleteButton" onclick="postDelete()">삭제 하기</button>
+            <button type="button" class="btn btn-primary" id="editButton">수정 하기</button>
+            <button type="button" class="btn btn-primary" id="deleteButton" onclick="postDelete()">삭제 하기</button>
           </sec:authorize>
           <button type="button" class="btn btn-secondary" id="prevButton">이전글</button>
           <button type="button" class="btn btn-secondary" id="nextButton">다음글</button>
@@ -198,7 +198,7 @@
 	  </div>  
 	  
 	    <div class="post-form d-flex justify-content-end">
-	      <button type="submit" class="btn btn-primary" >수정하기</button>
+	      <button type="button" id="modifyBtn" class="btn btn-primary" >수정하기</button>
 	      <button type="button" id="cancelBtn" class="btn btn-secondary ml-2">취 소</button>
 	    </div>
 	  <sec:csrfInput/>
@@ -340,7 +340,7 @@ function getPostTag(day) {
 // 게시글 삭제 
 function postDelete() {   
 
-    if (confirm("자료를 정말로 삭제 하시겠습니까?")) {
+    if (confirm("게시글을 정말로 삭제 하시겠습니까?")) {
     	$('#loading').show();
     	
         $.ajax({
@@ -352,7 +352,7 @@ function postDelete() {
             	$('#loading').hide();
             	
                 if (xhr.status == 204) {
-	                alert("게시글이 삭제되었습니다");
+	                alert("게시글이 삭제되었습니다.");
 	                window.location.href = "${pageContext.request.contextPath}/post"
                 } else {
                 	alert("글 삭제에 실패했습니다.");
@@ -384,7 +384,7 @@ function likesCheck() {
 	$("#postLike").removeAttr("onclick");
 	setTimeout(function() {
         $("#postLike").attr("onclick", "likesCancel()");
-    }, 3000);
+    }, 100);
 	
        $.ajax({
            type: "POST",
@@ -413,7 +413,7 @@ function likesCancel() {
 	$("#postLike").removeAttr("onclick");
 	setTimeout(function() {
         $("#postLike").attr("onclick", "likesCheck()");
-    }, 3000);
+    }, 100);
 
        $.ajax({
            type: "POST",
@@ -453,13 +453,11 @@ $(document).ready(function() {
 });
 
 // 수정 폼 제출시
-$("form").submit(function(e) {
+$("#modifyBtn").on("click", function(e) {
     e.preventDefault(); 
     
     $('#loading').show();
     var editorContent = $('#summernote').summernote('code');
-    
-    console.log(editorContent);
     
     var formData = new FormData();
     formData.append("postTitle", $("#postTitleModify").val());
@@ -478,8 +476,6 @@ $("form").submit(function(e) {
         processData: false,
         dataType: "text",
         success: function (data, textStatus, xhr) {
-        	console.log(data);
-        	console.log(xhr.status);
             if (xhr.status == 201) {
             	$('#loading').hide();
                 alert("게시글을 수정하였습니다.");
@@ -521,7 +517,13 @@ function commentList() {
 	                              "<p class='comment-date' id='comment-date-"+commentList.commentIdx+"' title='"+commentList.commentRegdate+"'>" + commentList.commentRegdate + "</p>" +
 	                              "<div id='comment-modify-"+commentList.commentIdx+"'>" +
 	                                "<p class='comment-content' id='comment-content-"+commentList.commentIdx+"' title='"+commentList.commentContent+"'>" + commentList.commentContent + "</p>" +
-	                                (function() {
+	                                
+	                                "<sec:authorize access='hasRole(\"ROLE_MASTER\")'>" +
+	                                  "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+commentList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+	                                  "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-delete-idx='"+commentList.commentIdx+"' onclick='commentDelete();'>삭제</button>" +
+		                		    "</sec:authorize>" +
+		                		    "<sec:authorize access='hasAnyRole(\"ROLE_USER\", \"ROLE_ADMIN\", \"ROLE_SOCIAL\")'>" +
+		                		    (function() {
 	                                    if (userinfoId === commentList.userinfoId) {
 	                                        return "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+commentList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
 	              					        	   "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-delete-idx='"+commentList.commentIdx+"' onclick='commentDelete();'>삭제</button>";
@@ -530,6 +532,7 @@ function commentList() {
 	                                        return "";
 	                                    }
 	                                 })() +
+		                		    "</sec:authorize>" +
 	                              "</div>" +
 	                              
 	                              "<div class='commentArea' id='comment-textarea-"+commentList.commentIdx+"'>" +
@@ -537,14 +540,21 @@ function commentList() {
 	                                "<button type='button' id='comment-modify-button' class='btn btn-danger' data-comment-modifyCancel-idx='"+commentList.commentIdx+"' onclick='commentModifyCancel();'>취소</button>" +
             				        "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-modify-idx='"+commentList.commentIdx+"' onclick='commentModify();'>등록</button>" +
 	                              "</div>" +
-	                              (function() {
-	                                  if (userinfoId === commentList.userinfoId) {
-	                                      return "<button type='button' id='comment-button-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>";
-	                                  } else {
-	                                	  // else 처리하지 않으면 undefined 출력됨
-	                                      return "<button type='button' id='comment-button1-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>";
-	                                  }
-	                              })() +
+	                              
+	                              "<sec:authorize access='hasRole(\"ROLE_MASTER\")'>" +
+	                                "<button type='button' id='comment-button-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>" +
+	                		      "</sec:authorize>" +
+	                		    
+	                		      "<sec:authorize access='hasAnyRole(\"ROLE_USER\", \"ROLE_ADMIN\", \"ROLE_SOCIAL\")'>" +
+	                		      (function() {
+	                                    if (userinfoId === commentList.userinfoId) {
+	                                        return "<button type='button' id='comment-button-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>";
+	                                    } else {
+	                                	    // else 처리하지 않으면 undefined 출력됨
+	                                        return "<button type='button' id='comment-button1-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>";
+	                                    }
+	                                })() +
+	                		     "</sec:authorize>" +
 	                           "</div>" +
 	                           
 	                           "<div class='' id='reply-button-"+commentList.commentIdx+"'>" +
@@ -583,19 +593,24 @@ function commentList() {
 						                              "<p class='reply-nickname' id='reply-nickname-"+replytList.commentIdx+"'>" + (replytList.nickname === null || replytList.nickname === "" ? "닉네임없음" : replytList.nickname + " (" + replytList.userinfoId.substring(0, 3) + "***)") + "</p>" +
 						                              "<p class='reply-date' id='reply-date-"+replytList.commentIdx+"' title='"+replytList.commentRegdate+"'>" + replytList.commentRegdate + "</p>" +
 						                              
-						                              // 이건 댓글에서 쓰던거
 						                              "<div id='comment-modify-"+replytList.commentIdx+"'>" +
-						                              "<p class='reply-content' id='comment-content-"+replytList.commentIdx+"' title='"+replytList.commentContent+"'>" + replytList.commentContent + "</p>" +
-						                              (function() {
-						                                  if (userinfoId === replytList.userinfoId) {
-						                                	  return "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+replytList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
-						                                             "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+replytList.commentIdx+"' data-reply-parent-idx='"+replytList.parentIdx+"' onclick='replyDelete();'>삭제</button>";
-						                                  } else {
-						                                	  // else 처리하지 않으면 undefined 출력됨
-						                                      return "";
-						                                  }
-						                              })() +
-						                          "</div>" +
+						                                "<p class='reply-content' id='comment-content-"+replytList.commentIdx+"' title='"+replytList.commentContent+"'>" + replytList.commentContent + "</p>" +
+						                                "<sec:authorize access='hasRole(\"ROLE_MASTER\")'>" +
+						                                  "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+replytList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+			                                              "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+replytList.commentIdx+"' data-reply-parent-idx='"+replytList.parentIdx+"' onclick='replyDelete();'>삭제</button>" +
+							                		    "</sec:authorize>" +
+							                		    "<sec:authorize access='hasAnyRole(\"ROLE_USER\", \"ROLE_ADMIN\", \"ROLE_SOCIAL\")'>" +
+						                                (function() {
+						                                    if (userinfoId === replytList.userinfoId) {
+						                                	    return "<button type='button' id='reply-modify-button' class='btn btn-danger' data-comment-modifyButton-idx='"+replytList.commentIdx+"' onclick='commentModifyButton();'>수정</button>" +
+						                                               "<button type='button' id='reply-delete-button' class='btn btn-danger' data-reply-delete-idx='"+replytList.commentIdx+"' data-reply-parent-idx='"+replytList.parentIdx+"' onclick='replyDelete();'>삭제</button>";
+						                                    } else {
+						                                	    // else 처리하지 않으면 undefined 출력됨
+						                                        return "";
+						                                    }
+						                                })() +
+							                		    "</sec:authorize>" +
+						                            "</div>" +
 						                              
 						                          "<div id='comment-textarea-"+replytList.commentIdx+"'>" +
 					                                "<textarea class='reply-content-modify' id='comment-modify-content-"+replytList.commentIdx+"' rows='2' maxlength='300'>"+replytList.commentContent+"</textarea>" +
@@ -608,7 +623,6 @@ function commentList() {
 						                $("#reply-list-" + replytList.parentIdx).append(replyElement);
 						                
 						              }
-									
 						            
 					                var replyButton = 
 					                	$("<div class='reply-input' id='reply-"+replyNum+"' data-aos='fade-up' data-aos-delay='10'>" +
@@ -939,10 +953,9 @@ function commentDelete() {
 	var deleteCommentIdx = event.currentTarget.getAttribute("data-comment-delete-idx");
 	
     if (confirm("댓글을 삭제 하시겠습니까?")) {
-    	console.log(postIdx);
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/comments'/>/" + deleteCommentIdx + "/" + postIdx,
+            url: "<c:url value='/comments'/>/" + deleteCommentIdx + "/post/" + postIdx,
             data: {'commentIdx' : deleteCommentIdx
             	,'postIdx' : postIdx},
             contentType: false,
@@ -973,10 +986,9 @@ function replyDelete() {
 	var deleteParentIdx = event.currentTarget.getAttribute("data-reply-parent-idx");
 	
     if (confirm("답글을 삭제 하시겠습니까?")) {
-    	
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/comments'/>/" + deleteReplyIdx + "/" + 0,
+            url: "<c:url value='/comments'/>/" + deleteReplyIdx + "/post/" + 0,
             data: {'commentIdx' : deleteReplyIdx
             	,'postIdx' : 0},
             contentType: false,
@@ -1108,12 +1120,11 @@ function imageUploader(file, el) {
 
 // 게시글 수정시 네이버 검색 기능
 $("#postLocModify, #searchImg").on("input keypress click", function(event) {
+	
 	if(event.keyCode == 13) {
 		event.preventDefault();
 	}
-	
 	$("#resultContainer").empty();
-	
 	var text = $("#postLocModify").val();
 	
 	if (text.trim() !== "") {
@@ -1125,12 +1136,10 @@ $("#postLocModify, #searchImg").on("input keypress click", function(event) {
 	      success: function(result) {
 	    	  
 	    	  if (result && result.items.length > 0) {
-	              
-	              for (var i = 0; i < 5; i++) {
-	                  var item = result.items[i];
-	                  $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
+	    		  for (var i = 0; i < result.items.length; i++) {
+	            	  var item = result.items[i];
+                          $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
 	              }
-	              
 	              $("#resultContainer p").on("click", function() {
                       var title = $(this).data("title");
                       var address = $(this).data("address");
@@ -1154,7 +1163,6 @@ $("#postLocModify, #searchImg").on("input keypress click", function(event) {
 		return;
 	}
 });
-
 
 function clearInput() {
     var searchInputTitle = document.getElementById('postLocModify');

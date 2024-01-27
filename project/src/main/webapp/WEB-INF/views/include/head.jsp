@@ -4,18 +4,11 @@
     <!-- Required meta tags -->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
 	<meta name="author" content="Untree.co">
-
 	<meta name="description" content="" />
 	<meta name="keywords" content="bootstrap, bootstrap5" />
 	
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<%-- 
-	<script src="https://cdn.ckeditor.com/ckeditor5/38.0.0/classic/ckeditor.js"></script> 
-	<script src="${pageContext.request.contextPath}/assets/ckeditor/ckeditor.js"></script>
-	<script src="${pageContext.request.contextPath}/assets/ckeditor/UploadAdapter.js"></script>
-	 --%>
 
 	<script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/tiny-slider.js"></script>
@@ -26,7 +19,6 @@
 	<script src="${pageContext.request.contextPath}/assets/js/flatpickr.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/glightbox.min.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/custom.js"></script>
-	
 	
 	<!-- 다음 주소 API -->
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -42,5 +34,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/glightbox.min.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/post-write.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css">
 </head>
   

@@ -18,17 +18,23 @@ public class Mysql {
 	
 	@Test
 	public void testConnection() {
-		/*
+		
 		try(Connection con = 
 				DriverManager.getConnection(
-						"jdbc:mysql://wcwimj6zu5aaddlj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/r8u2n4j10c73bvkm?serverTimezone=UTC",
-						"i6eqgj8l9920k7q7",
-						"svtfuithtubdhpoj")){
+						"jdbc:mysql://database-1.c4036o3cjyhj.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC",
+						"admin",
+						"dbstjr8879")){
+			/*
+			DriverManager.getConnection(
+						"jdbc:mysql://3.39.12.166:3306/sys?serverTimezone=UTC",
+						"yunseok",
+						"dbstjr8879")){
+			 */
 			System.out.println(con);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		*/
+		
 	}
 	
 }

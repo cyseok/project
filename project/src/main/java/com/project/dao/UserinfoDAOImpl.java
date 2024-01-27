@@ -1,7 +1,5 @@
 package com.project.dao;
 
-import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -62,23 +60,11 @@ public class UserinfoDAOImpl implements UserinfoDAO {
 	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoById(id);
    }
    
-   /* 관리자 */
+   // 닉네임 변경 =
    @Override
-   public int selectUserinfoCount() {
-	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoCount();
+   public int updateNickname(Userinfo userinfo) {
+	   return sqlSession.getMapper(UserinfoMapper.class).updateNickname(userinfo);
    }
-
-   // 전체 유저 검색
-   @Override
-   public List<Userinfo> selectUserinfoList(Map<String, Object> map) {
-	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoList(map);
-   }
-
-   // 아이디로 유저 검색
-   @Override
-   public Userinfo selectUserinfo(String id) {
-	   return sqlSession.getMapper(UserinfoMapper.class).selectUserinfoById(id);
-   }
-
+   
 
 }

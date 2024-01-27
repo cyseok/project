@@ -14,13 +14,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.dto.Post;
 import com.project.dto.Userinfo;
 import com.project.security.CustomUserDetails;
 import com.project.service.UserinfoService;
@@ -96,8 +97,30 @@ public class UserinfoRestController {
    @GetMapping("/find-id")
    public ResponseEntity<Userinfo> find(@RequestParam String name
 		   ,@RequestParam String email) throws Exception {
-	   Userinfo userinfo = userinfoservice.findUserinfo(name, email);
 	    try {
+	    	Userinfo userinfo = userinfoservice.findUserinfo(name, email);
+		  return new ResponseEntity<>(userinfo, HttpStatus.OK);
+	  } catch (Exception e) {
+		  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	  }
+   }
+   
+   // 닉네임 출력
+   @GetMapping("/find-nickname")
+   public ResponseEntity<Userinfo> findNickname(@RequestParam String id) throws Exception {
+	    try {
+	    	Userinfo userinfo = userinfoservice.getUserinfoById(id);
+		  return new ResponseEntity<>(userinfo, HttpStatus.OK);
+	  } catch (Exception e) {
+		  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	  }
+   }
+   
+   // 닉네임 변경
+   @PatchMapping("/{id}")
+   public ResponseEntity<Userinfo> modifyNickname(@PathVariable("id") String id, @RequestBody Userinfo userinfo) throws Exception {
+	    try {
+	    	userinfoservice.modifyNickname(userinfo);
 		  return new ResponseEntity<>(userinfo, HttpStatus.OK);
 	  } catch (Exception e) {
 		  return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

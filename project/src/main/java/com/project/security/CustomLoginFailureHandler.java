@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 //로그인 실패 후에 실행될 기능을 제공하기 위한 클래스x
@@ -21,21 +20,21 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 	        AuthenticationException exception) throws IOException, ServletException {
 
-	    String errorMessage = "ID와 PW가 올바르지 않습니다."; // 기본 에러 메시지
+	    String errorMessage = "ID와 PW가 올바르지 않습니다."; 
 	    
 	    if (exception instanceof BadCredentialsException) {
 	        errorMessage = "ID와 PW가 올바르지 않습니다.";
 	    } else if (exception instanceof DisabledException) {
 	        errorMessage = "계정이 사용 불가합니다.";
-	    } // 다른 예외 유형에 대해서도 처리할 수 있습니다.
+	    } 
 
-	    // 에러 메시지를 request 속성에 추가합니다.
+	    // 에러 메시지 추가
 	    request.setAttribute("loginError", errorMessage);
 	    
-	    // 사용자 ID를 세션에 저장합니다.
+	    // 사용자 ID를 세션에 저장
 	    request.getSession().setAttribute("userid", request.getParameter("userid"));
 	    
-	    // 실패 URL로 포워딩합니다.
+	    // 실패 URL로 포워딩
 	    request.getRequestDispatcher("/post").forward(request, response);
 	}
 

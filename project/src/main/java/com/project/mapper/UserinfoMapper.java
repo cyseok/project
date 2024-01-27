@@ -1,7 +1,5 @@
 package com.project.mapper;
 
-import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -26,9 +24,8 @@ public interface UserinfoMapper {
    /* 마이페이지 */
    Userinfo selectUserinfoById(String id);
    
-   /* 관리자 */
-   int selectUserinfoCount();
-   Userinfo selectUserinfo(String id);
-   List<Userinfo> selectUserinfoList(Map<String, Object> map); //전체 유저 정보 검색
+   /* 닉네임 변경 */
+   int updateNickname(Userinfo userinfo);
 
+   
 }

@@ -35,7 +35,7 @@ public class LikesController {
 			likes.setUserinfoId(userinfoId);
 			
 			likesService.addPostLikes(likes);
-			postService.getPostLikesCheck(postIdx);
+			postService.addPostLikes(postIdx);
 			return ResponseEntity.ok("ok");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
@@ -53,7 +53,7 @@ public class LikesController {
 			likes.setUserinfoId(userinfoId);
 			
 			likesService.removePostLikes(likes);
-			postService.getPostLikesCancel(postIdx);
+			postService.removePostLikes(postIdx);
 			return ResponseEntity.ok("ok");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");

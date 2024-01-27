@@ -10,70 +10,8 @@
 <html lang="UTF-8">
 <head>
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/notice-detail.css">
 	<title>공지사항</title>
-<style>
-  #noticeImg {
-    width: 30%;
-    height: 30%;
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    margin: auto;
-}
-       
-  .notice-detail {
-    margin-top: 20px; 
-    margin-bottom: 50px; 
-    width: 65%;
-    margin-left: auto;
-    margin-right: auto;
-  }	
-   .notice-button {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .notice-button button {
-    float: right;
-  }
-  #noticeImg {
-    width: 75%;
-    height: 60%;
-    margin-top: 100px;
-  }
-  #noticeFileName {
-    font-size: 18px; 
-  }
-  #noticeDownload {
-    font-size: 18px; 
-  }
-  #title {
-    font-size: 40px; 
-  }
-  #noticeRegdate {
-    font-size: 15px; 
-  }
-  #viewCount {
-    font-size: 15px; 
-  }
-  #content {
-    font-size: 25px; 
-  }
-  .modifyButton {
-    margin-top: 50px;
-  }
-  #noticeListButton {
-    margin-right: 10px;
-}
-
-#prevNum {
-    margin-right: 10px;
-}
-
-#nextNum {
-    margin-right: 10px;
-}
-</style>
 </head> 
 <header>
   <jsp:include page="/WEB-INF/views/include/header.jsp"/>
@@ -101,7 +39,7 @@
         </div>
         
 	    <img id="noticeImg" src="" >
-	    <hr>   	   
+	    <hr class="notice-hr">   	   
 	    <!-- 파일 다운로드 링크 -->
 	    <b id="noticeFileName"></b>
 	    <a id="noticeDownload" href="" download=""></a>
@@ -260,8 +198,6 @@ function noticeDetail() {
 	        	var prevNum = result.prevNumNextNum.prevNum;
 	        	var nextNum = result.prevNumNextNum.nextNum;
 				var notice = result.notice;
-				console.log(notice.noticeImg)
-				console.log(notice.noticeContent)
 				// .html : 마크업, html 태그 포함 / .val : 텍스트필드, 택스트값에 쓰기 / .text : 텍스트 내용 설정
 	            $("#noticeRegdate").html("작성일 : " + notice.noticeRegdate);
 	            $("#title").text(notice.noticeTitle);

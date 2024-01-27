@@ -210,11 +210,13 @@
 
 		
 		<!-- MySQL DBMS 서버 사용 -->
-   <!-- <dependency>
+   		<!-- 
+  		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>8.0.33</version>
-		</dependency> -->
+		</dependency> 
+		-->
 		
 		<dependency>
 		  <groupId>com.mysql</groupId>

@@ -1,134 +1,146 @@
-	.bg-white.m-body {
-	    border: 2px solid #d3d3d3; 
-	    padding: 10px; 
-	    width: 280px; 
-	    height: 300px; 
-	    border-radius: 35px;
-	}
-	.bg-white.m-body {
-	  position: relative;
-	}
-	/* 날짜 */
-	.bg-white.m-body > span.date {
-	  position: absolute;
-	  top: 9%;
-	  left: 10%;
-	  font-size: 15px;
-	}
-	/* 평일, 공휴일 */
-	.bg-white.m-body > span.float-right {
-	  position: absolute;
-	  top: 10%;
-	  right: 10%;
-	  font-size: 14px;
-	}
-	/* 지역이름 */
-	.bg-white.m-body > span.float-left {
-	  position: absolute;
-	  top: 65%;
-	  right: 12%;
-	  font-size: 16px;
-	  
-	  white-space: normal;
-      overflow: hidden;
-      line-height: 1.3;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp : 1;
-      -webkit-box-orient: vertical;
-      max-width: 160px;
-	 
-	}
-	/* 제목 */
-	.bg-white.m-body > p.styled-text {
-	  position: absolute;
-	  top: 28%;
-	  width: 80%;
-	  transform: translateX(5%);
-	  left: 5%;
-	  font-size: 23px !important;
-      font-weight: bold;
-	  
-	  white-space: normal;
-      overflow: hidden;
-      line-height: 1.3;
-      height: 3.9em;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp : 3;
-      -webkit-box-orient: vertical;
-	}
-	/* 선 */
-	.bg-white.m-body > hr.position-line {
-	  position: absolute;
-	  top: 73%;
-	  width: 90%;
-	  margin: 5% 5%;
-	  border: 1px solid black;
-	  left: 0;
-	}
-	/* 아이디 사진 */
-	.bg-white.m-body > img.login-image {
-	  position: absolute;
-	  bottom: 5%;
-	  left: 5%;
-	  width: 38px;
-	  height: 38px;
-	}
-	/* 아이디(닉네임) */
-	.bg-white.m-body > span.bottom-left {
-	  position: absolute;
-	  bottom: 8%;
-	  left: 20%;
-	  font-size: 13px;
-	}
-	/* 조회수 */
-	.bg-white.m-body > span.bottom-right {
-	  position: absolute;
-	  bottom: 8%;
-	  right: 13%;
-	  font-size: 13px;
-	}
-	.content-section {
-      padding-top: 120px;
- 	}
-	#type {
-	  border-color: #6c757d;
-	  background-color: #808080;
-	  color: #fff; 
-	}
-	.m-body {
-	  padding: 50px; 
-	  margin-bottom: 20px;
-	}
-	.clickable-post a {
-	  color: inherit; 
-	  text-decoration: none; 
-	}
-	.clickable-post a:hover {
-	  color: inherit; 
-	}
-	#searchButton {
-	  width: 100px;
-	  height: 44px; 
-	  box-sizing: border-box;
-	  border-radius: 6px;
-	}	
-    .inp-base {
-      width: 250px; /* Set the width to 200px */
-      box-sizing: border-box;
-    }
-    .nav-buttons {
-      display: flex;
-      justify-content: flex-start;
-      padding-left: 10%;
-     }
-     .search-buttons {
-       display: flex;
-       justify-content: flex-start;
-       padding-left: 60%;
-     }
+.bg-white.m-body {
+  border: 2px solid #d3d3d3; 
+  padding: 10px; 
+  width: 280px; 
+  height: 300px; 
+  border-radius: 35px;
+}
+.bg-white.m-body {
+  position: relative;
+}
+/* 날짜 */
+.bg-white.m-body > span.date {
+  position: absolute;
+  top: 9%;
+  left: 10%;
+  font-size: 15px;
+}
+/* 평일, 공휴일 */
+.bg-white.m-body > span.float-right {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  font-size: 14px;
+}
+/* 지역이름 */
+.bg-white.m-body > span.float-left {
+  position: absolute;
+  top: 65%;
+  right: 12%;
+  font-size: 16px;
+  
+  white-space: normal;
+  overflow: hidden;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp : 1;
+  -webkit-box-orient: vertical;
+  max-width: 160px;
+ 
+}
+/* 제목 */
+.bg-white.m-body > p.styled-text {
+  position: absolute;
+  top: 28%;
+  width: 80%;
+  transform: translateX(5%);
+  left: 5%;
+  font-size: 23px !important;
+     font-weight: bold;
+  
+  white-space: normal;
+     overflow: hidden;
+     line-height: 1.3;
+     height: 3.9em;
+     text-overflow: ellipsis;
+     display: -webkit-box;
+     -webkit-line-clamp : 3;
+     -webkit-box-orient: vertical;
+}
+/* 선 */
+.bg-white.m-body > hr.position-line {
+  position: absolute;
+  top: 73%;
+  width: 90%;
+  margin: 5% 5%;
+  border: 1px solid black;
+  left: 0;
+}
+/* 아이디 사진 */
+.bg-white.m-body > img.login-image {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  width: 38px;
+  height: 38px;
+}
+/* 아이디(닉네임) */
+.bg-white.m-body > span.bottom-left {
+  position: absolute;
+  bottom: 8%;
+  left: 20%;
+  font-size: 13px;
+}
+/* 조회수 */
+.bg-white.m-body > span.bottom-right {
+  position: absolute;
+  bottom: 8%;
+  right: 13%;
+  font-size: 13px;
+}
+.content-section {
+  padding-top: 120px;
+}
+#type {
+  border-color: #6c757d;
+  background-color: #808080;
+  color: #fff; 
+}
+.m-body {
+  padding: 50px; 
+  margin-bottom: 20px;
+}
+.clickable-post a {
+  color: inherit; 
+  text-decoration: none; 
+}
+.clickable-post a:hover {
+  color: inherit; 
+}
+#searchButton {
+  width: 100px;
+  height: 44px; 
+  box-sizing: border-box;
+  border-radius: 6px;
+}	
+.inp-base {
+  width: 250px; /* Set the width to 200px */
+  box-sizing: border-box;
+}
+.nav-buttons {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 10%;
+}
+ .search-buttons {
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 60%;
+}
      
-   	
+.top-button {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  background-color: #f7f7f7;
+  color: #777;
+  border-radius: 50%;
+  border: 2px solid grey;
+  cursor: pointer;
+}
 	
 	

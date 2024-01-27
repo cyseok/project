@@ -42,13 +42,13 @@
 	</update>
 	
 	<!-- 공지사항 삭제 -->
-	<delete id="deleteNotice" parameterType="com.project.dto.Notice">
+	<update id="deleteNotice" parameterType="com.project.dto.Notice">
 		<!-- DELETE FROM notice
 		WHERE notice_idx=#{noticeIdx} -->
 		UPDATE notice SET
 			notice_status=1
 		WHERE notice_idx=#{noticeIdx}
-	</delete>
+	</update>
 	
 	<!-- 공지사항 상세보기 -->
 	<select id="selectNotice" resultType="com.project.dto.Notice">
@@ -69,7 +69,7 @@
 	
 	<!-- 공지사항 조회수 업데이트 -->
 	<update id="viewNoticeCount" parameterType="com.project.dto.Notice">
-		UPDATE NOTICE SET
+		UPDATE notice SET
         	notice_viewcnt = notice_viewcnt + 1
         WHERE notice_idx=#{noticeIdx}
 	</update>

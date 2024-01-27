@@ -13,7 +13,7 @@
 		<intercept-url pattern="/user/login" access="permitAll"/>
 		<intercept-url pattern="/user/join" access="permitAll" />
 		<intercept-url pattern="/notice/write" access="hasRole('ROLE_MASTER')" />
-		<!-- <intercept-url pattern="/post/write" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')" /> -->
+		<intercept-url pattern="/user/my-page" access="hasAnyRole('ROLE_MASTER','ROLE_USER', 'ROLE_ADMIN', 'ROLE_SOCIAL')" />
 		<intercept-url pattern="/**" access="permitAll" /> 
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		

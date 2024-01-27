@@ -85,7 +85,7 @@ public class CommentRestController {
 	}
 	
 	// 댓글, 답글 삭제
-	@DeleteMapping("/{commentIdx}/{postIdx}")
+	@DeleteMapping("/{commentIdx}/post/{postIdx}")
 	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx
 			, @PathVariable("postIdx") int postIdx) {
 		try {

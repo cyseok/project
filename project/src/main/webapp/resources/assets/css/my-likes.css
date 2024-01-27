@@ -10,7 +10,7 @@
 /* 날짜 */
 .likes.m-body > span.date {
   position: absolute;
-  top: 44%;
+  top: 40%;
   left: 80%;
   font-size: 20px;
 }
@@ -53,7 +53,7 @@
 /* 선 */
 .likes.m-body > hr.position-line {
   position: absolute;
-  top: 40%;
+  top: 35%;
   width: 90%;
   margin: 5% 5%;
   border: 1px solid black;

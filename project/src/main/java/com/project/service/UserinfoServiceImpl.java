@@ -1,8 +1,5 @@
 package com.project.service;
 
-import java.util.HashMap; 
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,8 +8,6 @@ import com.project.dao.UserinfoDAO;
 import com.project.dto.UserinfoAuth;
 import com.project.dto.Userinfo;
 import com.project.exception.LoginAuthFailException;
-import com.project.exception.UserinfoNotFoundException;
-import com.project.util.Pager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -71,13 +66,8 @@ public class UserinfoServiceImpl implements UserinfoService {
 	
 	/* 마이페이지 */
 	@Override
-	public Userinfo getUserinfoById(String id) throws UserinfoNotFoundException {
-		Userinfo userinfo = userinfoDAO.selectUserinfoById(id);
-		// 검색된 회원정보가 없는 경우
-		if (userinfo == null) {
-			throw new UserinfoNotFoundException("아이디의 회원정보가 존재하지 않습니다.");
-		}
-		return userinfo;
+	public Userinfo getUserinfoById(String id) {
+		return userinfoDAO.selectUserinfoById(id);
 	}
 	
 	// 마지막 로그인 시간 갱신 
@@ -86,24 +76,11 @@ public class UserinfoServiceImpl implements UserinfoService {
 		userinfoDAO.updateLogdate(id);
 	}
 
-	//회원 리스트 조회 기능
+	// 닉네임 변경 
 	@Override
-	public Map<String, Object> getUserinfoList(int pageNum, int pageSize) {
-		int totalBoard = userinfoDAO.selectUserinfoCount();
-		int blockSize = 10;
-		Pager pager = new Pager(pageNum, totalBoard, pageSize, blockSize);
-
-		Map<String, Object> pageMap = new HashMap<String, Object>();
-		pageMap.put("startRow", pager.getStartRow());
-		pageMap.put("endRow", pager.getEndRow());
-
-		List<Userinfo> userinfoList = userinfoDAO.selectUserinfoList(pageMap);
-
-		Map<String, Object> userinfoMap = new HashMap<String, Object>();
-		userinfoMap.put("userinfoList", userinfoList);
-		userinfoMap.put("pager", pager);
-
-		return userinfoMap;
+	public void modifyNickname(Userinfo userinfo) {
+		userinfoDAO.updateNickname(userinfo);
 	}
+
 		
 }

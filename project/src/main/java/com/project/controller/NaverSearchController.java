@@ -2,14 +2,8 @@ package com.project.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +23,6 @@ public class NaverSearchController {
 		
 		String clientId = "lLK4tKRRKZzB3p_z8n5e"; 		
         String clientSecret = "H3jKWKwxmm";
-        
-        // https://openapi.naver.com/v1/search/local.json?query=경복궁&display=5&start=1&sort=random
-        // String decodedText = URLDecoder.decode(searchText, "UTF-8");
-        // String encodedText = URLEncoder.encode(searchText, "UTF-8");
         
         URI uri = UriComponentsBuilder
       		  .fromUriString("https://openapi.naver.com")
@@ -92,10 +82,8 @@ public class NaverSearchController {
         String responseBody = responseEntity.getBody();
          */
         
-        
         System.out.println("API Response: " + responseBody);
         System.out.println("API searchText: " + searchText);
-        //System.out.println("API encodedText: " + encodedText);
         System.out.println("API uri: " + uri);
         
         return ResponseEntity.ok(responseBody);

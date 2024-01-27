@@ -6,14 +6,14 @@
 <head>
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
 	<title>아이디찾기</title>
-	<style>
-  #find-id {
-    margin-top: 200px; 
-    width: 75%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-	</style>
+<style>
+#find-id {
+  margin-top: 200px; 
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
 </head>
 
 <header>
@@ -29,13 +29,11 @@
 			<form id="find_form">
 				<div class="form-group">
 					<input type="text" class="form-control" id="name"
-					name="name" placeholder="이름" required data-error="이름을 입력해주세요.">
-					<div class="help-block with-errors"></div>
+					name="name" placeholder="이름">
 				</div>
 				<div class="form-group">
 					<input type="email" class="form-control" id="email"
-					name="email" placeholder="이메일" required data-error="일치하는 이메일이 없습니다.">
-					<div class="help-block with-errors"></div>
+					name="email" placeholder="이메일">
 				</div>
 				<!-- 아이디 찾기 버튼 -->
 				<div class="form-group">

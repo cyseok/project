@@ -64,6 +64,7 @@
             <when test="selectKeyword != null and selectKeyword != ''">
                  WHERE post_status=1 and post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
                  OR post_status=1 and post_content LIKE CONCAT('%', #{selectKeyword}, '%')
+                 OR post_status=1 and post_loc LIKE CONCAT('%', #{selectKeyword}, '%')
             </when>
             <otherwise>
                 WHERE post_status=1 <!-- 검색어가 없는 경우 status=1 데이터 검색 -->
@@ -136,7 +137,8 @@
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%')
+	                OR p.post_loc LIKE CONCAT('%', #{selectKeyword}, '%'))
 	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
@@ -177,7 +179,8 @@
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%')
+	                OR p.post_loc LIKE CONCAT('%', #{selectKeyword}, '%'))
 	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
@@ -218,7 +221,8 @@
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%')
+	                OR p.post_loc LIKE CONCAT('%', #{selectKeyword}, '%'))
 	                AND p.post_status = 1
 	           </when>
 	           <otherwise>
@@ -259,7 +263,8 @@
 		  <choose>
 	           <when test="selectKeyword != null and selectKeyword != ''">
 	                WHERE (p.post_title LIKE CONCAT('%', #{selectKeyword}, '%') 
-	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%'))
+	                OR p.post_content LIKE CONCAT('%', #{selectKeyword}, '%')
+	                OR p.post_loc LIKE CONCAT('%', #{selectKeyword}, '%'))
 	                AND p.post_status = 1
 	           </when>
 	           <otherwise>

@@ -114,11 +114,6 @@
 
 
 <script>
-//CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
-
-// Ajax 기능을 사용하여 요청하는 모든 웹 프로그램에게 CSRF 토큰 전달 가능
-// ▶ Ajax 요청 시 beforeSend 속성을 설정할 필요 없음
-
 // 등록
 $("form").submit(function(e) {
     e.preventDefault(); 
@@ -204,14 +199,14 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
 	      data: {"text": text},
 	      dataType: "json",
 	      success: function(result) {
-	    	  
+	    	  $("#resultContainer").empty();
 	    	  if (result && result.items.length > 0) {
-	              
 	              for (var i = 0; i < result.items.length; i++) {
-	                  var item = result.items[i];
-	                  $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
+	            	  var item = result.items[i];
+                      if (item.title) { 
+                          $("#resultContainer").append("<p role='button' data-title='" + item.title + "' data-address='" + item.address + "'>" + item.title + "<br>" + item.address + "</p>");
+                      }
 	              }
-	              
 	              $("#resultContainer p").on("click", function() {
                       var title = $(this).data("title");
                       var address = $(this).data("address");
@@ -220,7 +215,6 @@ $("#postLoc, #searchImg").on("input keypress click", function(event) {
     				  $("#postAddress").val(address);
     				  $("#resultContainer").empty();
                   });
-	              
 	          } else {
 	        	  $("#resultContainer").empty();
 	              console.log("결과없음.");

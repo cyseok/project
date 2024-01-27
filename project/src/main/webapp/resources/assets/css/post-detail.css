@@ -263,3 +263,32 @@ div[id^="comment-modify-"] {
   font-size: 18px;
   font-weight: bold;
 }
+#loginForm {
+  margin-top: 15px;
+}
+#idInput {
+  margin-left: 8px;
+  width: 95%;
+  height: 45px;
+  border: 1px solid #ccc;
+  padding: 10px; 
+}
+#pwInput {
+  width: 95%;
+  height: 45px;
+  border: 1px solid #ccc;
+  padding: 10px; 
+  margin-left: 8px;
+}
+#loginButton {
+  margin-top: 20px;
+  width: 100%;
+  height: 40px;
+}
+#idLabel {
+  margin-left: 5px;
+}
+#pwLabel {
+  margin-left: 5px;
+  margin-top: 10px;
+}
