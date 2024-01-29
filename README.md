@@ -21,7 +21,7 @@
 ***
 
 [프로젝트 포토폴리오]
-[프로젝트 포토폴리오]:https://velog.io/@cyseok123/portfolio
+https://velog.io/@cyseok123/portfolio
 
 
 
