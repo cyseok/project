@@ -66,7 +66,7 @@ public class CommentRestController {
 			if(commentSelect.getParentIdx() == null) {
 				postService.addComment(comment.getPostIdx());
 			}
-			return new ResponseEntity<Comment>(commentSelect, HttpStatus.OK);
+			return new ResponseEntity<Comment>(commentSelect, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
