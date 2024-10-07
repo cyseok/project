@@ -22,7 +22,7 @@ import com.project.service.PostService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentRestController {
 	
@@ -33,7 +33,7 @@ public class CommentRestController {
 	private final PostService postService;
 	
 	// 댓글 리스트 출력 (/게시물 번호)
-	@GetMapping("/comment-list/{postIdx}")
+	@GetMapping("/{postIdx}")
 	public ResponseEntity<List<Comment>> commentList(@RequestParam("postIdx") int postIdx) {
 		
 		try {
@@ -45,7 +45,7 @@ public class CommentRestController {
 	}
 	
 	// 답글 리스트 출력 (/부모 댓글 번호)
-	@GetMapping("/reply-list/{parentIdx}")
+	@GetMapping("/replies/{parentIdx}")
 	public ResponseEntity<List<Comment>> replyList(@RequestParam("parentIdx") String parentIdx) {
 		
 		try {
@@ -85,7 +85,7 @@ public class CommentRestController {
 	}
 	
 	// 댓글, 답글 삭제
-	@DeleteMapping("/{commentIdx}/post/{postIdx}")
+	@DeleteMapping("/{commentIdx}/posts/{postIdx}")
 	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx
 			, @PathVariable("postIdx") int postIdx) {
 		try {

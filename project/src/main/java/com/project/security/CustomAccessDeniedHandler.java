@@ -14,12 +14,15 @@ import org.springframework.stereotype.Component;
 // ▶ AccessDeniedHandler 인터페이스를 상속받은 자식클래스를 생성 
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+	
 	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		
+	public void handle(HttpServletRequest request
+					, HttpServletResponse response
+					, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+		/*
 		response.setContentType("text/html;charset=UTF-8");
         response.getWriter().println("<script>alert('접근 권한이 없습니다.');history.go(-1);</script>");
+        */
         
 	}
 }
