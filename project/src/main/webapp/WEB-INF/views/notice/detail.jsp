@@ -23,7 +23,7 @@
       <section class="notice-detail">
       
 	    <div class="notice-button">
-	      <button id="noticeListButton" class="btn btn-secondary" type="button" onclick="location.href='${pageContext.request.contextPath}/notice'">목록으로</button>
+	      <button id="noticeListButton" class="btn btn-secondary" type="button" onclick="location.href='${pageContext.request.contextPath}/notices'">목록으로</button>
 	      <button id="prevNum" class="btn btn-secondary" type="button" onclick="">이전글</button>
 	      <button id="nextNum" class="btn btn-secondary" type="button" onclick="">다음글</button>
 	    </div>
@@ -161,7 +161,7 @@
        
        $.ajax({
           type: "POST",
-          url: "<c:url value='/notice/'/>" + noticeIdx,
+          url: "<c:url value='/api/notices/'/>" + noticeIdx,
           data: formData,
           processData: false, // 중요: FormData 사용 시 false로 설정
           contentType: false,
@@ -170,7 +170,7 @@
         	  $('#loading').hide();
         	  if (result == "success") {
                   alert("공지 사항을 수정하였습니다.");
-                  window.location.href = "${pageContext.request.contextPath}/notice/"+noticeIdx;
+                  window.location.href = "${pageContext.request.contextPath}/notices/"+noticeIdx;
               } 
           },
           error: function(xhr) {
@@ -185,14 +185,14 @@ function noticeDetail() {
 
     $.ajax({
         method: "GET",
-        url: "<c:url value='/notice/detail'/>/" + noticeIdx,
+        url: "<c:url value='/api/notices/'/>/" + noticeIdx,
         data: {"noticeidx": noticeIdx},
         dataType: "json",
         success: function(result) { 
         	 
 	        	if (result.notice == null) {
 	        		alert("존재하지 않는 글입니다.");
-	        		window.location.href = "${pageContext.request.contextPath}/notice"
+	        		window.location.href = "${pageContext.request.contextPath}/notices"
 	        	} else {
 					
 	        	var prevNum = result.prevNumNextNum.prevNum;
@@ -238,13 +238,13 @@ function noticeDetail() {
 				}
 	            // 이전글 다음글 버튼 번호 출력 
 	            if(prevNum != 0) {
-	            	$("#prevNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notice/" + prevNum +"'");
+	            	$("#prevNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notices/" + prevNum +"'");
 	            } else {
 	            	$("#prevNum").remove();
 				}
 	            
 	            if(nextNum != 0) {
-	            	$("#nextNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notice/" + nextNum +"'");
+	            	$("#nextNum").attr("onclick", "location.href='${pageContext.request.contextPath}/notices/" + nextNum +"'");
 	            } else {
 	            	$("#nextNum").remove();
 				}
@@ -253,7 +253,7 @@ function noticeDetail() {
 	        },
         error: function(xhr) {
             alert("공지 사항을 불러오는 중에 오류가 발생했습니다. 에러 코드 = (" + xhr.status + ")");
-            window.location.href = "${pageContext.request.contextPath}/notice";
+            window.location.href = "${pageContext.request.contextPath}/notices";
 	    }
     });
 }
@@ -264,16 +264,16 @@ function noticeDelete(noticeIdx) {
     if (confirm("자료를 정말로 삭제 하시겠습니까?")) {
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/notice'/>/" + noticeIdx,
+            url: "<c:url value='/api/notices'/>/" + noticeIdx,
             data: {'noticeIdx' : noticeIdx},
             contentType: false,
             success: function(result) {
                 if (result == "success") {
 	                alert("공지 사항이 삭제되었습니다");
-	                window.location.href = "${pageContext.request.contextPath}/notice"
+	                window.location.href = "${pageContext.request.contextPath}/notices"
                 } else {
                 	alert("글 삭제에 실패했습니다.");
-                	window.location.href = "${pageContext.request.contextPath}/notice/"+noticeidx;
+                	window.location.href = "${pageContext.request.contextPath}/notices/"+noticeidx;
                 }
             }
        });

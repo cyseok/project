@@ -147,6 +147,7 @@
 	      </choose>
 	    ORDER BY p.post_regdate DESC
 	    LIMIT #{offset}, #{limit}
+	    FOR UPDATE
 	</select>
 	
 	<!-- 조회순 정렬 -->

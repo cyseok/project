@@ -21,9 +21,10 @@ public class Mysql {
 		
 		try(Connection con = 
 				DriverManager.getConnection(
-						"jdbc:mysql://database-1.c4036o3cjyhj.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC",
+						//"jdbc:mysql://database-1.c4036o3cjyhj.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC",
+						"jdbc:log4jdbc:mysql://waiting-rds.c3qu0gcwopn7.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC",
 						"admin",
-						"dbstjr8879")){
+						"!dbstjr8879")){
 			/*
 			DriverManager.getConnection(
 						"jdbc:mysql://3.39.12.166:3306/sys?serverTimezone=UTC",

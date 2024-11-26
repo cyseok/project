@@ -15,7 +15,7 @@
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
 							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">HOME</a></li>
-							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
+							<li><a href="${pageContext.request.contextPath}/notices" style="color: gray; font-size: 19px;">공지사항</a></li>
 							<li class="active"><a onclick="loginMessage()" role="button" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
@@ -25,7 +25,7 @@
 					<div class="col-lg-6 d-none d-lg-inline-block text-center nav-center-wrap ">
 						<ul class="js-clone-nav  text-center site-menu p-0 m-0">
 							<li><a href="${pageContext.request.contextPath}/" style="color: gray; font-size: 19px;">HOME</a></li>
-							<li><a href="${pageContext.request.contextPath}/notice" style="color: gray; font-size: 19px;">공지사항</a></li>
+							<li><a href="${pageContext.request.contextPath}/notices" style="color: gray; font-size: 19px;">공지사항</a></li>
 							<li class="active"><a href="${pageContext.request.contextPath}/post/write" style="color: gray; font-size: 19px;">글작성</a></li>
 						</ul>
 					</div>
@@ -129,80 +129,77 @@
        <span class="visually-hidden">Loading...</span>
      </div>
   </div>
-  
+
 <script>
-//CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
-var csrfHeaderName = "${_csrf.headerName}";
-var csrfTokenValue = "${_csrf.token}";
+	//CSRF 토큰 관련 정보를 자바스크립트 변수에 저장
+	var csrfHeaderName = "${_csrf.headerName}";
+	var csrfTokenValue = "${_csrf.token}";
 
-// Ajax 기능을 사용하여 요청하는 모든 웹 프로그램에게 CSRF 토큰 전달 가능
-// ▶ Ajax 요청 시 beforeSend 속성을 설정할 필요 없음
-$(document).ajaxSend(function(e, xhr){
-	xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
-});
+	// Ajax 기능을 사용하여 요청하는 모든 웹 프로그램에게 CSRF 토큰 전달 가능
+	// ▶ Ajax 요청 시 beforeSend 속성을 설정할 필요 없음
+	$(document).ajaxSend(function(e, xhr) {
+		xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+	});
 
-var idLengthInput = document.getElementById("idInput");
-var pwLengthInput = document.getElementById("pwInput");
-var loginButton = document.getElementById("loginButton");
+	var idLengthInput = document.getElementById("idInput");
+	var pwLengthInput = document.getElementById("pwInput");
+	var loginButton = document.getElementById("loginButton");
 
-function checkPasswordLength() {
-	  
-  if (pwLengthInput.value.length >= 8 && idLengthInput.value.length >= 5) {
-       loginButton.disabled = false;
-    } else {
-       loginButton.disabled = true;
-    }
-}
+	function checkPasswordLength() {
 
-pwLengthInput.addEventListener("input", checkPasswordLength);
+		if (pwLengthInput.value.length >= 8
+				&& idLengthInput.value.length >= 5) {
+			loginButton.disabled = false;
+		} else {
+			loginButton.disabled = true;
+		}
+	}
 
-function disableButton() {
+	pwLengthInput.addEventListener("input", checkPasswordLength);
 
-    loginButton.disabled = true;
+	function disableButton() {
 
-    setTimeout(function () {
-      loginButton.disabled = false;
-    }, 3000);
-  }
-	
+		loginButton.disabled = true;
 
-   $("#loginForm").submit(function(event) {
-   	 event.preventDefault();
-   	 disableButton();
-   	 
-   	 $('#loading').show();
-            
-     var formData = JSON.stringify({
-         id: $("#idInput").val(),
-         pw: $("#pwInput").val()
-     });
-     
-	    $.ajax({
-	    	type: "POST",
-	        url: "<c:url value='/user/login'/>",
-	        dataType: "text",
-	        data: formData,
-	        contentType: "application/json",
-	        success: function (response) {
-	            if (response === "ok") {
-	            	$('#loading').hide();
-	            	window.location.reload();
-	            } else {
-	                alert("아이디와 비밀번호를 확인해주세요.");
-	                $('#loading').hide();
-	            }
-	        }, error: function(error) {
-	            $('#loading').hide();
-	            alert(error.responseText);
-	            console.log("Error:", error);
-	           }
-	     });
-  });
-</script>
-	
-<script>
+		setTimeout(function() {
+			loginButton.disabled = false;
+		}, 3000);
+	}
+
+	// 로그인
+	$("#loginForm").submit(function(event) {
+		event.preventDefault();
+		disableButton();
+
+		$('#loading').show();
+
+		var formData = JSON.stringify({
+			id : $("#idInput").val(),
+			pw : $("#pwInput").val()
+		});
+
+		$.ajax({
+			type : "POST",
+			url : "<c:url value='/user/login'/>",
+			dataType : "text",
+			data : formData,
+			contentType : "application/json",
+			success : function(result, textStatus, xhr) {
+				if (xhr.status === 200) {
+					$('#loading').hide();
+					window.location.reload();
+				}
+			},
+			error : function(error) {
+				$('#loading').hide();
+				alert(error.responseText);
+				pwLengthInput.value = '';
+			}
+		});
+	});
+
    $(document).ready(function() {
- 	    
+ 	    // 스프링시큐리티를 이용한 로그아웃
  	    $("#logoutButton").click(function(event) {
  	        event.preventDefault(); 
  	        if (confirm("로그아웃 하시겠습니까?")) {
@@ -215,43 +212,44 @@ function disableButton() {
 	  	            	window.location.href = "${pageContext.request.contextPath}/";
 	  	            },
 	  	            error: function(data) {
-	  	                alert("로그아웃 실패");
+	  	                alert("로그아웃에 실패했습니다. 잠시후 다시 시도해주세요.");
 	  	            }
 	  	        });
  	        }
  	    });
  	});
    
+	
 	// 로그인 버튼을 클릭하면 모달창을 열기
 	$("#login-button").click(function() {
-    	$("#login-modal").modal("show");
-   });
-	
-	$("#close-button").click(function(){
-	    $("#idInput").val('');
-	    $("#pwInput").val('');
-	  });
-	
-	$("#idInput").keypress(function(){
-	     if(event.keyCode == 13) { 
-		 	  $("#pwInput").focus();
-		   }
+		$("#login-modal").modal("show");
 	});
-	    
-   $("#pwInput").keypress(function(){
- 		if(event.keyCode == 13) {
- 			$("#loginForm").submit();
- 		}
-   });
-   
-   function loginMessage() {
-       alert("로그인 후 이용해주세요!!");
-       event.preventDefault();
-   }
-   function errorMessage() {
-       alert("페이지를 만드는 중입니다..");
-       event.preventDefault();
-   }
+
+	$("#close-button").click(function() {
+		$("#idInput").val('');
+		$("#pwInput").val('');
+	});
+
+	$("#idInput").keypress(function() {
+		if (event.keyCode == 13) {
+			$("#pwInput").focus();
+		}
+	});
+
+	$("#pwInput").keypress(function() {
+		if (event.keyCode == 13) {
+			$("#loginForm").submit();
+		}
+	});
+
+	function loginMessage() {
+		alert("로그인 후 이용해주세요!!");
+		event.preventDefault();
+	}
+	function errorMessage() {
+		alert("페이지를 만드는 중입니다..");
+		event.preventDefault();
+	}
 </script>
 
 </header>

@@ -7,7 +7,6 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
    
-
 	<http auto-config="true" use-expressions="true">
 	  <form-login login-page="/error"/>
 		<intercept-url pattern="/user/login" access="permitAll"/>
@@ -22,16 +21,16 @@
 		<logout logout-url="/logout" logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID"/>
 		
 		<remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
-		
-		<!-- authentication-success-handler-ref 속성: AuthenticationSuccessHandler 인터페이스를 상속받은 클래스에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
         
-		<!-- session-management: 로그인 정보가 저장된 세션을 관리하기 위한 엘리먼트 -->
+		<!-- session-management: 로그인 정보가 저장된 세션을 관리 -->
 		<session-management>
 		   <concurrency-control max-sessions="1" expired-url="/sessionError"/>
 		</session-management>
 	</http>
+	
+	<!-- authentication-success-handler-ref 속성: AuthenticationSuccessHandler 인터페이스를 상속받은 클래스에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
    
-	<!-- user-service-ref 속성: 인증에 필요한 사용자 및 권한 정보(UserDetails 객체)기 저장된 객체를 반환하는 
+	<!-- user-service-ref 속성: 인증에 필요한 사용자 및 권한 정보(UserDetails 객체) 저장된 객체를 반환하는 
    		클래스(CustomUserDetailsService)에 대한 Spring Bean의 식별자(beanName)를 속성값으로 설정 -->
 	<authentication-manager>
 		<authentication-provider user-service-ref="customUserDetailsService">

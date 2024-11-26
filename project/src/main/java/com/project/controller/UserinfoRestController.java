@@ -64,7 +64,7 @@ public class UserinfoRestController {
       int result = userinfoservice.idCheck(id);
 
       if (result != 0) {
-    	  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 아이디가 존재하거나 해당 아이디의 소셜 계정이 존재합니다."); 
+    	  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 아이디가 존재합니다."); 
       } else {
     	  return ResponseEntity.ok("ok"); // 중복 아이디 x
       }
@@ -77,7 +77,7 @@ public class UserinfoRestController {
        int emailResult = userinfoservice.emailCheck(email);
 
        if (emailResult != 0) {
-    	   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 이메일이 존재합니다."); 
+    	   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("중복 이메일이 존재하거나 해당 이메일로 소셜로그인 계정이 이미 존재합니다."); 
        } else {
     	   return ResponseEntity.ok("ok"); // 중복 없음
        }
@@ -157,7 +157,7 @@ public class UserinfoRestController {
 		                  userinfoservice.updateUserLogindate(userinfoAuth.getId());
 		                  
 		                  
-		                  return ResponseEntity.ok("ok");
+		                  return ResponseEntity.ok().build();
 		                  
 		              } else {
 		                  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");

@@ -16,17 +16,15 @@
   <jsp:include page="/WEB-INF/views/include/header.jsp"/>
 </header>
 <body>
-<div class="section">
-  <div class="container" style="margin-top: 150px;">
-    <div class="row" id="myWriteList">
-    
-    </div>
-  </div>
-</div>
+	<div class="section">
+		<div class="container" style="margin-top: 150px;">
+			<div class="row" id="myWriteList"></div>
+		</div>
+	</div>
 
 
 
-<sec:csrfInput/>
+	<sec:csrfInput/>
 
 <jsp:include page="/WEB-INF/views/include/footer.jsp"/>
 <script>
@@ -53,7 +51,6 @@ function myWritePost(userinfoId) {
         success: function(result) {
         	$('#loading').hide();
         	
-        	console.log(result);
         	if (result.length === 0) { 
         		var postElement1 = $("<p style='font-size: 25px;'>검색결과가 없습니다.</p>");
         		$("#myWriteList").append(postElement1);

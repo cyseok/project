@@ -55,7 +55,7 @@
 	</div>
     
     <sec:authorize access="hasRole('ROLE_MASTER')">
-	    <button type="button" id="writeNotice" class="btn btn-dark" onclick="location.href='${pageContext.request.contextPath}/notice/write'">
+	    <button type="button" id="writeNotice" class="btn btn-dark" onclick="location.href='${pageContext.request.contextPath}/notices/write'">
 	    	글쓰기
 	    </button>
     </sec:authorize>
@@ -106,7 +106,7 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
    
     $.ajax({
         method: "GET",
-        url: "<c:url value='/notice/list'/>",
+        url: "<c:url value='/api/notices'/>",
         data: {"pageNum": pageNum, "pageSize": pageSize, "selectKeyword": selectKeyword},
         dataType: "json",
         success: function(data, textStatus, xhr) {
@@ -129,7 +129,7 @@ function noticeListDisplay(pageNum, pageSize, selectKeyword) {
 		                var noticeList = data.noticeList[i];
 		                var row = "<tr data-idx='" + noticeList.noticeIdx + "'>" +
 		                   		  "<td>" + noticeList.rownum + "</td>" +
-		                   		  "<td><a href=\"<c:url value='/notice'/>/" + noticeList.noticeIdx + "\">" + noticeList.noticeTitle + "</a></td>" +
+		                   		  "<td><a href=\"<c:url value='/notices'/>/" + noticeList.noticeIdx + "\">" + noticeList.noticeTitle + "</a></td>" +
 		                   		  "<td>" + noticeList.noticeRegdate + "</td>" +
 		                   		  "<td>" + noticeList.noticeViewcnt + "</td>" +
 		                   		  "</tr>";

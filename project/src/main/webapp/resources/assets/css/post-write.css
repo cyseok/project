@@ -20,6 +20,7 @@
   margin-left: -13%;
 }
 #resultContainer {
+  position: absolute;
   border: 1px solid #ccc; 
   background-color: #fff; 
   z-index: 999; 

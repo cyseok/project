@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Controller
 public class ErrorController {
-	
+
 	@GetMapping("/error")
 	public String diyAdd() {
 		return "/error";

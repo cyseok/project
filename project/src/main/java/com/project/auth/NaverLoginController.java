@@ -35,67 +35,66 @@ import lombok.RequiredArgsConstructor;
 public class NaverLoginController {
 	private final NaverLoginBean naverLoginBean;
 	private final UserinfoService userinfoService;
-	
-	//네이버 로그인 페이지 요청하기 위한 요청
+
+	// 네이버 로그인 페이지 요청하기 위한 요청
 	@RequestMapping("/login")
 	public String login(HttpSession session) throws UnsupportedEncodingException {
-		String naverAuthUrl=naverLoginBean.getAuthorizationUrl(session);
-		return "redirect:"+naverAuthUrl;
+		String naverAuthUrl = naverLoginBean.getAuthorizationUrl(session);
+		return "redirect:" + naverAuthUrl;
 	}
-	
+
 	@RequestMapping("/callback")
-	public String login(@RequestParam(required = false) String code
-			, @RequestParam(required = false) String error
-			, @RequestParam String state
-			, HttpSession session) throws IOException, ParseException, ExistsUserinfoException, UserinfoNotFoundException {
+	public String login(@RequestParam(required = false) String code, @RequestParam(required = false) String error,
+			@RequestParam String state, HttpSession session)
+			throws IOException, ParseException, ExistsUserinfoException, UserinfoNotFoundException {
 
 		if (error != null && "access_denied".equals(error)) {
-	        // 사용자가 동의 창에서 취소한 경우
-	        return "redirect:/";
-	    }
-		
-		OAuth2AccessToken accessToken=naverLoginBean.getAccessToken(session, code, state);
-		
-		String apiResult=naverLoginBean.getUserProfile(accessToken);
-		
-		JSONParser parser=new JSONParser();
-		Object object=parser.parse(apiResult);
-		JSONObject jsonObject=(JSONObject)object;
-		
-		JSONObject responseObject=(JSONObject)jsonObject.get("response");
-		String id=(String)responseObject.get("id");
-		String nickname=(String)responseObject.get("nickname");
-		String email=(String)responseObject.get("email");
-	    
-		//반환받은 네이버 사용자 프로필의 값 사용
-		UserinfoAuth auth=new UserinfoAuth();
-		auth.setId("naver_"+id);
+			// 사용자가 동의 창에서 취소한 경우
+			return "redirect:/";
+		}
+
+		OAuth2AccessToken accessToken = naverLoginBean.getAccessToken(session, code, state);
+
+		String apiResult = naverLoginBean.getUserProfile(accessToken);
+
+		JSONParser parser = new JSONParser();
+		Object object = parser.parse(apiResult);
+		JSONObject jsonObject = (JSONObject) object;
+
+		JSONObject responseObject = (JSONObject) jsonObject.get("response");
+		String id = (String) responseObject.get("id");
+		String nickname = (String) responseObject.get("nickname");
+		String email = (String) responseObject.get("email");
+
+		// 반환받은 네이버 사용자 프로필의 값 사용
+		UserinfoAuth auth = new UserinfoAuth();
+		auth.setId("naver_" + id);
 		auth.setAuth("ROLE_SOCIAL");
-		
-		List<UserinfoAuth> authList=new ArrayList<UserinfoAuth>();
+
+		List<UserinfoAuth> authList = new ArrayList<UserinfoAuth>();
 		authList.add(auth);
-		
-		Userinfo userinfo=new Userinfo();
-		userinfo.setId("naver_"+id);
+
+		Userinfo userinfo = new Userinfo();
+		userinfo.setId("naver_" + id);
 		userinfo.setPw(UUID.randomUUID().toString());
 		userinfo.setNickname(nickname);
 		userinfo.setEmail(email);
 		userinfo.setAddress(null);
 		userinfo.setEnabled("0");
 		userinfo.setSecurityAuthList(authList);
-		
+
 		// 네이버 로그인 사용자의 권한을 SECURITY_AUTH 테이블에 저장
 		userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
 		userinfoService.addUserinfoAuth(auth);
 		userinfoService.updateUserLogindate(userinfo.getId());
 
-		//네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
-		CustomUserDetails customUserDetails=new CustomUserDetails(userinfo);
-		
-		Authentication authentication=new UsernamePasswordAuthenticationToken
-				(customUserDetails, null, customUserDetails.getAuthorities());
-		
-		//SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
+		// 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
+		CustomUserDetails customUserDetails = new CustomUserDetails(userinfo);
+
+		Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null,
+				customUserDetails.getAuthorities());
+
+		// SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		return "redirect:/";

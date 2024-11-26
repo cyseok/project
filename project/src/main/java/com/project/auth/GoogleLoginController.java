@@ -75,23 +75,23 @@ public class GoogleLoginController {
 		userinfo.setAddress(null);
 		userinfo.setEnabled("0");
 		userinfo.setSecurityAuthList(authList);
-		
+
 		// 사용자의 정보를 userinfo 테이블과 auth 테이블에 저장
 		userinfoService.addUserinfo(userinfo, "ROLE_SOCIAL");
 		userinfoService.addUserinfoAuth(auth);
 		userinfoService.updateUserLogindate(userinfo.getId());
-		
+
 		// (spring-security) 네이버 로그인 사용자 정보를 사용하여 UserDetails 객체(로그인 사용자)를 생성하여 저장
-		CustomUserDetails customUserDetails=new CustomUserDetails(userinfo);
-		
-		// UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자로 등록
+		CustomUserDetails customUserDetails = new CustomUserDetails(userinfo);
+
+		// UsernamePasswordAuthenticationToken 객체를 생성하여 Spring Security가 사용 가능한 인증 사용자 등록
 		// UsernamePasswordAuthenticationToken 객체 : 인증 성공한 사용자를 Spring Security가 사용 가능한 인증 사용자로 등록 처리하는 객체
-		Authentication authentication=new UsernamePasswordAuthenticationToken
-				(customUserDetails, null, customUserDetails.getAuthorities());
-		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null,
+				customUserDetails.getAuthorities());
+
 		// SecurityContextHolder 객체 : 인증 사용자의 권한 관련 정보를 저장하기 위한 객체
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-			
+
 		return "redirect:/";
 	}
 }

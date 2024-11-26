@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/notice")
+@RequestMapping("/notices")
 public class NoticeController {
 	
 	// 공지사항 목록 페이지 요청
@@ -25,17 +25,20 @@ public class NoticeController {
 	   return "notice/detail";
 	}
 	
-	// 공지사항 수정 페이지 
-	@GetMapping("/modify/{noticeIdx}")
-	public String noticeModify() {
-		return "/notice/modify";
-	}
-	
 	// 공지사항 작성 페이지 요청
 	@PreAuthorize("hasRole('ROLE_MASTER')")
 	@GetMapping("/write")
 	public String diyAdd() {
 		return "notice/write";
 	}
+	
+	// 공지사항 수정 페이지 
+	/*
+	@GetMapping("/modify/{noticeIdx}")
+	public String noticeModify() {
+		return "/notice/modify";
+	}
+	*/
+	
 
 }

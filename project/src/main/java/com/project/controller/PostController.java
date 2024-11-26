@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
 	
 	// 게시글 목록 페이지 요청
@@ -42,6 +42,7 @@ public class PostController {
 	   return "/post/detail";
 	}
 	
+	/*
 	// 게시글 수정 페이지 
 	@GetMapping("/modify/{postIdx}")
 	public String postModify() {
@@ -61,6 +62,7 @@ public class PostController {
 		}
 		return "/post/write";
 	}
+	*/
 	
 	// 나의 작성글 페이지
 	@GetMapping("/my-write")

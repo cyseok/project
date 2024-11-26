@@ -20,9 +20,9 @@
 	  
 	  <!-- AWS RDS 서버 -->
 	  <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" />
-	  <property name="url" value="jdbc:log4jdbc:mysql://database-1.c4036o3cjyhj.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC" />
+	  <property name="url" value="jdbc:log4jdbc:mysql://waiting-rds.c3qu0gcwopn7.ap-northeast-2.rds.amazonaws.com:3306/test?serverTimezone=UTC" />
 	  <property name="username" value="admin"></property>
-	  <property name="password" value="dbstjr8879"></property>
+	  <property name="password" value="!dbstjr8879"></property>
 	  
 	  
 	  <!-- project 공유 DB -->

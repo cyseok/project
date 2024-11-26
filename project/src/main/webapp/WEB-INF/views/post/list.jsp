@@ -31,7 +31,7 @@
 					<p class="mb-4" data-aos="fade-up">현재 있는 곳의 사람이 얼마나 많은지 게시물을 올려주세요!!
 					<br>
 					사람이 많아 가기 망설여지는 사람들에게 도움을 줄 수 있습니다.
-					<br><!-- 
+					<br>
 					<br>
 					일반 사용자 계정 
 					<br>
@@ -44,7 +44,7 @@
 					<br> 
 					ID : test1
 					<br>
-					PW : !Xptmxm1   -->          
+					PW : !Xptmxm1  
 					</p>
 				</div>
 			</div>
@@ -131,7 +131,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='/post/list'/>",
+        url: "<c:url value='/api/posts'/>",
         
         data: {"offset": offset
         		, "limit": limit
@@ -150,7 +150,7 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	                var postList = result.content[i];
 	                var postElement2 = 
 	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
-	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                		"<a href='${pageContext.request.contextPath}/posts/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
 	                              "<span class='date'>" + postList.postRegdate + "</span>" +
@@ -177,13 +177,14 @@ function postListDisplay(offset, limit, selectKeyword, viewType) {
 	                $("#postList").append(postElement2);
 	            }
 	            postScroll = false;
+	            
             } else {
 				         	
 	            for (var i = 0; i < result.content.length; i++) {
 	                var postList = result.content[i];
 	                var postElement2 = 
 	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
-	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                		"<a href='${pageContext.request.contextPath}/posts/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
 	                              "<span class='date'>" + postList.postRegdate + "</span>" +
@@ -236,7 +237,7 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='/post/list'/>",
+        url: "<c:url value='/api/posts'/>",
         
         data: {"offset": offset
         		, "limit": limit
@@ -260,7 +261,7 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
 	                var postList = result.content[i];
 	                var postElement2 = 
 	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
-	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                		"<a href='${pageContext.request.contextPath}/posts/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
 	                              "<span class='date'>" + postList.postRegdate + "</span>" +
@@ -293,7 +294,7 @@ function postSearchDisplay(offset, limit, selectKeyword, viewType) {
 	                var postList = result.content[i];
 	                var postElement2 = 
 	                	$("<div class='col-12 col-sm-6 col-md-4 col-lg-3 mb-4 clickable-post' data-aos='fade-up' data-aos-delay='100' data-aos-duration='800'>" +
-	                		"<a href='${pageContext.request.contextPath}/post/" + postList.postIdx + "'>" +
+	                		"<a href='${pageContext.request.contextPath}/posts/" + postList.postIdx + "'>" +
 	                          "<div class='media-entry'>" +
 	                            "<div class='bg-white m-body'>" +
 	                              "<span class='date'>" + postList.postRegdate + "</span>" +

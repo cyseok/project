@@ -67,7 +67,7 @@
                       <div class="form-group">
                         <label for="birth" class="sp">생년월일</label>
                         <input type="text" name="birth" id="birth" placeholder="생년월일 8자리 ex) 20000101" maxlength="8">
-                        <span id="check-birth" class="">8자리의 숫자로만 입력해주세요.</span>
+                        <span id="check-birth" class="">생년월일 형식이 맞지않습니.</span>
                       </div>    
                       
                       <div class="form-group">
@@ -564,7 +564,7 @@ var joinButton = document.getElementById("loginButton");
 		
    setTimeout(function () {
 	   joinButton.disabled = false;
-   }, 3000);
+   }, 1000);
  } 
 
 $("#join_form").submit(function(event) {
@@ -756,7 +756,7 @@ $("#join_form").submit(function(event) {
        document.getElementById("confirmPw").disabled = true;
      }
    }
-/* 비밀번호 확인 일치 검사 */
+   /* 비밀번호 확인 일치 검사 */
    function confirmPw() {
        const pw = pwInput.value;
        const confirmPw = pwConfirmInput.value;
@@ -803,13 +803,17 @@ $("#join_form").submit(function(event) {
    /* 생년월일 유효성 검사 */
    function checkBirth() {
      var bitrh = birthInput.value;
-     var regExp = /^\d{8}$/;
+     var currentYear = new Date().getFullYear();
+     //var regExp = /^\d{8}$/;
+     var regExp = /^(\d{4})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
 
      if (regExp.test(bitrh)) {
     	 checkBirthSpan.style.color = "green";
+    	 checkBirthSpan.textContent = "생년월일 형식이 맞습니다.";
     	 birthCheck = true;     
      } else {
     	 checkBirthSpan.style.color = "red";
+    	 checkBirthSpan.textContent = "생년월일 형식을 확인해주세요.";
     	 birthCheck = false;     
      }
    }
@@ -858,7 +862,7 @@ $("#join_form").submit(function(event) {
 		
    setTimeout(function () {
    	idButton.disabled = false;
-   }, 3000);
+   }, 1000);
  }
  
 $(function() {
@@ -870,6 +874,15 @@ $(function() {
 		  $("#id").focus();
 			return;
 	   }
+	  
+	 var id = idInput.value;
+     var regExp = /^[A-Za-z\d]{5,15}$/;
+
+     if (!regExp.test(id)) {
+    	 alert("아이디 형식을 다시 확인해주세요.")
+    	 return false;
+     } 
+	     
 	idDisableButton();
 	  
     $.ajax({
@@ -905,7 +918,7 @@ function emailDisableButton() {
 	
     setTimeout(function () {
     	emailButton.disabled = false;
-    }, 3000);
+    }, 1000);
   }
 $(function() {
   $("#check-email-button").click(function() {
@@ -939,7 +952,7 @@ $(function() {
         	emailCheck = false;
         }
       }, error: function(error) {
-    	  alert("Error:" + error.responseText);
+    	  alert(error.responseText);
           $("#email-check-message").css("color", "red");
           emailCheck = false;
       }
@@ -956,7 +969,7 @@ $(function() {
 		
    setTimeout(function () {
 	   emailConfirmButton.disabled = false;
-   }, 3000);
+   }, 1000);
  } 
  
   $("#mail-send-Btn").click(function() {

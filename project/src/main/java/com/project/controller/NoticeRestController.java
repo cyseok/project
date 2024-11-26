@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +32,7 @@ import com.project.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/notice")
+@RequestMapping("/api/notices")
 @RequiredArgsConstructor
 public class NoticeRestController {
 	
@@ -38,8 +42,9 @@ public class NoticeRestController {
 	@Autowired
 	private final WebApplicationContext context; 
 	
+	// 변경
 	// 공지사항 리스트
-	@GetMapping("/list")
+	@GetMapping
 	public ResponseEntity<Map<String, Object>> noticeList(
 			@RequestParam(defaultValue = "1") int pageNum
 			, @RequestParam(defaultValue = "10") int pageSize
@@ -53,9 +58,10 @@ public class NoticeRestController {
 		
 	}
 	
+	// 변경
 	// 공지사항 상세보기
-	@GetMapping("/detail/{noticeIdx}")
-	public Map<String, Object> noticeDetail(@PathVariable("noticeIdx") int noticeIdx) {
+	@GetMapping("/{noticeIdx}")
+	public Map<String, Object> noticeDetail(@PathVariable("noticeIdx") int noticeIdx, HttpServletRequest req, HttpServletResponse res) {
 		
 		Notice notice = new Notice();
 		notice.setNoticeIdx(noticeIdx);
@@ -64,9 +70,75 @@ public class NoticeRestController {
 		resultMap.put("notice", noticeService.getSelectNotice(noticeIdx));
         resultMap.put("prevNumNextNum", noticeService.getSelectPreNumNextNum(noticeIdx));
         
-		noticeService.getViewNoticeCount(noticeIdx);
+		// noticeService.getViewNoticeCount(noticeIdx);
+        viewCount(noticeIdx, req, res);
 		
 	   return resultMap;
+	}
+	
+	// Cookie 사용해 조회수 중복 제거
+	private void viewCount(int noticeIdx, HttpServletRequest req, HttpServletResponse res) {
+		Cookie oldCookie = null;
+		
+		Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("noticeCookie")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + noticeIdx + "]")) {
+            	noticeService.getViewNoticeCount(noticeIdx);
+                oldCookie.setValue(oldCookie.getValue() + "_[" +noticeIdx + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                res.addCookie(oldCookie);
+            }
+        } else {
+        	noticeService.getViewNoticeCount(noticeIdx);
+            Cookie newCookie = new Cookie("noticeCookie","[" + noticeIdx + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            res.addCookie(newCookie);
+        }
+        
+        /* 이 방법도 활용하기
+        // 현재 접속한 사용자의 IP 주소 가져오기
+        String ipAddress = request.getRemoteAddr();
+
+        // 쿠키 이름 설정 (IP 주소를 포함하여 고유하게 만듦)
+        String cookieName = "pageView_" + ipAddress.replace(".", "_");
+
+        // 조회수를 저장할 변수
+        int viewCount = 0;
+
+        // 쿠키 검사
+        Cookie[] cookies = request.getCookies();
+        boolean cookieExists = false;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    cookieExists = true;
+                    break;
+                }
+            }
+        }
+
+        // 쿠키가 없으면 조회수 증가 및 쿠키 생성
+        if (!cookieExists) {
+            // 여기에 조회수를 증가시키는 로직을 추가 (예: 데이터베이스에서 조회수 가져와 증가시키고 다시 저장)
+            viewCount++; // 실제로는 데이터베이스에서 가져온 값을 증가시켜야 함
+
+            // 새 쿠키 생성 (24시간 유효)
+            Cookie newCookie = new Cookie(cookieName, "viewed");
+            newCookie.setMaxAge(24 * 60 * 60); // 24시간 (초 단위)
+            response.addCookie(newCookie);
+        }
+        */
 	}
 	
 	// 공지사항 삭제
@@ -76,7 +148,7 @@ public class NoticeRestController {
 		return "success";
 	}
 	
-	// 공지사항 등록 요청
+	// 관리자 공지사항 등록 요청
 	@PreAuthorize("hasRole('ROLE_MASTER')")
 	@PostMapping
 	public String noticeAdd(Notice notice
@@ -188,8 +260,5 @@ public class NoticeRestController {
 		return "success";
 		
 	}
-	
-
-	
 
 }

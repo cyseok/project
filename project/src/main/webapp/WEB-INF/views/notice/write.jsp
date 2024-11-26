@@ -11,7 +11,7 @@
 	<jsp:include page="/WEB-INF/views/include/head.jsp"/>
 	<style>
 body {
-    padding-top: 50px; /* Adjust the padding value as needed */
+    padding-top: 50px;
   }
 #preview {
   width: 100%;
@@ -21,10 +21,10 @@ p {
   font-size : 22px;
 }
 #noticeTitle {
-  font-size: 24px; /* You can adjust the size as needed */
+  font-size: 24px; 
 }
 #noticeContent {
-  font-size: 22px; /* You can adjust the size as needed */
+  font-size: 22px; 
 }
 	</style>
 </head>
@@ -72,7 +72,7 @@ p {
 	    <br>
 	    <div class="post-form d-flex justify-content-end">
 	    <button type="submit" class="btn btn-primary" >등 록</button>
-	    <button type="button" class="btn btn-secondary ml-2" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
+	    <button type="button" class="btn btn-secondary ml-2" id="cancelBtn" onclick="location.href='${pageContext.request.contextPath}/notices'">취 소</button>
 	    </div>
 	  <sec:csrfInput/>
 	  </form>
@@ -114,7 +114,7 @@ $("form").submit(function(e) {
 
     $.ajax({
         type: "POST",
-        url: "<c:url value='/notice'/>",
+        url: "<c:url value='/api/notices'/>",
         data: formData,
         contentType: false,
         processData: false,
@@ -123,7 +123,7 @@ $("form").submit(function(e) {
         	$('#loading').hide();
             if (result == "success") {
                 alert("공지 사항을 등록하였습니다.");
-                window.location.href = "${pageContext.request.contextPath}/notice"
+                window.location.href = "${pageContext.request.contextPath}/notices"
             } else {
                 alert("글 등록을 실패하였습니다.");
             }

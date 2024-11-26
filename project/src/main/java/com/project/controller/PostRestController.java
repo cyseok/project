@@ -36,7 +36,7 @@ import com.project.service.PostService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostRestController {
 	
@@ -50,7 +50,7 @@ public class PostRestController {
 	private final WebApplicationContext context; 
 	
 	// 게시글 목록 출력
-	@GetMapping(value = "/list")
+	@GetMapping
 	public ResponseEntity<CollectionModel<Post>> getPostList(
 			@RequestParam("offset") int offset
 			, @RequestParam("limit") int limit
@@ -205,7 +205,7 @@ public class PostRestController {
 		
 	}
 	
-	@GetMapping("/detail/{postIdx}")
+	@GetMapping("/{postIdx}")
 	public ResponseEntity<CollectionModel<Map<String, Object>>> getPost(
 			@PathVariable("postIdx") int postIdx
 			, @RequestParam String userinfoId) {
@@ -269,7 +269,7 @@ public class PostRestController {
 	}
 	
 	@PostMapping(value = "/image-upload")
-	public ResponseEntity<?> imageUpload(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
+	public ResponseEntity<String> imageUpload(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
 		try {
 			
 			// 서버에 저장할 경로
@@ -287,7 +287,6 @@ public class PostRestController {
 			// 위에서 설정한 서버 경로에 이미지 저장
 			file.transferTo(new File(uploadDirectory, uuidFileName));
 		
-			System.out.println("************************ 업로드 컨트롤러 실행 ************************");
 			System.out.println(uploadDirectory);
 			
 			// Ajax에서 업로드 된 파일의 이름을 응답 받을 수 있도록 해줍니다.

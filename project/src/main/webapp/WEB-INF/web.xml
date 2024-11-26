@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-   xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
-   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" 
+         id="WebApp_ID" version="4.0">
 
    <!-- 모든 서블릿 필터에 적용되는 Root Spring Container -->
    <context-param>
@@ -22,6 +23,7 @@
 	<filter>
         <filter-name>multipartFilter</filter-name>
         <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+        <async-supported>true</async-supported>
     </filter>
     <filter-mapping>
         <filter-name>multipartFilter</filter-name>
@@ -41,6 +43,7 @@
            <param-name>forceEncoding</param-name> 
            <param-value>true</param-value> 
        </init-param> 
+       <async-supported>true</async-supported>
    </filter> 
    <filter-mapping> 
        <filter-name>encodingFilter</filter-name> 
@@ -50,6 +53,7 @@
 	<filter>
     	<filter-name>CorsFilter</filter-name> 
     	<filter-class>com.project.util.CorsFilter</filter-class>
+    	<async-supported>true</async-supported>
 	</filter>
 
 	<filter-mapping>
@@ -67,6 +71,7 @@
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -84,6 +89,7 @@
          </param-value>
       </init-param>
       <load-on-startup>1</load-on-startup>
+      <async-supported>true</async-supported>
    </servlet>
       
    <servlet-mapping>

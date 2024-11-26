@@ -24,7 +24,7 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public void modifyPost(Post post) {
+	public synchronized void modifyPost(Post post) {
 		postDAO.updatePost(post);
 	}
 

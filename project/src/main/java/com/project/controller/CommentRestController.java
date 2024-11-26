@@ -25,45 +25,45 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentRestController {
-	
+
 	@Autowired
 	private final CommentService commentService;
-	
+
 	@Autowired
 	private final PostService postService;
-	
+
 	// 댓글 리스트 출력 (/게시물 번호)
 	@GetMapping("/{postIdx}")
 	public ResponseEntity<List<Comment>> commentList(@RequestParam("postIdx") int postIdx) {
-		
+
 		try {
-	        List<Comment> comment = commentService.getCommentList(postIdx);
-	        return new ResponseEntity<>(comment, HttpStatus.OK);
-	    } catch (Exception e) {
-	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	    }
+			List<Comment> comment = commentService.getCommentList(postIdx);
+			return new ResponseEntity<>(comment, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
-	
+
 	// 답글 리스트 출력 (/부모 댓글 번호)
 	@GetMapping("/replies/{parentIdx}")
 	public ResponseEntity<List<Comment>> replyList(@RequestParam("parentIdx") String parentIdx) {
-		
+
 		try {
-	        List<Comment> reply = commentService.getReplyList(parentIdx);
-	        return new ResponseEntity<>(reply, HttpStatus.OK);
-	    } catch (Exception e) {
-	    	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	    }
+			List<Comment> reply = commentService.getReplyList(parentIdx);
+			return new ResponseEntity<>(reply, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
-	
-	// 댓글,답글 등록	
+
+	// 댓글,답글 등록
 	@PostMapping
 	public ResponseEntity<Comment> commentAdd(Comment comment) {
 		try {
 			commentService.addComment(comment);
 			Comment commentSelect = commentService.getComment(comment.getCommentIdx());
 			// 댓글일때만 댓글 수 +1 (답글일때는 x)
-			if(commentSelect.getParentIdx() == null) {
+			if (commentSelect.getParentIdx() == null) {
 				postService.addComment(comment.getPostIdx());
 			}
 			return new ResponseEntity<Comment>(commentSelect, HttpStatus.CREATED);
@@ -71,27 +71,28 @@ public class CommentRestController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	// 댓글, 답글 수정
 	@PatchMapping("/{commentIdx}")
-	public ResponseEntity<Comment> commentModify(@PathVariable("commentIdx") String commentIdx, @RequestBody Comment comment) {
+	public ResponseEntity<Comment> commentModify(@PathVariable("commentIdx") String commentIdx,
+			@RequestBody Comment comment) {
 		try {
 			commentService.modifyComment(comment);
 			return new ResponseEntity<Comment>(comment, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 	}
-	
+
 	// 댓글, 답글 삭제
 	@DeleteMapping("/{commentIdx}/posts/{postIdx}")
-	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx
-			, @PathVariable("postIdx") int postIdx) {
+	public ResponseEntity<?> commentDelete(@PathVariable("commentIdx") String commentIdx,
+			@PathVariable("postIdx") int postIdx) {
 		try {
 			commentService.removeComment(commentIdx);
 			// 댓글일 때만 댓글 수 -1
-			if(postIdx != 0) {
+			if (postIdx != 0) {
 				postService.removeComment(postIdx);
 			}
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);

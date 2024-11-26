@@ -24,96 +24,87 @@
 </header>
 
 <body>
-<div class="section">
-  <div class="container">
-  <div class="row">
-  
-	<form id="post-form" enctype="multipart/form-data">
-	
-	<input type="hidden" name="userinfoId" id="userinfoId" value="${sessionScope.userinfoId}">
-	 
-	  <div class="post-form">
-	    <label for="postTitle" class="post-label">제목</label>
-	    <textarea name="postTitle" id="postTitle" class="form-control" rows="2" placeholder="제목을 입력해주세요."></textarea>
-	  </div>
-	  <hr style="width: 70%; margin-left: auto; margin-right: auto;">
-	  <div class="post-form">
-	    <label class="radio-inline" style="width: 20%">
-		  <input type="radio" name="postDayType" id="dayType" value="1" style="width: 20%">
-		  <br>
-		  <br>
-		  <br>
-		  <span class="radio-font">평일</span>
-	    </label>
-	    <label class="radio-inline" style="width: 20%">
-		  <input type="radio" name="postDayType" id="dayType" value="2" style="width: 20%">
-		  <br>
-		  <br>
-		  <br>
-		  <span class="radio-font">주말, 공휴일</span>				
-	    </label>
-	  </div>
-	  <hr style="width: 70%; margin-left: auto; margin-right: auto;">
-	  <div class="post-form">
-	    <label class="radio-inline" style="width: 20%">
-		  <input type="radio" name="postTag" id="postTag" value="1" style="width: 20%">
-		  <br>
-		  <br>
-		  <br>
-		  <span class="radio-font">사람없음</span>
-	    </label>
-	    <label class="radio-inline" style="width: 20%">
-		  <input type="radio" name="postTag" id="postTag" value="2" style="width: 20%">
-		  <br>
-		  <br>
-		  <br>
-		  <span class="radio-font">웨이팅없음</span>				
-	    </label>
-	    <label class="radio-inline" style="width: 20%">
-		  <input type="radio" name="postTag" id="postTag" value="3" style="width: 20%">
-		  <br>
-		  <br>
-		  <br>
-		  <span class="radio-font">웨이팅 조금</span>
-	    </label>
-	    <label class="radio-inline" style="width: 20%">
-		  <input type="radio" name="postTag" id="postTag" value="4" style="width: 20%">
-		  <br>
-		  <br>
-		  <br>
-		  <span class="radio-font">웨이팅 김</span>				
-	    </label>
-	  </div>
-	  
-	  <div class="post-form">
-	      <label for="postLoc" class="post-label">지역</label>
-	      <div class="post-search">
-	        <input type="hidden" name="postAddress" id="postAddress">
-	        <input name="postLoc" id="postLoc"  placeholder="내용을 입력해주세요.">
-	        <img id="searchImg" role="button" src="${pageContext.request.contextPath}/assets/images/search.png">
-	        <img id="xImg" role="button" src="${pageContext.request.contextPath}/assets/images/xmark.png" onclick="clearInput()">
-	      </div>
-	      <div id="resultContainer"></div>
-	  </div>
-	  
-	  <div class="post-form">
-	    <textarea name="postContent" id="summernote">
-	    </textarea>
-	  </div>  
-	  
-	    <div class="post-form d-flex justify-content-end">
-	      <button type="submit" class="btn btn-primary">등 록</button>
-	      <button type="button" id="cancelBtn" class="btn btn-secondary ml-2" onclick="location.href='${pageContext.request.contextPath}/notice'">취 소</button>
-	    </div>
-	  <sec:csrfInput/>
-	</form>
-  </div>
-  </div>
-</div>
-<jsp:include page="/WEB-INF/views/include/footer.jsp"/>
+	<div class="section">
+		<div class="container">
+			<div class="row">
+
+				<form id="post-form" enctype="multipart/form-data">
+
+					<input type="hidden" name="userinfoId" id="userinfoId"
+						value="${sessionScope.userinfoId}">
+
+					<div class="post-form">
+						<label for="postTitle" class="post-label">제목</label>
+						<textarea name="postTitle" id="postTitle" class="form-control"
+							rows="2" placeholder="제목을 입력해주세요."></textarea>
+					</div>
+					<hr style="width: 70%; margin-left: auto; margin-right: auto;">
+					<div class="post-form">
+						<label class="radio-inline" style="width: 20%"> <input
+							type="radio" name="postDayType" id="dayType" value="1"
+							style="width: 20%"> <br> <br> <br> <span
+							class="radio-font">평일</span>
+						</label> <label class="radio-inline" style="width: 20%"> <input
+							type="radio" name="postDayType" id="dayType" value="2"
+							style="width: 20%"> <br> <br> <br> <span
+							class="radio-font">주말, 공휴일</span>
+						</label>
+					</div>
+					<hr style="width: 70%; margin-left: auto; margin-right: auto;">
+					<div class="post-form">
+						<label class="radio-inline" style="width: 20%"> <input
+							type="radio" name="postTag" id="postTag" value="1"
+							style="width: 20%"> <br> <br> <br> <span
+							class="radio-font">사람없음</span>
+						</label> <label class="radio-inline" style="width: 20%"> <input
+							type="radio" name="postTag" id="postTag" value="2"
+							style="width: 20%"> <br> <br> <br> <span
+							class="radio-font">웨이팅없음</span>
+						</label> <label class="radio-inline" style="width: 20%"> <input
+							type="radio" name="postTag" id="postTag" value="3"
+							style="width: 20%"> <br> <br> <br> <span
+							class="radio-font">웨이팅 조금</span>
+						</label> <label class="radio-inline" style="width: 20%"> <input
+							type="radio" name="postTag" id="postTag" value="4"
+							style="width: 20%"> <br> <br> <br> <span
+							class="radio-font">웨이팅 김</span>
+						</label>
+					</div>
+
+					<div class="post-form">
+						<label for="postLoc" class="post-label">지역</label>
+						<div class="post-search">
+							<input type="hidden" name="postAddress" id="postAddress">
+							<input name="postLoc" id="postLoc" placeholder="내용을 입력해주세요.">
+							<img id="searchImg" role="button"
+								src="${pageContext.request.contextPath}/assets/images/search.png">
+							<img id="xImg" role="button"
+								src="${pageContext.request.contextPath}/assets/images/xmark.png"
+								onclick="clearInput()">
+							<div id="resultContainer"></div>
+						</div>
+					</div>
+
+					<div class="post-form">
+						<textarea name="postContent" id="summernote">
+	                    </textarea>
+					</div>
+
+					<div class="post-form d-flex justify-content-end">
+						<button type="submit" class="btn btn-primary">등 록</button>
+						<button type="button" id="cancelBtn"
+							class="btn btn-secondary ml-2"
+							onclick="location.href='${pageContext.request.contextPath}/notice'">취소</button>
+					</div>
+					<sec:csrfInput />
+				</form>
+			</div>
+		</div>
+	</div>
+	<jsp:include page="/WEB-INF/views/include/footer.jsp" />
 
 
-<script>
+	<script>
 // 등록
 $("form").submit(function(e) {
     e.preventDefault(); 
@@ -175,7 +166,7 @@ $("form").submit(function(e) {
     });
 });
 </script>
-<script>
+	<script>
 $(document.body).on("click", function(event) {
     if (!$(event.target).closest("#resultContainer").length) {
         $("#resultContainer").empty();
@@ -240,7 +231,7 @@ function clearInput() {
 }
 </script>
 
-<script>	
+	<script>	
 $('#summernote').summernote({
       
 	  // 에디터 크기 설정
@@ -297,7 +288,6 @@ function imageUploader(file, el) {
 			$(el).summernote('insertImage', "${pageContext.request.contextPath}/assets/images/upload/"+data, function($image) {
 				$image.css('width', "100%");
 			});
-			console.log(data);
 		}
 	});
 }

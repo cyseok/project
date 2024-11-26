@@ -230,7 +230,7 @@ function postDetail() {
 		
 	$.ajax({
         method: "GET",
-        url: "<c:url value='/post/detail'/>/" + postIdx,
+        url: "<c:url value='/api/posts'/>/" + postIdx,
         data: {"postIdx": postIdx
         	   , "userinfoId": userinfoId
         	},
@@ -245,7 +245,7 @@ function postDetail() {
         	
         	if (post === null) {
         		alert("존재하지 않는 글입니다.");
-        		window.location.href = "${pageContext.request.contextPath}/post"
+        		window.location.href = "${pageContext.request.contextPath}/posts"
         	} else {
         		
         		if(post.nickname === null) {
@@ -278,13 +278,13 @@ function postDetail() {
         		$("#postContent").html(post.postContent);
         		
         		if(prevNum != 0) {
-	            	$("#prevButton").attr("onclick", "location.href='${pageContext.request.contextPath}/post/" + prevNum +"'");
+	            	$("#prevButton").attr("onclick", "location.href='${pageContext.request.contextPath}/posts/" + prevNum +"'");
 	            } else {
 	            	$("#prevButton").remove();
 				}
 	            
 	            if(nextNum != 0) {
-	            	$("#nextButton").attr("onclick", "location.href='${pageContext.request.contextPath}/post/" + nextNum +"'");
+	            	$("#nextButton").attr("onclick", "location.href='${pageContext.request.contextPath}/posts/" + nextNum +"'");
 	            } else {
 	            	$("#nextButton").remove();
 				}
@@ -312,7 +312,7 @@ function postDetail() {
         },
         error: function(error) {
             alert("오류가 발생했습니다.");
-            window.location.href = "${pageContext.request.contextPath}/post";
+            window.location.href = "${pageContext.request.contextPath}/posts";
 	    }
 	});
 }
@@ -345,7 +345,7 @@ function postDelete() {
     	
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/post'/>/" + postIdx,
+            url: "<c:url value='/api/posts'/>/" + postIdx,
             data: {'postIdx' : postIdx},
             contentType: false,
             success: function(data, textStatus, xhr) {
@@ -353,16 +353,16 @@ function postDelete() {
             	
                 if (xhr.status == 204) {
 	                alert("게시글이 삭제되었습니다.");
-	                window.location.href = "${pageContext.request.contextPath}/post"
+	                window.location.href = "${pageContext.request.contextPath}/posts"
                 } else {
                 	alert("글 삭제에 실패했습니다.");
-                	window.location.href = "${pageContext.request.contextPath}/post/"+postIdx;
+                	window.location.href = "${pageContext.request.contextPath}/posts/"+postIdx;
                 } 
             },
             error: function(error) {
             	console.log(error);
                 alert("오류가 발생했습니다.");
-                window.location.href = "${pageContext.request.contextPath}/post";
+                window.location.href = "${pageContext.request.contextPath}/posts";
     	    }
        });
     } 
@@ -388,7 +388,7 @@ function likesCheck() {
 	
        $.ajax({
            type: "POST",
-           url: "<c:url value='/post/likesCheck'/>/",
+           url: "<c:url value='/api/posts/likesCheck'/>/",
            data: {"postIdx" : postIdx
         	      , "userinfoId": userinfoId
         	   },
@@ -417,7 +417,7 @@ function likesCancel() {
 
        $.ajax({
            type: "POST",
-           url: "<c:url value='/post/likesCancel'/>/",
+           url: "<c:url value='/api/posts/likesCancel'/>/",
            data: {"postIdx" : postIdx
      	        , "userinfoId": userinfoId
     	      },
@@ -470,7 +470,7 @@ $("#modifyBtn").on("click", function(e) {
 
     $.ajax({
         type: "post",
-        url: "<c:url value='/post/modify'/>",
+        url: "<c:url value='/api/posts/modify'/>",
         data: formData,
         contentType: false,
         processData: false,
@@ -497,7 +497,7 @@ function commentList() {
 	
     $.ajax({
         method: "GET",
-        url: "<c:url value='/comments/comment-list'/>/" + postIdx,
+        url: "<c:url value='/api/comments'/>/" + postIdx,
         data: {"postIdx": postIdx},
         dataType: "json",
         success: function(result) {
@@ -541,7 +541,7 @@ function commentList() {
             				        "<button type='button' id='comment-delete-button' class='btn btn-danger' data-comment-modify-idx='"+commentList.commentIdx+"' onclick='commentModify();'>등록</button>" +
 	                              "</div>" +
 	                              
-	                              "<sec:authorize access='hasRole(\"ROLE_MASTER\")'>" +
+	                              "<sec:authorize access='isAnonymous()'>" +
 	                                "<button type='button' id='comment-button-"+commentList.commentIdx+"' class='btn btn-success'  data-comment-replyShow-idx='"+commentList.commentIdx+"' onclick='replyShowButton()'><span>답글 </span><span id='reply-count-"+commentList.commentIdx+"'></span></button>" +
 	                		      "</sec:authorize>" +
 	                		    
@@ -571,12 +571,13 @@ function commentList() {
 	                
 	                replyList(replyNum);
 	                
+	                
 	                // 답글 출력
 	                function replyList(replyNum) {
 	                	
 		                $.ajax({
 					        method: "GET",
-					        url: "<c:url value='/comments/reply-list'/>/" + replyNum,
+					        url: "<c:url value='/api/comments/replies'/>/" + replyNum,
 					        data: {"parentIdx": replyNum},
 					        dataType: "json",
 					        success: function(result) {
@@ -725,7 +726,7 @@ function commentAdd() {
     
     $.ajax({
         type: "POST",
-        url: "<c:url value='/comments'/>",
+        url: "<c:url value='/api/comments'/>",
         data: formData,
         contentType: false,
         processData: false,
@@ -733,7 +734,8 @@ function commentAdd() {
         success: function (data, textStatus, xhr) {
         	var parsedData = JSON.parse(data);
             console.log(parsedData);
-            if (xhr.status == 200) {
+            
+            if (xhr.status == 201) {
             	// 입력 값 지워주기
 			    var replyInput = document.getElementById('commentContent');
 			    replyInput.value = '';
@@ -826,7 +828,7 @@ function replyAdd() {
     // parentIdx 가 정수면 삽입이 잘 되는거같은데 뭐가 문제일까........
     $.ajax({
         type: "POST",
-        url: "<c:url value='/comments'/>",
+        url: "<c:url value='/api/comments'/>",
         data: formData,
         contentType: false,
         processData: false,
@@ -835,7 +837,7 @@ function replyAdd() {
         	var parsedData = JSON.parse(data);
             console.log("parsedData:", parsedData);
             
-            if (xhr.status == 200) {
+            if (xhr.status === 201) {
             	
             	// 입력 값 지워주기
 			    var replyInput = document.getElementById('reply-content-'+replyIdx);
@@ -886,7 +888,7 @@ function commentModify() {
 	
     $.ajax({
         type: "PATCH",
-        url: "<c:url value='/comments/'/>" + commentIdx,
+        url: "<c:url value='/api/comments/'/>" + commentIdx,
         data: JSON.stringify({'commentIdx': commentIdx,'commentContent' : commentModifyContent}),
         contentType: 'application/json',
         dataType: "text",
@@ -920,7 +922,7 @@ function replyModify() {
     
     $.ajax({
         type: "PATCH",
-        url: "<c:url value='/comments/'/>" + replyIdx,
+        url: "<c:url value='/api/comments/'/>" + replyIdx,
         data: JSON.stringify({'commentIdx': replyIdx,'commentContent' : replyModifyContent}),
         contentType: 'application/json',
         dataType: "text",
@@ -955,7 +957,7 @@ function commentDelete() {
     if (confirm("댓글을 삭제 하시겠습니까?")) {
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/comments'/>/" + deleteCommentIdx + "/post/" + postIdx,
+            url: "<c:url value='/api/comments'/>/" + deleteCommentIdx + "/posts/" + postIdx,
             data: {'commentIdx' : deleteCommentIdx
             	,'postIdx' : postIdx},
             contentType: false,
@@ -988,7 +990,7 @@ function replyDelete() {
     if (confirm("답글을 삭제 하시겠습니까?")) {
         $.ajax({
             type: "DELETE",
-            url: "<c:url value='/comments'/>/" + deleteReplyIdx + "/post/" + 0,
+            url: "<c:url value='/api/comments'/>/" + deleteReplyIdx + "/posts/" + 0,
             data: {'commentIdx' : deleteReplyIdx
             	,'postIdx' : 0},
             contentType: false,
@@ -1105,7 +1107,7 @@ function imageUploader(file, el) {
 	$.ajax({                                                              
 		data : formData,
 		type : "POST",
-		url : '/post/image-upload',
+		url : '/api/posts/image-upload',
 		contentType : false,
 		processData : false,
 		enctype : 'multipart/form-data',                                  
